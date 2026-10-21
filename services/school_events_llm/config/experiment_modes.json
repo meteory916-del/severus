@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "modes": {
+    "full": {
+      "include_exact_grade": true,
+      "include_teacher": true,
+      "include_school": true,
+      "resources_mode": "actual",
+      "include_region": true,
+      "include_source_context": true,
+      "include_mode_block": false
+    },
+    "universal": {
+      "include_exact_grade": false,
+      "include_teacher": false,
+      "keep_teacher_fields": ["script_detail"],
+      "include_school": false,
+      "resources_mode": "neutral",
+      "include_region": false,
+      "include_source_context": false,
+      "include_mode_block": true
+    }
+  }
+}

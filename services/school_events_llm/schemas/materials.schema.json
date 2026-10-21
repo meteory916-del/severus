@@ -1,0 +1,237 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "FactClaim": {
+      "properties": {
+        "claim_id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "source_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "fragment_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "needs_teacher_check": {
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "claim_id",
+        "text",
+        "location"
+      ],
+      "type": "object",
+      "additionalProperties": false
+    },
+    "Material": {
+      "properties": {
+        "material_id": {
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "teacher_instruction",
+            "worksheet",
+            "activity_card",
+            "slide_outline",
+            "quiz",
+            "discussion_questions",
+            "handout",
+            "props_checklist",
+            "parent_instruction",
+            "audience_ballot",
+            "jury_scorecard",
+            "award_instruction"
+          ],
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "used_in_blocks": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "audience": {
+          "enum": [
+            "teacher",
+            "pupil",
+            "pupils_group",
+            "parent",
+            "all"
+          ],
+          "type": "string"
+        },
+        "content": {
+          "minLength": 20,
+          "type": "string"
+        },
+        "teacher_notes": {
+          "type": "string"
+        },
+        "print_required": {
+          "type": "boolean"
+        },
+        "dependencies": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "estimated_preparation_minutes": {
+          "maximum": 240,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "family_task": {
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "material_id",
+        "type",
+        "title",
+        "used_in_blocks",
+        "audience",
+        "content",
+        "teacher_notes",
+        "print_required",
+        "estimated_preparation_minutes"
+      ],
+      "type": "object",
+      "additionalProperties": false
+    },
+    "VotingDraft": {
+      "properties": {
+        "award_title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "criterion": {
+          "type": "string"
+        },
+        "votes_per_person": {
+          "default": 1,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "tie_rule": {
+          "type": "string"
+        },
+        "block_id": {
+          "type": "string"
+        },
+        "material_ids": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "criterion",
+        "tie_rule",
+        "block_id"
+      ],
+      "type": "object",
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "schema_version": {
+      "default": "1.2",
+      "type": "string"
+    },
+    "task": {
+      "const": "materials",
+      "default": "materials",
+      "type": "string"
+    },
+    "variant_id": {
+      "type": "string"
+    },
+    "materials": {
+      "items": {
+        "$ref": "#/$defs/Material"
+      },
+      "type": "array"
+    },
+    "teacher_instructions": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "voting": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/VotingDraft"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "teacher_fallback": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "fact_claims": {
+      "items": {
+        "$ref": "#/$defs/FactClaim"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "variant_id",
+    "teacher_instructions"
+  ],
+  "type": "object",
+  "additionalProperties": false
+}

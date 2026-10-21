@@ -1,0 +1,201 @@
+# school_events_llm
+
+Независимый прототип LLM-сервиса «Школьные события» по актуальному ТЗ v1.5 из `docs/tz/`.
+
+Сервис принимает запрос в формате контракта 01, собирает контекст и prompt-блоки, генерирует от 1 до 3 вариантов через выбранную LLM, проверяет результат Python-кодом и формирует ответ по замороженному контракту 02.
+
+На текущем этапе реализован CLI-прототип. Внутренний HTTP-сервис на `127.0.0.1:8090` относится к следующему этапу интеграции.
+
+## Структура прототипа
+
+| Компонент | Расположение |
+|---|---|
+| Системный prompt | `prompts/core/system.md`, `prompts/core/safety.md` |
+| Правила этапов | `prompts/tasks/*.md` |
+| Шаблон пользовательского сообщения | `prompts/templates/user_message.md` |
+| Динамические блоки контекста | `prompts/events`, `age`, `grade`, `size`, `duration`, `formats`, `participants`, `values`, `family`, `teacher`, `school`, `resources`, `region`, `modes` |
+| Форматы ответа модели | `prompts/output/*.md` |
+| Сборщик prompt | `app/prompting/composer.py` |
+| Контракт ответа модели | `app/contracts/llm.py`, JSON Schema в `schemas/` |
+| Конвейер генерации | `app/generation/pipeline.py` |
+| Тайминг и группировка | `app/generation/timing.py`, `app/generation/grouping.py` |
+| Проверки результата | `app/validation/checks.py` |
+| Проверка корпуса источников | `app/sources.py` |
+| Клиенты моделей | `app/llm/client.py` |
+| Локальная очередь и общий lock-файл | `app/llm/mutex.py` |
+| Эталонные примеры | `examples/golden`, `examples/rendered`, `examples/readable` |
+
+Подробное описание сборки prompt и контрактов находится в `docs/PROMPTS.md`.
+
+## Требования
+
+- Python 3.11 или новее.
+- Для реального теста Qwen3.5-9B: LM Studio с локальным сервером на `127.0.0.1:1234`.
+- Все служебные операции выполняются через `python -m app ...` и `python -m pytest`.
+- `.bat`, `.ps1` и `.sh` не требуются.
+
+## Установка
+
+Команды выполняются из каталога `services/school_events_llm/`.
+
+Windows PowerShell:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+Copy-Item .env.example .env
+python -m pytest
+```
+
+Windows CMD:
+
+```cmd
+python -m venv .venv
+.venv\Scripts\activate.bat
+python -m pip install -r requirements.txt
+copy .env.example .env
+python -m pytest
+```
+
+Linux/macOS:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+cp .env.example .env
+python -m pytest
+```
+
+## Первый тест Qwen3.5-9B
+
+1. Загрузить Qwen3.5-9B в LM Studio.
+2. Включить OpenAI-совместимый сервер на порту `1234`.
+3. Проверить выбранную модель.
+4. Запустить генерацию на одном из примеров.
+
+```bash
+python -m app health
+python -m app generate examples/requests/ex1_knowledge_day.json
+```
+
+Если трассировка включена, артефакты запуска сохраняются в `data/runs/<job_id>/`. Там находятся итоговый `final_result.json`, читаемые варианты, фактические prompt, сырые ответы модели, parsed JSON, манифесты и результаты проверок.
+
+## Работа без реальной модели
+
+Эталонные ответы позволяют прогнать конвейер без LM Studio:
+
+```bash
+python -m app generate examples/requests/ex1_knowledge_day.json --fixture examples/golden/ex1_knowledge_day.json
+```
+
+Можно намеренно повредить первый ответ указанного этапа и проверить repair:
+
+```bash
+python -m app generate examples/requests/ex1_knowledge_day.json --fixture examples/golden/ex1_knowledge_day.json --broken scenario_plan materials
+```
+
+## CLI
+
+```text
+python -m app health [--model KEY]
+python -m app compose REQUEST.json --stage STAGE [--json]
+python -m app generate REQUEST.json [--model KEY] [--out FILE]
+python -m app experiment REQUEST.json --context-mode full|universal --cultural-context on|off [--experiment-tag TAG] [--experiment-pair-id ID]
+python -m app validate PACKAGE.json --request REQUEST.json
+python -m app render PACKAGE.json --request REQUEST.json [--markdown]
+python -m app export-schemas
+python -m app sources-check
+```
+
+Публичные команды `generate` и `compose` всегда используют `context_mode=full` и включенный культурный контекст. Параметры H2/H3 доступны только через `experiment`. Входной контракт 01 не содержит и не должен содержать экспериментальные флаги.
+
+Этапы модели:
+
+- `variation_plan`
+- `scenario_plan`
+- `scenario_blocks`
+- `scenario_block`
+- `materials`
+- `quality_review`
+
+`quality_review` вызывается только если `llm_quality_review=true` в `config/generation.json`. Основные структурные проверки в любом случае выполняются Python-кодом.
+
+## Режимы full и universal
+
+Состав prompt-блоков задается в `config/experiment_modes.json`.
+
+`full` использует точный класс, предпочтения педагога, профиль школы, реальные ресурсы, региональный и проверенный культурный контекст.
+
+`universal` предназначен только для эксперимента. В этом режиме не подключаются `GRADE`, `TEACHER`, `SCHOOL`, `REGION`, а реальные ресурсы заменяются нейтральным ресурсным профилем. Предпочтения педагога сбрасываются к дефолтам, кроме полей из `keep_teacher_fields` (по умолчанию `script_detail`, чтобы универсальная версия не была короче по полноте). В prompt добавляется блок `MODE`.
+
+Раздел «Справочные данные» подключается во всех режимах. В `universal` фрагменты в него не передаются, поэтому он прямо запрещает фактические утверждения. При `--cultural-context off` отключаются региональные и культурные темы, а фрагменты о самом событии остаются.
+
+Изменение состава экспериментального режима не требует изменения Python-кода генератора.
+
+## Модели и reasoning_mode
+
+Модель выбирается через `ACTIVE_MODEL` в `.env` либо `default_model` в `config/models.json`. Генератор не должен изменяться при смене модели.
+
+Для локального Qwen используется OpenAI-совместимый API LM Studio. `model_id: auto_loaded` разрешает автоматически выбрать единственную загруженную модель. Если LM Studio сообщает несколько загруженных моделей, нужно явно задать `model_id`.
+
+`reasoning_mode` и `disable_thinking_method` управляют обработкой рассуждений модели. Независимо от способа отключения reasoning, служебные блоки `<think>` и `<analysis>` не должны попадать в parsed JSON.
+
+## Очередь и межпроцессная блокировка
+
+Вызовы к локальной LLM внутри одного процесса сервиса всегда сериализуются и выполняются по одному.
+
+Если LM Studio одновременно используют другие процессы, можно включить общий lock-файл:
+
+```dotenv
+LOCAL_LLM_MUTEX_ENABLED=true
+LOCAL_LLM_MUTEX_PATH=data/locks/lm_studio.lock
+```
+
+По умолчанию `LOCAL_LLM_MUTEX_ENABLED=false`. Все процессы, которые должны координировать доступ к одной локальной модели, обязаны использовать один и тот же путь lock-файла.
+
+## Источники и факты
+
+Проверенный региональный корпус хранится в `catalog/regions/<region_id>/verified_sources.json`.
+
+Проверка структуры и покрытия:
+
+```bash
+python -m app sources-check
+```
+
+`sources-check` проверяет уникальность идентификаторов, статусы, пустые цитаты, разных составителя и проверяющего, ссылки на события и темы, а также то, что у каждого фрагмента указан `source_id` из списка источников корпуса.
+
+В генерацию попадают только фрагменты со статусом `verified`. Фактологические утверждения фиксируются в `fact_claims`. Если утверждение не подтверждено проверенным фрагментом, оно должно быть удалено, заменено либо явно отмечено `needs_teacher_check=true` в разрешенных ТЗ случаях.
+
+Текущий пилотный корпус пуст. Это ожидаемое состояние первого прототипа, но культурное и историческое покрытие до продуктового использования должно быть наполнено и проверено куратором.
+
+## Конфигурация и воспроизводимость
+
+`config/generation.json` содержит параметры этапов, включая `max_repair_attempts_per_stage` и `temperature_hint`. Если у этапа задан `max_output_tokens_per_variant`, лимит ответа равен этому значению, умноженному на число вариантов, но не больше `max_output_tokens`. Так настроен `variation_plan`: 1300 токенов на концепцию, потолок 3900, чтобы ответ с тремя концепциями не обрезался.
+
+`config/experiment_modes.json` определяет состав контекста экспериментов.
+
+`config/school_profile.json` содержит серверный профиль школы.
+
+Манифест каждого LLM-вызова сохраняет фактически использованные prompt-блоки, версии, SHA-256, использованные переменные, режим контекста и контрольные суммы конфигураций и источников. Это позволяет разбирать конкретную генерацию после изменения prompt или конфигурации.
+
+## Что проверяется автоматически
+
+Тесты покрывают входной контракт и серверные дефолты, сборку prompt, режимы full/universal, точный тайминг, группировку школьников, родителей, ресурсы, ценности, семейное задание, фактологические ссылки, рендер контракта 02, repair, трассировку, Model Router, reasoning stripping, общий lock-файл и проверку корпуса источников.
+
+Актуальное количество успешно выполненных тестов следует смотреть в выводе `python -m pytest`. README намеренно не фиксирует число тестов, чтобы оно не устаревало после добавления новых проверок.
+
+## Что еще не проверено в этой среде
+
+Реальная Qwen3.5-9B в LM Studio здесь не запускалась. Поэтому до первого коммита, который заявляет качество генерации, необходимо отдельно проверить на целевой машине:
+
+- корректность подключения к LM Studio;
+- качество каждого этапа Qwen3.5-9B;
+- скорость и потребление контекста;
+- реальное поведение `reasoning_mode`;
+- устойчивость structured output;
+- достаточность repair на реальных ошибках модели.
+
+HTTP API `127.0.0.1:8090`, очередь HTTP-заданий, постоянное хранилище, CSV-аналитика и полный Replay относятся к последующим этапам разработки.

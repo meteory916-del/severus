@@ -1,0 +1,303 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "Concept": {
+      "properties": {
+        "summary": {
+          "minLength": 10,
+          "type": "string"
+        },
+        "goal": {
+          "minLength": 5,
+          "type": "string"
+        },
+        "tasks": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "expected_outcomes": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "values_to_mechanics": {
+          "items": {
+            "$ref": "#/$defs/ValueMechanic"
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "summary",
+        "goal",
+        "tasks",
+        "expected_outcomes",
+        "values_to_mechanics"
+      ],
+      "type": "object",
+      "additionalProperties": false
+    },
+    "GroupingRequest": {
+      "properties": {
+        "mode": {
+          "enum": [
+            "whole_class",
+            "pairs",
+            "small_groups",
+            "mixed"
+          ],
+          "type": "string"
+        },
+        "groups_count": {
+          "maximum": 35,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "block_ids": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "mode",
+        "groups_count"
+      ],
+      "type": "object",
+      "additionalProperties": false
+    },
+    "PlanBlock": {
+      "properties": {
+        "block_id": {
+          "pattern": "^block_\\d{2}$",
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "proposed_minutes": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "role_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "planned_material_ids": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "block_id",
+        "title",
+        "purpose",
+        "proposed_minutes",
+        "role_ids"
+      ],
+      "type": "object",
+      "additionalProperties": false
+    },
+    "PlanRole": {
+      "properties": {
+        "role_id": {
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "type": "string"
+        },
+        "participant_type": {
+          "enum": [
+            "teacher",
+            "pupil",
+            "pupils_group",
+            "parent",
+            "guest"
+          ],
+          "type": "string"
+        },
+        "role_mode": {
+          "anyOf": [
+            {
+              "enum": [
+                "helper",
+                "active_participant",
+                "audience",
+                "evaluator"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "title": {
+          "type": "string"
+        },
+        "count": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "role_id",
+        "participant_type",
+        "title",
+        "count"
+      ],
+      "type": "object",
+      "additionalProperties": false
+    },
+    "PlannedMaterial": {
+      "properties": {
+        "material_id": {
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "teacher_instruction",
+            "worksheet",
+            "activity_card",
+            "slide_outline",
+            "quiz",
+            "discussion_questions",
+            "handout",
+            "props_checklist",
+            "parent_instruction",
+            "audience_ballot",
+            "jury_scorecard",
+            "award_instruction"
+          ],
+          "type": "string"
+        },
+        "purpose": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "material_id",
+        "type",
+        "purpose"
+      ],
+      "type": "object",
+      "additionalProperties": false
+    },
+    "ValueMechanic": {
+      "properties": {
+        "value_id": {
+          "enum": [
+            "family",
+            "mutual_aid",
+            "historical_memory",
+            "labour_creation",
+            "cultural_diversity",
+            "citizenship"
+          ],
+          "type": "string"
+        },
+        "mechanic_type": {
+          "enum": [
+            "family_research",
+            "team_task",
+            "source_work",
+            "joint_product",
+            "culture_comparison",
+            "real_problem_solving",
+            "class_collective_task",
+            "pair_task",
+            "discussion"
+          ],
+          "type": "string"
+        },
+        "mechanic": {
+          "minLength": 10,
+          "type": "string"
+        },
+        "block_ids": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "value_id",
+        "mechanic_type",
+        "mechanic"
+      ],
+      "type": "object",
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "schema_version": {
+      "default": "1.2",
+      "type": "string"
+    },
+    "task": {
+      "const": "scenario_plan",
+      "default": "scenario_plan",
+      "type": "string"
+    },
+    "variant_id": {
+      "pattern": "^v[1-3]$",
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "concept": {
+      "$ref": "#/$defs/Concept"
+    },
+    "grouping_request": {
+      "$ref": "#/$defs/GroupingRequest"
+    },
+    "roles": {
+      "items": {
+        "$ref": "#/$defs/PlanRole"
+      },
+      "minItems": 2,
+      "type": "array"
+    },
+    "blocks": {
+      "items": {
+        "$ref": "#/$defs/PlanBlock"
+      },
+      "maxItems": 12,
+      "minItems": 2,
+      "type": "array"
+    },
+    "planned_materials": {
+      "items": {
+        "$ref": "#/$defs/PlannedMaterial"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "variant_id",
+    "title",
+    "concept",
+    "grouping_request",
+    "roles",
+    "blocks"
+  ],
+  "type": "object",
+  "additionalProperties": false
+}

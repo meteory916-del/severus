@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "profile_id": "pilot_school_01",
+  "region_id": "RU-SVE",
+  "settlement_type": null,
+  "small_school": null,
+  "mixed_grade_classes": false,
+  "typical_teachers_available": 1,
+  "local_context_notes": null,
+  "updated_at": "2026-10-21"
+}

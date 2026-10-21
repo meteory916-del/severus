@@ -1,0 +1,1 @@
+"""Прототип LLM-сервиса «Школьные события» (services/school_events_llm)."""

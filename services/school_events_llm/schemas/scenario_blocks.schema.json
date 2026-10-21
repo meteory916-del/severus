@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "BlockDetail": {
+      "properties": {
+        "block_id": {
+          "pattern": "^block_\\d{2}$",
+          "type": "string"
+        },
+        "start_minute": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "duration_minutes": {
+          "exclusiveMinimum": 0,
+          "type": "integer"
+        },
+        "title": {
+          "type": "string"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "teacher_script": {
+          "minLength": 20,
+          "type": "string"
+        },
+        "pupil_actions": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "role_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "material_ids": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "block_id",
+        "start_minute",
+        "duration_minutes",
+        "title",
+        "purpose",
+        "teacher_script",
+        "pupil_actions",
+        "role_ids"
+      ],
+      "type": "object",
+      "additionalProperties": false
+    },
+    "FactClaim": {
+      "properties": {
+        "claim_id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "source_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "fragment_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "needs_teacher_check": {
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "claim_id",
+        "text",
+        "location"
+      ],
+      "type": "object",
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "schema_version": {
+      "default": "1.2",
+      "type": "string"
+    },
+    "task": {
+      "const": "scenario_blocks",
+      "default": "scenario_blocks",
+      "type": "string"
+    },
+    "variant_id": {
+      "type": "string"
+    },
+    "blocks": {
+      "items": {
+        "$ref": "#/$defs/BlockDetail"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "fact_claims": {
+      "items": {
+        "$ref": "#/$defs/FactClaim"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "variant_id",
+    "blocks"
+  ],
+  "type": "object",
+  "additionalProperties": false
+}

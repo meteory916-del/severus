@@ -1,0 +1,371 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "GenerationSettings": {
+      "additionalProperties": false,
+      "properties": {
+        "variants_count": {
+          "maximum": 3,
+          "minimum": 1,
+          "title": "Variants Count",
+          "type": "integer"
+        },
+        "language": {
+          "const": "ru",
+          "title": "Language",
+          "type": "string"
+        }
+      },
+      "required": [
+        "variants_count",
+        "language"
+      ],
+      "title": "GenerationSettings",
+      "type": "object"
+    },
+    "Participants": {
+      "additionalProperties": false,
+      "properties": {
+        "teachers_count": {
+          "maximum": 10,
+          "minimum": 1,
+          "title": "Teachers Count",
+          "type": "integer"
+        },
+        "parents_enabled": {
+          "title": "Parents Enabled",
+          "type": "boolean"
+        },
+        "parents_count": {
+          "anyOf": [
+            {
+              "maximum": 200,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parents Count"
+        },
+        "parent_roles": {
+          "items": {
+            "enum": [
+              "helper",
+              "active_participant",
+              "audience",
+              "evaluator"
+            ],
+            "type": "string"
+          },
+          "title": "Parent Roles",
+          "type": "array"
+        },
+        "parent_audience_engagement": {
+          "enum": [
+            "none",
+            "feedback",
+            "vote",
+            "audience_award"
+          ],
+          "title": "Parent Audience Engagement",
+          "type": "string"
+        },
+        "parent_notes": {
+          "anyOf": [
+            {
+              "maxLength": 500,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parent Notes"
+        }
+      },
+      "required": [
+        "teachers_count",
+        "parents_enabled",
+        "parent_roles",
+        "parent_audience_engagement"
+      ],
+      "title": "Participants",
+      "type": "object"
+    },
+    "Resources": {
+      "additionalProperties": false,
+      "properties": {
+        "projector": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Projector"
+        },
+        "printer": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Printer"
+        },
+        "internet": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Internet"
+        },
+        "audio": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Audio"
+        },
+        "room": {
+          "anyOf": [
+            {
+              "enum": [
+                "classroom",
+                "assembly_hall",
+                "gym",
+                "other"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Room"
+        },
+        "available_materials": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 50,
+          "title": "Available Materials",
+          "type": "array"
+        },
+        "extra_notes": {
+          "anyOf": [
+            {
+              "maxLength": 500,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Extra Notes"
+        }
+      },
+      "required": [
+        "projector",
+        "printer",
+        "internet",
+        "audio",
+        "room",
+        "available_materials"
+      ],
+      "title": "Resources",
+      "type": "object"
+    },
+    "TeacherPreferences": {
+      "additionalProperties": false,
+      "properties": {
+        "style": {
+          "enum": [
+            "classic",
+            "interactive",
+            "creative",
+            "research"
+          ],
+          "title": "Style",
+          "type": "string"
+        },
+        "script_detail": {
+          "enum": [
+            "brief",
+            "standard",
+            "detailed"
+          ],
+          "title": "Script Detail",
+          "type": "string"
+        },
+        "difficulty": {
+          "enum": [
+            "basic",
+            "standard",
+            "advanced"
+          ],
+          "title": "Difficulty",
+          "type": "string"
+        },
+        "interaction_level": {
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "title": "Interaction Level",
+          "type": "string"
+        },
+        "group_work": {
+          "title": "Group Work",
+          "type": "boolean"
+        },
+        "preparation_effort": {
+          "enum": [
+            "minimal",
+            "standard",
+            "extended"
+          ],
+          "title": "Preparation Effort",
+          "type": "string"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "maxLength": 500,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        }
+      },
+      "required": [
+        "style",
+        "script_detail",
+        "difficulty",
+        "interaction_level",
+        "group_work",
+        "preparation_effort"
+      ],
+      "title": "TeacherPreferences",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Эффективный (после дефолтов) запрос контракта 01.",
+  "properties": {
+    "event_id": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Event Id",
+      "type": "string"
+    },
+    "region_id": {
+      "const": "RU-SVE",
+      "title": "Region Id",
+      "type": "string"
+    },
+    "grade_group": {
+      "anyOf": [
+        {
+          "enum": [
+            "1-4",
+            "5-8",
+            "9-11"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Grade Group"
+    },
+    "grade": {
+      "anyOf": [
+        {
+          "maximum": 11,
+          "minimum": 1,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Grade"
+    },
+    "pupils_count": {
+      "maximum": 35,
+      "minimum": 1,
+      "title": "Pupils Count",
+      "type": "integer"
+    },
+    "duration_minutes": {
+      "enum": [
+        30,
+        45,
+        60,
+        90
+      ],
+      "title": "Duration Minutes",
+      "type": "integer"
+    },
+    "format": {
+      "enum": [
+        "class_hour",
+        "school_event",
+        "interactive_lesson"
+      ],
+      "title": "Format",
+      "type": "string"
+    },
+    "participants": {
+      "$ref": "#/$defs/Participants"
+    },
+    "resources": {
+      "$ref": "#/$defs/Resources"
+    },
+    "teacher_preferences": {
+      "$ref": "#/$defs/TeacherPreferences"
+    },
+    "generation": {
+      "$ref": "#/$defs/GenerationSettings"
+    }
+  },
+  "required": [
+    "event_id",
+    "region_id",
+    "pupils_count",
+    "duration_minutes",
+    "format",
+    "participants",
+    "resources",
+    "teacher_preferences",
+    "generation"
+  ],
+  "title": "GenerationRequest",
+  "type": "object"
+}

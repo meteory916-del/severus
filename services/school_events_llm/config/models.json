@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "default_model": "qwen_local_9b",
+  "fallback": {
+    "enabled": false
+  },
+  "models": {
+    "qwen_local_9b": {
+      "provider": "openai_compatible",
+      "base_url": "http://127.0.0.1:1234/v1",
+      "model_id": "auto_loaded",
+      "api_key_env": null,
+      "timeout_seconds": 240,
+      "max_concurrency": 1,
+      "structured_output_mode": "auto",
+      "reasoning_mode": "disabled",
+      "disable_thinking_method": "strip_only",
+      "local": true,
+      "enabled": true
+    },
+    "qwen_27b": {
+      "provider": "openai_compatible",
+      "base_url": null,
+      "model_id": "SET_ACTUAL_SERVER_MODEL_ID",
+      "api_key_env": "QWEN_API_KEY",
+      "timeout_seconds": 300,
+      "max_concurrency": 1,
+      "structured_output_mode": "auto",
+      "reasoning_mode": "disabled",
+      "disable_thinking_method": "strip_only",
+      "local": false,
+      "enabled": false
+    },
+    "gigachat": {
+      "provider": "gigachat",
+      "base_url": "https://api.giga.chat",
+      "model_id": "GigaChat",
+      "api_key_env": "GIGACHAT_AUTH_KEY",
+      "timeout_seconds": 240,
+      "max_concurrency": 2,
+      "structured_output_mode": "none",
+      "reasoning_mode": "provider_default",
+      "local": false,
+      "enabled": false
+    },
+    "gpt6_luna": {
+      "provider": "openai",
+      "base_url": "https://api.openai.com/v1",
+      "model_id": "gpt-6-luna",
+      "api_key_env": "OPENAI_API_KEY",
+      "timeout_seconds": 240,
+      "max_concurrency": 3,
+      "structured_output_mode": "auto",
+      "reasoning_mode": "provider_default",
+      "local": false,
+      "enabled": false
+    }
+  }
+}

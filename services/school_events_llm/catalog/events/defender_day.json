@@ -1,0 +1,38 @@
+{
+  "id": "defender_day",
+  "title": "День защитника Отечества",
+  "category": "federal",
+  "status": "active",
+  "aliases": [
+    "23 февраля"
+  ],
+  "supported_age_groups": [
+    "1-4",
+    "5-8",
+    "9-11"
+  ],
+  "supported_formats": [
+    "class_hour",
+    "school_event",
+    "interactive_lesson"
+  ],
+  "prompt_block": "events/defender_day.md",
+  "source_collection": "defender_day",
+  "values": [
+    "historical_memory",
+    "citizenship"
+  ],
+  "educational_goals": [
+    "Сформировать уважение к людям, защищающим Отечество",
+    "Обсудить смелость, ответственность и заботу без гендерных стереотипов"
+  ],
+  "regional_topics": [
+    "RU-SVE/ural_volunteer_tank_corps"
+  ],
+  "review": {
+    "historical_accuracy_required": true,
+    "age_appropriateness_required": true,
+    "cultural_review_required": true
+  },
+  "catalog_version": "1.1"
+}

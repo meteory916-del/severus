@@ -1,0 +1,38 @@
+{
+  "id": "unity_day",
+  "title": "День народного единства",
+  "category": "federal",
+  "status": "active",
+  "aliases": [
+    "4 ноября"
+  ],
+  "supported_age_groups": [
+    "1-4",
+    "5-8",
+    "9-11"
+  ],
+  "supported_formats": [
+    "class_hour",
+    "school_event",
+    "interactive_lesson"
+  ],
+  "prompt_block": "events/unity_day.md",
+  "source_collection": "unity_day",
+  "values": [
+    "cultural_diversity",
+    "citizenship"
+  ],
+  "educational_goals": [
+    "Сформировать представление о единстве многонационального народа",
+    "Развить уважение к культурам народов России по источникам"
+  ],
+  "regional_topics": [
+    "RU-SVE/peoples_of_the_region"
+  ],
+  "review": {
+    "historical_accuracy_required": true,
+    "age_appropriateness_required": true,
+    "cultural_review_required": true
+  },
+  "catalog_version": "1.1"
+}

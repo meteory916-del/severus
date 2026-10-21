@@ -8,7 +8,8 @@ __pycache__/
 
 # Environment variables and secrets
 .env
-.env.local
+.env.*
+!.env.example
 
 # macOS
 .DS_Store

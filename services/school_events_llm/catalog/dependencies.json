@@ -1,0 +1,101 @@
+{
+  "schema_version": "1.0",
+  "items": [
+    {
+      "id": "projector",
+      "kind": "equipment",
+      "resource_flag": "projector",
+      "label": "Проектор"
+    },
+    {
+      "id": "printer",
+      "kind": "equipment",
+      "resource_flag": "printer",
+      "label": "Принтер"
+    },
+    {
+      "id": "internet",
+      "kind": "equipment",
+      "resource_flag": "internet",
+      "label": "Интернет"
+    },
+    {
+      "id": "audio",
+      "kind": "equipment",
+      "resource_flag": "audio",
+      "label": "Звуковое оборудование"
+    },
+    {
+      "id": "board",
+      "kind": "consumable",
+      "resource_flag": null,
+      "label": "Доска и мел/маркеры для доски"
+    },
+    {
+      "id": "paper",
+      "kind": "consumable",
+      "resource_flag": null,
+      "label": "Бумага А4"
+    },
+    {
+      "id": "whatman",
+      "kind": "consumable",
+      "resource_flag": null,
+      "label": "Ватман или плакатная бумага"
+    },
+    {
+      "id": "markers",
+      "kind": "consumable",
+      "resource_flag": null,
+      "label": "Маркеры"
+    },
+    {
+      "id": "colored_pencils",
+      "kind": "consumable",
+      "resource_flag": null,
+      "label": "Цветные карандаши"
+    },
+    {
+      "id": "pens",
+      "kind": "consumable",
+      "resource_flag": null,
+      "label": "Ручки"
+    },
+    {
+      "id": "sticky_notes",
+      "kind": "consumable",
+      "resource_flag": null,
+      "label": "Стикеры"
+    },
+    {
+      "id": "scissors",
+      "kind": "consumable",
+      "resource_flag": null,
+      "label": "Ножницы"
+    },
+    {
+      "id": "glue",
+      "kind": "consumable",
+      "resource_flag": null,
+      "label": "Клей"
+    },
+    {
+      "id": "tape",
+      "kind": "consumable",
+      "resource_flag": null,
+      "label": "Скотч или магниты для доски"
+    },
+    {
+      "id": "ballot_box",
+      "kind": "consumable",
+      "resource_flag": null,
+      "label": "Коробка для бюллетеней"
+    },
+    {
+      "id": "timer",
+      "kind": "consumable",
+      "resource_flag": null,
+      "label": "Таймер (телефон или часы)"
+    }
+  ]
+}

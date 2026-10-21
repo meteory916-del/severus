@@ -1,0 +1,38 @@
+{
+  "id": "victory_day",
+  "title": "День Победы",
+  "category": "federal",
+  "status": "active",
+  "aliases": [
+    "9 мая"
+  ],
+  "supported_age_groups": [
+    "1-4",
+    "5-8",
+    "9-11"
+  ],
+  "supported_formats": [
+    "class_hour",
+    "school_event",
+    "interactive_lesson"
+  ],
+  "prompt_block": "events/victory_day.md",
+  "source_collection": "victory_day",
+  "values": [
+    "historical_memory",
+    "citizenship"
+  ],
+  "educational_goals": [
+    "Сформировать уважительное отношение к памяти о Великой Отечественной войне",
+    "Научить работать с подлинными свидетельствами эпохи"
+  ],
+  "regional_topics": [
+    "RU-SVE/ural_volunteer_tank_corps"
+  ],
+  "review": {
+    "historical_accuracy_required": true,
+    "age_appropriateness_required": true,
+    "cultural_review_required": true
+  },
+  "catalog_version": "1.1"
+}

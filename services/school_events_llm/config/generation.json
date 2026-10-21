@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "prompt_version": "0.1.0",
+  "defaults": {
+    "language": "ru",
+    "variants_count": 1,
+    "max_variants": 3,
+    "max_concept_retries": 2,
+    "allow_partial_result": true,
+    "min_block_minutes": 2,
+    "block_detail_mode": "auto",
+    "per_block_from_minutes": 60,
+    "llm_quality_review": false,
+    "max_repair_attempts_per_stage": 2
+  },
+  "script_min_chars": {
+    "brief": 150,
+    "standard": 350,
+    "detailed": 600
+  },
+  "audience_award_min_voters_warning": 6,
+  "tasks": {
+    "variation_plan": {
+      "max_output_tokens": 3900,
+      "max_output_tokens_per_variant": 1300,
+      "temperature_hint": 0.65
+    },
+    "scenario_plan": {
+      "max_output_tokens": 3500,
+      "temperature_hint": 0.4
+    },
+    "scenario_blocks": {
+      "max_output_tokens": 6000,
+      "temperature_hint": 0.45
+    },
+    "scenario_block": {
+      "max_output_tokens": 4500,
+      "temperature_hint": 0.45
+    },
+    "materials": {
+      "max_output_tokens": 4000,
+      "temperature_hint": 0.4
+    },
+    "quality_review": {
+      "max_output_tokens": 1800,
+      "temperature_hint": 0.1
+    }
+  }
+}
