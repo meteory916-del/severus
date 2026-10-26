@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
-  "required": ["sources", "fragments"],
+  "required": ["sources"],
   "properties": {
     "event_id": { "type": "string", "minLength": 1 },
     "sources": {
@@ -17,7 +17,18 @@
           "retrieved_at": { "type": "string" },
           "verification_status": { 
             "type": "string",
-            "enum": ["draft", "pending", "verified", "rejected", "needs_content_review"]
+            "enum": [
+              "draft",
+              "pending",
+              "verified",
+              "rejected",
+              "needs_content_review",
+              "verified_minimum_met",
+              "candidate_date_conflict_review",
+              "verified_event_occurrence_date_conflict",
+              "candidate_needs_direct_legal_check",
+              "candidate_needs_article_level_check"
+            ]
           },
           "topics": {
             "type": "array",
@@ -46,7 +57,17 @@
           "quote": { "type": "string", "minLength": 1 },
           "verification_status": { 
             "type": "string",
-            "enum": ["draft", "verified", "rejected", "needs_content_review"]
+            "enum": [
+              "draft",
+              "verified",
+              "rejected",
+              "needs_content_review",
+              "verified_minimum_met",
+              "candidate_date_conflict_review",
+              "verified_event_occurrence_date_conflict",
+              "candidate_needs_direct_legal_check",
+              "candidate_needs_article_level_check"
+            ]
           },
           "collected_by": { "type": "string" },
           "verified_by": { "type": "string" },
@@ -59,7 +80,7 @@
     "verified_count": { "type": "integer", "minimum": 0 },
     "status": { 
       "type": "string",
-      "enum": ["complete", "incomplete"]
+      "enum": ["complete", "incomplete", "verified_minimum_met"]
     },
     "note": { "type": "string" },
     "audit_note": { "type": "string" }
