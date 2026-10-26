@@ -3,6 +3,7 @@
   "type": "object",
   "required": ["sources", "fragments"],
   "properties": {
+    "event_id": { "type": "string", "minLength": 1 },
     "sources": {
       "type": "array",
       "items": {
@@ -12,11 +13,11 @@
           "source_id": { "type": "string", "minLength": 1 },
           "title": { "type": "string", "minLength": 1 },
           "publisher": { "type": "string" },
-          "url": { "type": "string", "format": "uri" },
+          "url": { "type": "string" },
           "retrieved_at": { "type": "string" },
           "verification_status": { 
             "type": "string",
-            "enum": ["draft", "pending", "verified", "rejected"]
+            "enum": ["draft", "pending", "verified", "rejected", "needs_content_review"]
           },
           "topics": {
             "type": "array",
@@ -45,7 +46,7 @@
           "quote": { "type": "string", "minLength": 1 },
           "verification_status": { 
             "type": "string",
-            "enum": ["draft", "verified", "rejected"]
+            "enum": ["draft", "verified", "rejected", "needs_content_review"]
           },
           "collected_by": { "type": "string" },
           "verified_by": { "type": "string" },
