@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://example.invalid/catalog_schema.json",
-  "title": "School event catalog card",
+  "title": "School event catalog card (v2.6)",
   "type": "object",
   "required": [
     "id",
@@ -11,14 +11,16 @@
     "supported_age_groups",
     "supported_formats",
     "educational_goals",
+    "values",
     "age_appropriateness_notes",
-    "prompt_block",
     "source_collection",
     "source_ids",
     "review",
     "regional_variants",
     "catalog_version",
-    "updated_at"
+    "updated_at",
+    "regional_topics",
+    "facts_to_verify"
   ],
   "properties": {
     "id": {
@@ -36,7 +38,12 @@
       }
     },
     "category": {
-      "type": "string"
+      "enum": [
+        "federal",
+        "regional",
+        "school",
+        "cultural"
+      ]
     },
     "date_rule": {
       "type": "object",
@@ -71,16 +78,40 @@
     },
     "supported_formats": {
       "type": "array",
+      "minItems": 1,
       "items": {
-        "type": "string"
+        "enum": [
+          "class_hour",
+          "school_event",
+          "interactive_lesson"
+        ]
       }
     },
     "educational_goals": {
       "type": "array",
       "minItems": 1,
+      "maxItems": 3,
       "items": {
-        "type": "string"
+        "type": "string",
+        "minLength": 1
       }
+    },
+    "values": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 3,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "family",
+          "mutual_aid",
+          "historical_memory",
+          "labour_creation",
+          "cultural_diversity",
+          "citizenship"
+        ]
+      },
+      "description": "Ценности в порядке приоритета; справочник services/school_events_llm/catalog/values.json."
     },
     "age_appropriateness_notes": {
       "type": "object",
@@ -102,8 +133,21 @@
       },
       "additionalProperties": false
     },
-    "prompt_block": {
-      "type": "string"
+    "facts_to_verify": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "Что нельзя утверждать без проверенного фрагмента и где нужна осторожность."
+    },
+    "regional_topics": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Z]{2}-[A-Z0-9]{2,3}/[a-z0-9_]+$"
+      },
+      "description": "Региональные темы вида RU-SVE/<topic>, подключаются только через проверенные фрагменты."
     },
     "source_collection": {
       "type": "string"
@@ -115,7 +159,18 @@
       }
     },
     "review": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "historical_accuracy_required": {
+          "type": "boolean"
+        },
+        "age_appropriateness_required": {
+          "type": "boolean"
+        },
+        "cultural_review_required": {
+          "type": "boolean"
+        }
+      }
     },
     "regional_variants": {
       "type": "array",
