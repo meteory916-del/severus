@@ -93,8 +93,95 @@
     }
   ],
   "required_minimum": 3,
-  "verified_count": 2,
-  "status": "incomplete",
+  "verified_count": 3,
+  "status": "verified_minimum_met",
   "note": "Строгий подсчёт v1.9: учитываются только источники с подтверждённой релевантностью и успешным прямым открытием URL; один издатель считается один раз.",
-  "audit_note": "Источники с поисковым сниппетом без успешного прямого открытия, недоступные URL, дубли и записи, не подтверждающие конкретный тезис, не засчитываются."
+  "audit_note": "Источники с поисковым сниппетом без успешного прямого открытия, недоступные URL, дубли и записи, не подтверждающие конкретный тезис, не засчитываются.",
+  "fragments": [
+    {
+      "fragment_id": "frag_unity_day_001",
+      "source_id": "src_unity_day_audit_03",
+      "quote": "4 ноября - День народного единства.",
+      "events": [
+        "unity_day"
+      ],
+      "topics": [],
+      "regions": [
+        "RU-SVE"
+      ],
+      "verification_status": "draft",
+      "collected_by": "claude-auto",
+      "verified_by": null,
+      "retrieved_at": "2026-10-26",
+      "note": "Черновик: цитата выписана автоматически (не длиннее 125 знаков). Сверить дословно со страницей, при необходимости расширить до абзаца, затем указать verified_by (другой человек) и статус verified. Страница КонсультантПлюс: Приказ Роструда от 11.11.2022 N 253, раздел «4. Нерабочие праздничные дни»."
+    },
+    {
+      "fragment_id": "frag_unity_day_002",
+      "source_id": "src_unity_day_v19_01",
+      "quote": "войска народного ополчения под предводительством Кузьмы Минина и Дмитрия Пожарского освободили Москву",
+      "events": [
+        "unity_day"
+      ],
+      "topics": [],
+      "regions": [
+        "RU-SVE"
+      ],
+      "verification_status": "draft",
+      "collected_by": "claude-auto",
+      "verified_by": null,
+      "retrieved_at": "2026-10-26",
+      "note": "Черновик: цитата выписана автоматически (не длиннее 125 знаков). Сверить дословно со страницей, при необходимости расширить до абзаца, затем указать verified_by (другой человек) и статус verified."
+    },
+    {
+      "fragment_id": "frag_unity_day_003",
+      "source_id": "src_unity_day_v19_01",
+      "quote": "С 2005 года в России 4 ноября празднуется День народного единства.",
+      "events": [
+        "unity_day"
+      ],
+      "topics": [],
+      "regions": [
+        "RU-SVE"
+      ],
+      "verification_status": "draft",
+      "collected_by": "claude-auto",
+      "verified_by": null,
+      "retrieved_at": "2026-10-26",
+      "note": "Черновик: цитата выписана автоматически (не длиннее 125 знаков). Сверить дословно со страницей, при необходимости расширить до абзаца, затем указать verified_by (другой человек) и статус verified."
+    },
+    {
+      "fragment_id": "frag_unity_day_004",
+      "source_id": "src_unity_day_v19_02",
+      "quote": "Праздник учреждён в память о событиях 1612 г.",
+      "events": [
+        "unity_day"
+      ],
+      "topics": [],
+      "regions": [
+        "RU-SVE"
+      ],
+      "verification_status": "draft",
+      "collected_by": "claude-auto",
+      "verified_by": null,
+      "retrieved_at": "2026-10-26",
+      "note": "Черновик: цитата выписана автоматически (не длиннее 125 знаков). Сверить дословно со страницей, при необходимости расширить до абзаца, затем указать verified_by (другой человек) и статус verified."
+    },
+    {
+      "fragment_id": "frag_unity_day_005",
+      "source_id": "src_unity_day_v19_02",
+      "quote": "Именно объединение сил позволило ополчению одержать победу в Кремле и Китай-городе.",
+      "events": [
+        "unity_day"
+      ],
+      "topics": [],
+      "regions": [
+        "RU-SVE"
+      ],
+      "verification_status": "draft",
+      "collected_by": "claude-auto",
+      "verified_by": null,
+      "retrieved_at": "2026-10-26",
+      "note": "Черновик: цитата выписана автоматически (не длиннее 125 знаков). Сверить дословно со страницей, при необходимости расширить до абзаца, затем указать verified_by (другой человек) и статус verified."
+    }
+  ]
 }

@@ -6,7 +6,7 @@ from pathlib import Path
 
 from app.settings import Settings
 from app.sources import check_sources
-from tests.helpers import ROOT
+from tests.helpers import ROOT, SHARED_CATALOG
 
 
 class SourcesCorpusValidationTest(unittest.TestCase):
@@ -15,23 +15,20 @@ class SourcesCorpusValidationTest(unittest.TestCase):
     def test_t103_duplicate_ids_and_missing_verifier_are_errors(self):
         """Проверяет T-103: дубликаты ID и verified-фрагмент без проверяющего блокируют корпус.
 
-        Тест создает временный минимальный корень сервиса, копирует каталог событий и
-        справочники, затем подменяет корпус RU-SVE заведомо ошибочными данными. После
+        Тест создает временный общий каталог, копирует в него карточки событий,
+        затем кладёт файл источников с заведомо ошибочными данными. После
         проверки ожидаются ошибки дублирования source_id, fragment_id и отсутствия
         verified_by. Дополнительно проверяется, что отчет покрытия формируется даже
         при структурных ошибках корпуса.
         """
         with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
-            shutil.copytree(ROOT / "catalog" / "events", root / "catalog" / "events")
-            shutil.copy2(ROOT / "catalog" / "values.json", root / "catalog" / "values.json")
-            shutil.copy2(ROOT / "catalog" / "dependencies.json", root / "catalog" / "dependencies.json")
-            region_dir = root / "catalog" / "regions" / "RU-SVE"
-            region_dir.mkdir(parents=True)
+            catalog_dir = Path(tmp) / "catalog"
+            shutil.copytree(SHARED_CATALOG / "events", catalog_dir / "events")
+            sources_dir = catalog_dir / "sources"
+            sources_dir.mkdir(parents=True)
 
             corpus = {
-                "schema_version": "1.0",
-                "region_id": "RU-SVE",
+                "event_id": "knowledge_day",
                 "sources": [
                     {"source_id": "source_dup", "title": "Источник 1"},
                     {"source_id": "source_dup", "title": "Источник 2"},
@@ -58,12 +55,12 @@ class SourcesCorpusValidationTest(unittest.TestCase):
                     },
                 ],
             }
-            (region_dir / "verified_sources.json").write_text(
+            (sources_dir / "knowledge_day.json").write_text(
                 json.dumps(corpus, ensure_ascii=False, indent=2),
                 encoding="utf-8",
             )
 
-            report = check_sources(Settings(root=root, env={}))
+            report = check_sources(Settings(root=ROOT, env={"CATALOG_DIR": str(catalog_dir)}))
             codes = {item["code"] for item in report["issues"]}
 
             self.assertEqual(report["status"], "error")
@@ -85,8 +82,7 @@ class SourcesCorpusValidationTest(unittest.TestCase):
             "topics": [],
         }
         corpus = {
-            "schema_version": "1.0",
-            "region_id": "RU-SVE",
+            "event_id": "knowledge_day",
             "sources": [{"source_id": "source_ok", "title": "Источник"}],
             "fragments": [
                 {**fragment, "fragment_id": "fragment_ok", "source_id": "source_ok"},
@@ -95,13 +91,12 @@ class SourcesCorpusValidationTest(unittest.TestCase):
             ],
         }
         with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
-            shutil.copytree(ROOT / "catalog" / "events", root / "catalog" / "events")
-            region_dir = root / "catalog" / "regions" / "RU-SVE"
-            region_dir.mkdir(parents=True)
-            (region_dir / "verified_sources.json").write_text(json.dumps(corpus, ensure_ascii=False), encoding="utf-8")
+            catalog_dir = Path(tmp) / "catalog"
+            shutil.copytree(SHARED_CATALOG / "events", catalog_dir / "events")
+            (catalog_dir / "sources").mkdir(parents=True)
+            (catalog_dir / "sources" / "knowledge_day.json").write_text(json.dumps(corpus, ensure_ascii=False), encoding="utf-8")
 
-            report = check_sources(Settings(root=root, env={}))
+            report = check_sources(Settings(root=ROOT, env={"CATALOG_DIR": str(catalog_dir)}))
             by_location = {(item["code"], item["location"]) for item in report["issues"]}
 
             self.assertEqual(report["status"], "error")

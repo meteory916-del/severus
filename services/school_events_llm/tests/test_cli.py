@@ -2,6 +2,7 @@ import contextlib
 import json
 import io
 import unittest
+from unittest.mock import patch
 
 from app.cli import main
 from app.sources import check_sources
@@ -35,6 +36,15 @@ class CliModeTest(unittest.TestCase):
         self.assertEqual(code, 0)
         summary = json.loads(stdout.getvalue())
         self.assertEqual(summary["context_mode"], "universal")
+
+
+    def test_serve_command_starts_internal_http_app(self):
+        """Проверяет, что CLI-команда serve передаёт HTTP-приложение в Uvicorn."""
+        with patch("uvicorn.run") as run_mock:
+            code = main(["serve", "--host", "127.0.0.1", "--port", "18099"])
+        self.assertEqual(code, 0)
+        self.assertEqual(run_mock.call_args.kwargs["host"], "127.0.0.1")
+        self.assertEqual(run_mock.call_args.kwargs["port"], 18099)
 
 
 class SourcesCheckTest(unittest.TestCase):

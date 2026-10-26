@@ -96,5 +96,109 @@
   "verified_count": 3,
   "status": "verified_minimum_met",
   "note": "Строгий подсчёт v1.9: учитываются только источники с подтверждённой релевантностью и успешным прямым открытием URL; один издатель считается один раз.",
-  "audit_note": "Источники с поисковым сниппетом без успешного прямого открытия, недоступные URL, дубли и записи, не подтверждающие конкретный тезис, не засчитываются."
+  "audit_note": "Источники с поисковым сниппетом без успешного прямого открытия, недоступные URL, дубли и записи, не подтверждающие конкретный тезис, не засчитываются.",
+  "fragments": [
+    {
+      "fragment_id": "frag_labour_day_001",
+      "source_id": "src_labour_day_audit_02",
+      "quote": "1 мая - Праздник Весны и Труда;",
+      "events": [
+        "labour_day"
+      ],
+      "topics": [],
+      "regions": [
+        "RU-SVE"
+      ],
+      "verification_status": "draft",
+      "collected_by": "claude-auto",
+      "verified_by": null,
+      "retrieved_at": "2026-10-26",
+      "note": "Черновик: цитата выписана автоматически (не длиннее 125 знаков). Сверить дословно со страницей, при необходимости расширить до абзаца, затем указать verified_by (другой человек) и статус verified. Страница КонсультантПлюс: Приказ Роструда от 11.11.2022 N 253, раздел «4. Нерабочие праздничные дни»."
+    },
+    {
+      "fragment_id": "frag_labour_day_002",
+      "source_id": "src_labour_day_v19_01",
+      "quote": "1 мая в нашей стране отмечается Праздник Весны и Труда",
+      "events": [
+        "labour_day"
+      ],
+      "topics": [],
+      "regions": [
+        "RU-SVE"
+      ],
+      "verification_status": "draft",
+      "collected_by": "claude-auto",
+      "verified_by": null,
+      "retrieved_at": "2026-10-26",
+      "note": "Черновик: цитата выписана автоматически (не длиннее 125 знаков). Сверить дословно со страницей, при необходимости расширить до абзаца, затем указать verified_by (другой человек) и статус verified."
+    },
+    {
+      "fragment_id": "frag_labour_day_003",
+      "source_id": "src_labour_day_v19_01",
+      "quote": "В 1992 году Международный день солидарности трудящихся был переименован в Праздник Весны и Труда.",
+      "events": [
+        "labour_day"
+      ],
+      "topics": [],
+      "regions": [
+        "RU-SVE"
+      ],
+      "verification_status": "draft",
+      "collected_by": "claude-auto",
+      "verified_by": null,
+      "retrieved_at": "2026-10-26",
+      "note": "Черновик: цитата выписана автоматически (не длиннее 125 знаков). Сверить дословно со страницей, при необходимости расширить до абзаца, затем указать verified_by (другой человек) и статус verified."
+    },
+    {
+      "fragment_id": "frag_labour_day_004",
+      "source_id": "src_labour_day_v19_01",
+      "quote": "После Октябрьской революции 1 Мая стало государственным праздником.",
+      "events": [
+        "labour_day"
+      ],
+      "topics": [],
+      "regions": [
+        "RU-SVE"
+      ],
+      "verification_status": "draft",
+      "collected_by": "claude-auto",
+      "verified_by": null,
+      "retrieved_at": "2026-10-26",
+      "note": "Черновик: цитата выписана автоматически (не длиннее 125 знаков). Сверить дословно со страницей, при необходимости расширить до абзаца, затем указать verified_by (другой человек) и статус verified."
+    },
+    {
+      "fragment_id": "frag_labour_day_005",
+      "source_id": "src_labour_day_v19_02",
+      "quote": "Dating back to the 1880s and born as a result of the worldwide struggle of workers for daily working hours",
+      "events": [
+        "labour_day"
+      ],
+      "topics": [],
+      "regions": [
+        "RU-SVE"
+      ],
+      "verification_status": "draft",
+      "collected_by": "claude-auto",
+      "verified_by": null,
+      "retrieved_at": "2026-10-26",
+      "note": "Черновик: цитата выписана автоматически (не длиннее 125 знаков). Сверить дословно со страницей, при необходимости расширить до абзаца, затем указать verified_by (другой человек) и статус verified. Источник на английском языке."
+    },
+    {
+      "fragment_id": "frag_labour_day_006",
+      "source_id": "src_labour_day_v19_02",
+      "quote": "Today is 1st of May, International Workers Day, the day of labour and solidarity",
+      "events": [
+        "labour_day"
+      ],
+      "topics": [],
+      "regions": [
+        "RU-SVE"
+      ],
+      "verification_status": "draft",
+      "collected_by": "claude-auto",
+      "verified_by": null,
+      "retrieved_at": "2026-10-26",
+      "note": "Черновик: цитата выписана автоматически (не длиннее 125 знаков). Сверить дословно со страницей, при необходимости расширить до абзаца, затем указать verified_by (другой человек) и статус verified. Источник на английском языке."
+    }
+  ]
 }

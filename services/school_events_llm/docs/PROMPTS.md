@@ -87,12 +87,21 @@ python -m app compose examples/requests/ex1_knowledge_day.json --stage variation
 
 ## 5. Основные prompt-блоки
 
+Блок события состоит из двух частей:
+
+- `events/<event_id>.md` - смысл события для сценария: акценты, что нежелательно, идеи активностей, правила проверки содержания. Пишется в сервисе.
+- `events/_card.md` - данные из карточки общего каталога: дата (`date_rule`), совет только для возрастной группы запроса (`age_appropriateness_notes`) и что нельзя утверждать без фрагмента (`facts_to_verify`). Ведётся куратором каталога, в сервисе не дублируется.
+
+Хеш карточки события попадает в манифест (`config_hashes.event_card`).
+
+
 | Блок | Расположение | Условие |
 |---|---|---|
 | CORE | `core/system.md` | всегда |
 | SAFETY | `core/safety.md` | всегда |
 | TASK | `tasks/<stage>.md` | всегда |
 | EVENT | `events/<event_id>.md` | всегда |
+| EVENT_CARD | `events/_card.md` + карточка `severus/catalog/events/<event_id>.json` | всегда |
 | AGE | `age/grades_*.md` | всегда |
 | GRADE | `grade/exact.md` | full и известен точный класс |
 | SIZE | `size/*.md` | всегда |
@@ -122,7 +131,7 @@ python -m app compose examples/requests/ex1_knowledge_day.json --stage variation
 - `sha256`
 - фактически использованные `variables`
 
-Контекст манифеста также содержит `context_mode`, `cultural_context`, контрольные суммы `catalog/values.json`, `config/school_profile.json`, `config/experiment_modes.json`, а также идентификаторы и хеши подключенных фрагментов источников.
+Контекст манифеста также содержит `context_mode`, `cultural_context`, контрольные суммы `catalog/values.json`, карточки события из общего каталога, `config/school_profile.json`, `config/experiment_modes.json`, а также идентификаторы и хеши подключенных фрагментов источников.
 
 `manifest_hash` рассчитывается по блокам и служебному контексту. Благодаря этому можно установить, какой именно prompt и какой серверный контекст использовались в конкретном LLM-вызове.
 

@@ -111,8 +111,95 @@
     }
   ],
   "required_minimum": 3,
-  "verified_count": 1,
+  "verified_count": 2,
   "status": "incomplete",
   "note": "Строгий подсчёт v1.9: учитываются только источники с подтверждённой релевантностью и успешным прямым открытием URL; один издатель считается один раз.",
-  "audit_note": "Источники с поисковым сниппетом без успешного прямого открытия, недоступные URL, дубли и записи, не подтверждающие конкретный тезис, не засчитываются."
+  "audit_note": "Источники с поисковым сниппетом без успешного прямого открытия, недоступные URL, дубли и записи, не подтверждающие конкретный тезис, не засчитываются.",
+  "fragments": [
+    {
+      "fragment_id": "frag_new_year_001",
+      "source_id": "src_new_year_v19_01",
+      "quote": "а потом постановил начать год с 1 января 1700 года.",
+      "events": [
+        "new_year"
+      ],
+      "topics": [],
+      "regions": [
+        "RU-SVE"
+      ],
+      "verification_status": "draft",
+      "collected_by": "claude-auto",
+      "verified_by": null,
+      "retrieved_at": "2026-10-26",
+      "note": "Черновик: цитата выписана автоматически (не длиннее 125 знаков). Сверить дословно со страницей, при необходимости расширить до абзаца, затем указать verified_by (другой человек) и статус verified."
+    },
+    {
+      "fragment_id": "frag_new_year_002",
+      "source_id": "src_new_year_v19_01",
+      "quote": "1 января духовенство, послы и бояре приглашались на праздничный обед к царю.",
+      "events": [
+        "new_year"
+      ],
+      "topics": [],
+      "regions": [
+        "RU-SVE"
+      ],
+      "verification_status": "draft",
+      "collected_by": "claude-auto",
+      "verified_by": null,
+      "retrieved_at": "2026-10-26",
+      "note": "Черновик: цитата выписана автоматически (не длиннее 125 знаков). Сверить дословно со страницей, при необходимости расширить до абзаца, затем указать verified_by (другой человек) и статус verified."
+    },
+    {
+      "fragment_id": "frag_new_year_003",
+      "source_id": "src_new_year_v19_01",
+      "quote": "Вечером царь объезжал главные улицы и поздравлял народ с Новым годом.",
+      "events": [
+        "new_year"
+      ],
+      "topics": [],
+      "regions": [
+        "RU-SVE"
+      ],
+      "verification_status": "draft",
+      "collected_by": "claude-auto",
+      "verified_by": null,
+      "retrieved_at": "2026-10-26",
+      "note": "Черновик: цитата выписана автоматически (не длиннее 125 знаков). Сверить дословно со страницей, при необходимости расширить до абзаца, затем указать verified_by (другой человек) и статус verified."
+    },
+    {
+      "fragment_id": "frag_new_year_004",
+      "source_id": "src_new_year_v19_02",
+      "quote": "а новолетье начинать не с 1 сентября, а с 1 января, как во многих европейских странах.",
+      "events": [
+        "new_year"
+      ],
+      "topics": [],
+      "regions": [
+        "RU-SVE"
+      ],
+      "verification_status": "draft",
+      "collected_by": "claude-auto",
+      "verified_by": null,
+      "retrieved_at": "2026-10-26",
+      "note": "Черновик: цитата выписана автоматически (не длиннее 125 знаков). Сверить дословно со страницей, при необходимости расширить до абзаца, затем указать verified_by (другой человек) и статус verified."
+    },
+    {
+      "fragment_id": "frag_new_year_005",
+      "source_id": "src_new_year_v19_02",
+      "quote": "В день 1 января, когда по старому летоисчислению шёл 7208 г., по введённому новому летоисчислению наступал 1700-й г.",
+      "events": [
+        "new_year"
+      ],
+      "topics": [],
+      "regions": [
+        "RU-SVE"
+      ],
+      "verification_status": "draft",
+      "collected_by": "claude-auto",
+      "verified_by": null,
+      "retrieved_at": "2026-10-26",
+      "note": "Черновик: цитата выписана автоматически (не длиннее 125 знаков). Сверить дословно со страницей, при необходимости расширить до абзаца, затем указать verified_by (другой человек) и статус verified."
+    }
+  ]
 }

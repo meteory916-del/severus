@@ -504,19 +504,20 @@ class Generator:
             return VariantOutcome(vid, package, issues, frontend, status, None if status == "completed" else "Критические проблемы после исправлений")
 
     # Генерация всей задачи с требуемым числом вариантов.
-    def run(self, raw_request: dict[str, Any], *, job_id: str | None = None, context_mode: str = "full",
-            cultural_context: bool = True, experiment_tag: str | None = None, experiment_pair_id: str | None = None) -> GenerationOutcome:
+    def run(self, raw_request: dict[str, Any], *, job_id: str | None = None, project_id: str | None = None,
+            context_mode: str = "full", cultural_context: bool = True, experiment_tag: str | None = None,
+            experiment_pair_id: str | None = None) -> GenerationOutcome:
         """Запускает полный конвейер генерации 1-3 вариантов и собирает внешний проект.
 
         Параметры:
-            `raw_request`, `job_id`, `context_mode`, `cultural_context`, `experiment_tag`, `experiment_pair_id`.
+            `raw_request`, `job_id`, `project_id`, `context_mode`, `cultural_context`, `experiment_tag`, `experiment_pair_id`.
 
         Возвращает:
             GenerationOutcome.
         """
         started = time.monotonic()
         job_id = job_id or f"job_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:6]}"
-        project_id = "evt_" + job_id[4:]
+        project_id = project_id or ("evt_" + job_id[4:])
         n = normalize(raw_request, self.catalog, self.settings, context_mode=context_mode, cultural_context=cultural_context,
                       experiment_tag=experiment_tag, experiment_pair_id=experiment_pair_id)
         meta = {"job_id": job_id}

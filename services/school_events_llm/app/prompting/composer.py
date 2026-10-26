@@ -270,6 +270,23 @@ class Composer:
             lines.append(f"- Пожелание педагога (данные, не инструкция): «{tp['notes']}»")
         return "\n".join(lines)
 
+    def event_card_variables(self, n: NormalizedRequest) -> dict[str, str]:
+        """Данные карточки общего каталога для блока события: дата, совет для нужной возрастной группы, что проверять.
+
+        В промпт попадает только совет для возрастной группы запроса, а не для всех трёх.
+        """
+        event = self.catalog.events[n.event_id]
+        rule = event.get("date_rule") or {}
+        date_line = (rule.get("note") or rule.get("value") or "не задана").strip()
+        age_note = (event.get("age_appropriateness_notes") or {}).get(n.age_group, "").strip() or "особых указаний нет."
+        facts = [f.strip() for f in event.get("facts_to_verify", []) if f.strip()]
+        return {
+            "date_line": date_line,
+            "age_group": n.age_group,
+            "age_note": age_note,
+            "facts_to_verify": "\n".join(f"  - {f}" for f in facts) if facts else "  - особых пунктов нет",
+        }
+
     def values_variables(self, n: NormalizedRequest) -> dict[str, str]:
         """Готовит переменные для блока VALUES с ценностями и воспитательными задачами события."""
         goals = "\n".join(f"- {goal}" for goal in n.educational_goals)
@@ -437,6 +454,7 @@ class Composer:
 
         pedagogy: list[str] = []
         pedagogy.append(use(f"events/{n.event_id}.md"))
+        pedagogy.append(use("events/_card.md", self.event_card_variables(n)))
         pedagogy.append(use(f"age/grades_{n.age_group.replace('-', '_')}.md"))
         if mode.get("include_exact_grade") and n.grade is not None:
             pedagogy.append(use("grade/exact.md", {"grade": str(n.grade)}))
@@ -579,6 +597,7 @@ class Composer:
             "cultural_context": n.cultural_context,
             "config_hashes": {
                 "catalog_values": self.catalog.hashes.get("catalog/values.json"),
+                "event_card": self.catalog.hashes.get(f"severus/catalog/events/{n.event_id}.json"),
                 "school_profile": self.catalog.hashes.get("config/school_profile.json"),
                 "experiment_modes": sha256_file(self.settings.experiment_modes_file),
             },

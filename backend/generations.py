@@ -1,9 +1,15 @@
+"""Маршруты генерации сценариев и переключение между mock и LLM-сервисом."""
+
+from __future__ import annotations
+
+import os
 from uuid import uuid4
 
-from fastapi import APIRouter, BackgroundTasks, HTTPException, status
+from fastapi import APIRouter, BackgroundTasks, HTTPException, Request, status
 from pydantic import BaseModel
 
 from backend.catalog import list_events
+from backend.llm_service_client import get_llm_service_client
 from backend.schemas import GenerationRequest
 
 
@@ -12,8 +18,8 @@ router = APIRouter(
     tags=["Generations"],
 )
 
-# Временное хранилище заданий для Sprint 1.
-# Позже заменим постоянным хранилищем.
+# Временное хранилище mock-заданий. В режиме llm_service состояние хранит
+# внутренний LLM-сервис, а Backend только проксирует запросы по тем же ID.
 jobs = {}
 projects = {}
 
@@ -28,17 +34,42 @@ class GenerationAccepted(BaseModel):
     project_url: str
 
 
-@router.post(
-    "/generations",
-    response_model=GenerationAccepted,
-    status_code=status.HTTP_202_ACCEPTED,
-)
-def create_generation(request: GenerationRequest, background_tasks: BackgroundTasks):
-    events = {
-        event.id: event
-        for event in list_events()
-    }
+def generator_mode() -> str:
+    """Возвращает активный режим генератора основного Backend.
 
+    Допустимые значения: ``mock`` и ``llm_service``. Неизвестное значение
+    считается ошибкой конфигурации, а не поводом тихо переключаться на mock.
+
+    Возвращает:
+        str.
+    """
+    mode = os.getenv("GENERATOR_MODE", "mock").strip().lower()
+    if mode not in {"mock", "llm_service"}:
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "code": "INTERNAL_ERROR",
+                "message": f"Неизвестный GENERATOR_MODE={mode}",
+                "field": None,
+                "retryable": False,
+            },
+        )
+    return mode
+
+
+def _validate_catalog_constraints(request: GenerationRequest):
+    """Проверяет событие, возраст и формат по общему каталогу команды.
+
+    Параметры:
+        `request`.
+
+    Возвращает:
+        EventSummary: Карточку найденного события.
+
+    Исключения:
+        HTTPException: Если событие или сочетание параметров не поддерживается.
+    """
+    events = {event.id: event for event in list_events()}
     event = events.get(request.event_id)
 
     if event is None:
@@ -54,14 +85,51 @@ def create_generation(request: GenerationRequest, background_tasks: BackgroundTa
     if request.grade_group not in event.supported_age_groups:
         raise HTTPException(
             status_code=422,
-            detail="Возрастная группа не поддерживается",
+            detail={
+                "code": "CONFLICTING_CONSTRAINTS",
+                "message": "Возрастная группа не поддерживается",
+                "field": "grade_group",
+            },
         )
 
     if request.format not in event.supported_formats:
         raise HTTPException(
             status_code=422,
-            detail="Формат мероприятия не поддерживается",
+            detail={
+                "code": "CONFLICTING_CONSTRAINTS",
+                "message": "Формат мероприятия не поддерживается",
+                "field": "format",
+            },
         )
+
+    return event
+
+
+@router.post(
+    "/generations",
+    response_model=GenerationAccepted,
+    status_code=status.HTTP_202_ACCEPTED,
+)
+def create_generation(
+    request: GenerationRequest,
+    background_tasks: BackgroundTasks,
+    http_request: Request,
+):
+    """Создаёт задачу генерации через mock или внутренний LLM-сервис.
+
+    В режиме ``llm_service`` JSON передаётся без изменения состава полей.
+    Основной Backend сохраняет публичный контракт и не знает внутренних этапов LLM.
+    """
+    event = _validate_catalog_constraints(request)
+
+    if generator_mode() == "llm_service":
+        client = get_llm_service_client()
+        data = client.create_generation(
+            request.model_dump(mode="json"),
+            request_id=http_request.headers.get("X-Request-Id"),
+            idempotency_key=http_request.headers.get("Idempotency-Key"),
+        )
+        return GenerationAccepted.model_validate(data)
 
     job_id = f"job_{uuid4().hex}"
     project_id = f"evt_{uuid4().hex}"
@@ -95,6 +163,11 @@ def finish_mock_generation(
     request: GenerationRequest,
     event_title: str,
 ) -> None:
+    """Завершает локальную mock-генерацию для режима разработки Frontend.
+
+    Параметры:
+        `job_id`, `request`, `event_title`.
+    """
     from backend.mock_generator import build_mock_project
 
     job = jobs[job_id]
@@ -113,7 +186,14 @@ def finish_mock_generation(
 
 
 @router.get("/generations/{job_id}")
-def get_generation(job_id: str):
+def get_generation(job_id: str, request: Request):
+    """Возвращает состояние mock-задачи или проксирует состояние LLM-задачи."""
+    if generator_mode() == "llm_service":
+        return get_llm_service_client().get_generation(
+            job_id,
+            request_id=request.headers.get("X-Request-Id"),
+        )
+
     job = jobs.get(job_id)
 
     if job is None:
@@ -145,7 +225,14 @@ def get_generation(job_id: str):
 
 
 @router.get("/projects/{project_id}")
-def get_project(project_id: str):
+def get_project(project_id: str, request: Request):
+    """Возвращает mock-проект или проксирует проект LLM-сервиса."""
+    if generator_mode() == "llm_service":
+        return get_llm_service_client().get_project(
+            project_id,
+            request_id=request.headers.get("X-Request-Id"),
+        )
+
     project = projects.get(project_id)
 
     if project is None:
@@ -155,3 +242,11 @@ def get_project(project_id: str):
         )
 
     return project
+
+
+@router.get("/health/llm")
+def health_llm():
+    """Возвращает состояние активного генератора с точки зрения Backend."""
+    if generator_mode() == "mock":
+        return {"status": "ok", "mode": "mock", "provider": "mock"}
+    return get_llm_service_client().health()

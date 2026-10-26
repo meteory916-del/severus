@@ -141,6 +141,28 @@ class ComposerTest(unittest.TestCase):
         self.assertIn("ошибка", c.messages[-1]["content"])
 
 
+class EventCardBlockTest(unittest.TestCase):
+    def test_card_data_for_requested_age_group_only(self):
+        """Блок события дополняется данными карточки: дата, совет только для своей группы, что проверять."""
+        card = catalog().events["victory_day"]
+        composed = compose(minimal_request(event_id="victory_day", grade=6), "scenario_plan")
+        user = composed.messages[1]["content"]
+        self.assertIn("events.card", ids(composed))
+        self.assertIn(card["date_rule"]["note"], user)
+        self.assertIn("Для 5-8 классов:", user)
+        self.assertIn(card["age_appropriateness_notes"]["5-8"], user)
+        self.assertNotIn(card["age_appropriateness_notes"]["1-4"], user)
+        self.assertNotIn(card["age_appropriateness_notes"]["9-11"], user)
+        for fact in card["facts_to_verify"]:
+            self.assertIn(fact, user)
+
+    def test_event_blocks_have_no_age_lines(self):
+        """Возрастная адаптация живёт только в карточке каталога, в блоках событий её нет."""
+        for path in sorted((settings().root / "prompts" / "events").glob("*.md")):
+            with self.subTest(block=path.name):
+                self.assertNotIn("Возрастная адаптация", path.read_text(encoding="utf-8"))
+
+
 class ReferenceDataInAllModesTest(unittest.TestCase):
     def test_no_facts_rule_present_in_every_mode(self):
         """Запрет фактов без проверенных фрагментов есть в штатном режиме и в режимах H2/H3."""

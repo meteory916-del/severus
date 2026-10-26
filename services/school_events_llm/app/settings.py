@@ -166,6 +166,15 @@ class Settings:
         return self.path("SCHOOL_PROFILE_FILE", "config/school_profile.json")
 
     @property
+    def catalog_dir(self) -> Path:
+        """Возвращает путь к общему каталогу событий проекта (по умолчанию `severus/catalog/`).
+
+        Сервис только читает каталог: карточки `events/*.json` и источники `sources/*.json`.
+        Справочники сервиса (`catalog/values.json`, `catalog/dependencies.json`) лежат в корне сервиса.
+        """
+        return self.path("CATALOG_DIR", "../../catalog").resolve()
+
+    @property
     def data_dir(self) -> Path:
         """Возвращает каталог для локальных трасс, результатов и служебных данных.
 

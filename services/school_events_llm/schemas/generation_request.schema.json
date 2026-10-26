@@ -27,7 +27,6 @@
       "additionalProperties": false,
       "properties": {
         "teachers_count": {
-          "maximum": 10,
           "minimum": 1,
           "title": "Teachers Count",
           "type": "integer"
@@ -39,7 +38,6 @@
         "parents_count": {
           "anyOf": [
             {
-              "maximum": 200,
               "minimum": 0,
               "type": "integer"
             },
@@ -76,7 +74,6 @@
         "parent_notes": {
           "anyOf": [
             {
-              "maxLength": 500,
               "type": "string"
             },
             {
@@ -164,14 +161,12 @@
           "items": {
             "type": "string"
           },
-          "maxItems": 50,
           "title": "Available Materials",
           "type": "array"
         },
         "extra_notes": {
           "anyOf": [
             {
-              "maxLength": 500,
               "type": "string"
             },
             {
@@ -249,7 +244,6 @@
         "notes": {
           "anyOf": [
             {
-              "maxLength": 500,
               "type": "string"
             },
             {
@@ -276,7 +270,6 @@
   "description": "Эффективный (после дефолтов) запрос контракта 01.",
   "properties": {
     "event_id": {
-      "maxLength": 64,
       "minLength": 1,
       "title": "Event Id",
       "type": "string"
