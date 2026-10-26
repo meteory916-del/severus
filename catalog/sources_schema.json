@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["sources", "fragments"],
+  "properties": {
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source_id", "title", "url"],
+        "properties": {
+          "source_id": { "type": "string", "minLength": 1 },
+          "title": { "type": "string", "minLength": 1 },
+          "publisher": { "type": "string" },
+          "url": { "type": "string", "format": "uri" },
+          "retrieved_at": { "type": "string" },
+          "verification_status": { 
+            "type": "string",
+            "enum": ["draft", "pending", "verified", "rejected"]
+          },
+          "topics": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "regions": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "text_excerpt": { "type": "string" },
+          "note": { "type": "string" },
+          "content_relevance_checked": { "type": "boolean" },
+          "url_access_checked_in_this_revision": { "type": "boolean" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "fragments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["fragment_id", "source_id", "quote"],
+        "properties": {
+          "fragment_id": { "type": "string", "minLength": 1 },
+          "source_id": { "type": "string", "minLength": 1 },
+          "quote": { "type": "string", "minLength": 1 },
+          "verification_status": { 
+            "type": "string",
+            "enum": ["draft", "verified", "rejected"]
+          },
+          "collected_by": { "type": "string" },
+          "verified_by": { "type": "string" },
+          "note": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "required_minimum": { "type": "integer", "minimum": 1 },
+    "verified_count": { "type": "integer", "minimum": 0 },
+    "status": { 
+      "type": "string",
+      "enum": ["complete", "incomplete"]
+    },
+    "note": { "type": "string" },
+    "audit_note": { "type": "string" }
+  },
+  "additionalProperties": false
+}
