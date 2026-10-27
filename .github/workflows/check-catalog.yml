@@ -10,9 +10,15 @@ on:
 jobs:
   check-catalog:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     
     steps:
     - uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
     
     - name: Set up Python
       uses: actions/setup-python@v5
@@ -22,13 +28,13 @@ jobs:
     - name: Run catalog rebuild
       run: python catalog/tools/build_catalog_index.py
     
-    - name: Create Pull Request with updates
-      if: failure()
+    - name: Create Pull Request
       uses: peter-evans/create-pull-request@v6
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        commit-message: "Auto-update: rebuild catalog files"
-        title: "Auto-update catalog files"
+        commit-message: "Auto-update catalog files"
+        title: "🤖 Auto-update catalog files"
         body: "Automatically updated by GitHub Actions"
         branch: auto-update-catalog
         delete-branch: true
+        base: main
