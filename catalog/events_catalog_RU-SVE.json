@@ -1,6 +1,7 @@
 {
   "catalog_id": "RU-SVE-school-events",
   "catalog_version": "2.5",
+  "generated_by": "catalog/tools/build_catalog_index.py - файл производный, руками не править",
   "region": {
     "region_id": "RU-SVE",
     "title": "Свердловская область",
@@ -35,9 +36,9 @@
         "Расширение кругозора"
       ],
       "age_appropriateness_notes": {
-        "1-4": "Культурно-познавательный формат, без религиозного принуждения",
-        "5-8": "Историко-культурный контекст, традиции разных народов",
-        "9-11": "Дискуссия о культурном наследии, сравнение традиций"
+        "1-4": "Представлять праздник как религиозную и культурную традицию; участие в обрядах не обязательно.",
+        "5-8": "Не предполагать единой веры в классе; разделять сведения о традиции и личные убеждения.",
+        "9-11": "Рассматривать религиозную историю академически и уважительно, без миссионерского давления."
       },
       "prompt_block": "events/christmas.md",
       "source_collection": "christmas",
@@ -56,8 +57,8 @@
       "regional_variants": [
         "RU-SVE"
       ],
-      "catalog_version": "1.2",
-      "updated_at": "2026-10-19"
+      "catalog_version": "2.5",
+      "updated_at": "2026-10-21"
     },
     {
       "id": "defender_day",
@@ -87,9 +88,9 @@
         "Формирование понятия долга и чести — без гендерных стереотипов"
       ],
       "age_appropriateness_notes": {
-        "1-4": "Рассказы о героизме, рисунки, песни, короткие поздравления близким",
-        "5-8": "Исторические примеры, встречи с ветеранами/военнослужащими, командные активности",
-        "9-11": "Дискуссия о гражданском долге, проектные работы, подготовка к службе"
+        "1-4": "Фокус на заботе, взаимопомощи и безопасности; не связывать мужество только с мальчиками.",
+        "5-8": "Избегать милитаризации и стереотипов о гендерных ролях; обсуждать службу и защиту граждан.",
+        "9-11": "Различать исторический контекст и современные оценки; избегать агитационных упрощений."
       },
       "prompt_block": "events/defender_day.md",
       "source_collection": "defender_day",
@@ -108,8 +109,8 @@
       "regional_variants": [
         "RU-SVE"
       ],
-      "catalog_version": "1.2",
-      "updated_at": "2026-10-19"
+      "catalog_version": "2.5",
+      "updated_at": "2026-10-21"
     },
     {
       "id": "graduation",
@@ -136,9 +137,9 @@
         "Постановка целей на следующий жизненный этап"
       ],
       "age_appropriateness_notes": {
-        "1-4": "—",
-        "5-8": "—",
-        "9-11": "Торжественная часть, вальс, напутствия, вручение аттестатов"
+        "1-4": "Событие обычно не относится к этой группе; не позиционировать как обязательный жизненный этап.",
+        "5-8": "Если используется как знакомство с традицией, не создавать давления «все обязаны поступить/окончить одинаково».",
+        "9-11": "Не акцентировать стоимость одежды и праздника; учитывать доступность, безопасность и разные семейные ресурсы."
       },
       "prompt_block": "events/graduation.md",
       "source_collection": "graduation",
@@ -152,13 +153,13 @@
       "review": {
         "historical_accuracy_required": false,
         "age_appropriateness_required": true,
-        "cultural_review_required": false
+        "cultural_review_required": true
       },
       "regional_variants": [
         "RU-SVE"
       ],
-      "catalog_version": "1.2",
-      "updated_at": "2026-10-19"
+      "catalog_version": "2.5",
+      "updated_at": "2026-10-21"
     },
     {
       "id": "knowledge_day",
@@ -189,9 +190,9 @@
         "Постановка учебных целей"
       ],
       "age_appropriateness_notes": {
-        "1-4": "Игровые механики, знакомство с правилами, короткие активности",
-        "5-8": "Командные задания, обсуждение целей года, творческие активности",
-        "9-11": "Дискуссия о планах, профориентационные элементы, наставничество младшим"
+        "1-4": "Короткий доброжелательный формат; избегать проверок знаний и сравнения успеваемости детей.",
+        "5-8": "Добавить цели на год и правила безопасного общения; не перегружать административными речами.",
+        "9-11": "Обсудить учебные цели, самостоятельность и планирование; уважать разные образовательные траектории."
       },
       "prompt_block": "events/knowledge_day.md",
       "source_collection": "knowledge_day",
@@ -205,13 +206,13 @@
       "review": {
         "historical_accuracy_required": false,
         "age_appropriateness_required": true,
-        "cultural_review_required": false
+        "cultural_review_required": true
       },
       "regional_variants": [
         "RU-SVE"
       ],
-      "catalog_version": "1.2",
-      "updated_at": "2026-10-19"
+      "catalog_version": "2.5",
+      "updated_at": "2026-10-21"
     },
     {
       "id": "labour_day",
@@ -242,9 +243,9 @@
         "Формирование понимания ценности профессионального мастерства"
       ],
       "age_appropriateness_notes": {
-        "1-4": "Рассказы о профессиях, рисунки, игры",
-        "5-8": "Исторический контекст, встречи с представителями профессий",
-        "9-11": "Дискуссия о мире труда, профориентация, проекты"
+        "1-4": "Говорить о полезном труде и взаимопомощи; не оценивать достоинство людей по профессии.",
+        "5-8": "Обсуждать разные профессии, права и безопасность труда без партийной агитации.",
+        "9-11": "Разделять историю рабочего движения, современное трудовое право и политические интерпретации."
       },
       "prompt_block": "events/labour_day.md",
       "source_collection": "labour_day",
@@ -258,13 +259,13 @@
       "review": {
         "historical_accuracy_required": true,
         "age_appropriateness_required": true,
-        "cultural_review_required": false
+        "cultural_review_required": true
       },
       "regional_variants": [
         "RU-SVE"
       ],
-      "catalog_version": "1.2",
-      "updated_at": "2026-10-19"
+      "catalog_version": "2.5",
+      "updated_at": "2026-10-21"
     },
     {
       "id": "last_bell",
@@ -293,9 +294,9 @@
         "Торжественное завершение этапа обучения"
       ],
       "age_appropriateness_notes": {
-        "1-4": "Поздравление старших, короткие выступления, подарки",
-        "5-8": "Творческие номера, напутствия младшим",
-        "9-11": "Торжественная часть, напутствие выпускников, символический звонок"
+        "1-4": "Не использовать тревожные формулировки о расставании; участие в выступлениях добровольное.",
+        "5-8": "Учитывать, что для младших классов событие может быть обычным школьным мероприятием; не имитировать выпускной экзамен.",
+        "9-11": "Избегать публичного ранжирования выпускников и раскрытия личных результатов; уважать разные планы после школы."
       },
       "prompt_block": "events/last_bell.md",
       "source_collection": "last_bell",
@@ -309,13 +310,62 @@
       "review": {
         "historical_accuracy_required": false,
         "age_appropriateness_required": true,
-        "cultural_review_required": false
+        "cultural_review_required": true
       },
       "regional_variants": [
         "RU-SVE"
       ],
-      "catalog_version": "1.2",
-      "updated_at": "2026-10-19"
+      "catalog_version": "2.5",
+      "updated_at": "2026-10-21"
+    },
+    {
+      "id": "middle_urals_peoples_day",
+      "title": "День народов Среднего Урала",
+      "aliases": [
+        "Праздник народов Среднего Урала"
+      ],
+      "category": "regional",
+      "date_rule": {
+        "type": "variable",
+        "value": "дата требует ежегодного подтверждения",
+        "note": "В тексте регионального указа указан второй субботний день апреля; региональные публикации фиксируют проведение в другие даты в отдельные годы. Для календарного планирования ежегодно сверять официальный анонс региона."
+      },
+      "supported_age_groups": [
+        "1-4",
+        "5-8",
+        "9-11"
+      ],
+      "supported_formats": [
+        "class_hour",
+        "interactive_lesson",
+        "school_event"
+      ],
+      "educational_goals": [
+        "Знакомство с культурным многообразием народов Среднего Урала",
+        "Развитие уважительного межкультурного диалога",
+        "Изучение традиций, языков, ремёсел и локальной истории"
+      ],
+      "age_appropriateness_notes": {
+        "1-4": "Использовать безопасные культурно-познавательные активности, сказки, ремёсла и музыку без стереотипизации.",
+        "5-8": "Сравнивать культурные традиции по проверенным источникам, избегать обобщений о людях по происхождению.",
+        "9-11": "Организовать исследовательские мини-проекты и обсуждение культурного наследия с уважением к различиям."
+      },
+      "prompt_block": "events/middle_urals_peoples_day.md",
+      "source_collection": "middle_urals_peoples_day",
+      "source_ids": [
+        "src_middle_urals_peoples_day_regional_01",
+        "src_middle_urals_peoples_day_regional_02"
+      ],
+      "review": {
+        "historical_accuracy_required": true,
+        "age_appropriateness_required": true,
+        "cultural_review_required": true
+      },
+      "regional_variants": [
+        "RU-SVE"
+      ],
+      "catalog_version": "2.5",
+      "updated_at": "2026-10-21"
     },
     {
       "id": "mothers_day",
@@ -345,9 +395,9 @@
         "Формирование семейных ценностей"
       ],
       "age_appropriateness_notes": {
-        "1-4": "Поделки, поздравления, тёплые слова",
-        "5-8": "Творческие номера, письма мамам, совместные активности",
-        "9-11": "Дискуссия о роли матери, эссе, проекты благодарности"
+        "1-4": "Не предполагать, что у каждого ребёнка есть мама в семье или безопасные отношения с ней; разрешить выбрать значимого взрослого.",
+        "5-8": "Избегать публичного раскрытия семейных обстоятельств и оценок «правильной» семьи.",
+        "9-11": "Обсуждать заботу и семейные роли без давления и гендерных стереотипов."
       },
       "prompt_block": "events/mothers_day.md",
       "source_collection": "mothers_day",
@@ -362,13 +412,13 @@
       "review": {
         "historical_accuracy_required": false,
         "age_appropriateness_required": true,
-        "cultural_review_required": false
+        "cultural_review_required": true
       },
       "regional_variants": [
         "RU-SVE"
       ],
-      "catalog_version": "1.2",
-      "updated_at": "2026-10-19"
+      "catalog_version": "2.5",
+      "updated_at": "2026-10-21"
     },
     {
       "id": "new_year",
@@ -377,7 +427,7 @@
         "Новогодний праздник",
         "Зимние каникулы"
       ],
-      "category": "calendar",
+      "category": "federal",
       "date_rule": {
         "type": "fixed",
         "value": "12-31",
@@ -399,9 +449,9 @@
         "Сплочение коллектива"
       ],
       "age_appropriateness_notes": {
-        "1-4": "Игры, хороводы, короткие сценки, подарки",
-        "5-8": "Творческие номера, конкурсы, командные игры",
-        "9-11": "Организация праздника для младших, творческие мастерские"
+        "1-4": "Без пиротехники, пугающих персонажей и обязательного участия; учитывать сенсорную чувствительность.",
+        "5-8": "Обсуждать традиции как разнообразные семейные практики, не объявляя их обязательными.",
+        "9-11": "Различать исторические сведения, массовую культуру и личные семейные обычаи."
       },
       "prompt_block": "events/new_year.md",
       "source_collection": "new_year",
@@ -416,239 +466,13 @@
       "review": {
         "historical_accuracy_required": false,
         "age_appropriateness_required": true,
-        "cultural_review_required": false
-      },
-      "regional_variants": [
-        "RU-SVE"
-      ],
-      "catalog_version": "1.2",
-      "updated_at": "2026-10-19"
-    },
-    {
-      "id": "teachers_day",
-      "title": "День учителя",
-      "aliases": [
-        "5 октября"
-      ],
-      "category": "federal",
-      "date_rule": {
-        "type": "fixed",
-        "value": "10-05",
-        "note": "Ежегодно, 5 октября"
-      },
-      "supported_age_groups": [
-        "1-4",
-        "5-8",
-        "9-11"
-      ],
-      "supported_formats": [
-        "class_hour",
-        "school_event",
-        "interactive_lesson"
-      ],
-      "educational_goals": [
-        "Воспитание уважения к труду педагога",
-        "Развитие культуры благодарности и признательности"
-      ],
-      "age_appropriateness_notes": {
-        "1-4": "Тёплые слова, рисунки, короткие поздравления",
-        "5-8": "Творческие номера, интервью с учителями, совместные активности",
-        "9-11": "Дискуссия о роли учителя, проекты благодарности, организация праздника для младших"
-      },
-      "prompt_block": "events/teachers_day.md",
-      "source_collection": "teachers_day",
-      "source_ids": [
-        "src_teachers_day_audit_01",
-        "src_teachers_day_audit_02",
-        "src_teachers_day_audit_03",
-        "src_teachers_day_v19_01",
-        "src_teachers_day_v19_02"
-      ],
-      "review": {
-        "historical_accuracy_required": false,
-        "age_appropriateness_required": true,
-        "cultural_review_required": false
-      },
-      "regional_variants": [
-        "RU-SVE"
-      ],
-      "catalog_version": "1.2",
-      "updated_at": "2026-10-19"
-    },
-    {
-      "id": "unity_day",
-      "title": "День народного единства",
-      "aliases": [
-        "4 ноября"
-      ],
-      "category": "federal",
-      "date_rule": {
-        "type": "fixed",
-        "value": "11-04",
-        "note": "Ежегодно, 4 ноября"
-      },
-      "supported_age_groups": [
-        "1-4",
-        "5-8",
-        "9-11"
-      ],
-      "supported_formats": [
-        "class_hour",
-        "school_event",
-        "interactive_lesson"
-      ],
-      "educational_goals": [
-        "Воспитание гражданской идентичности",
-        "Знакомство с событиями 1612 года",
-        "Развитие уважения к многонациональному народу России"
-      ],
-      "age_appropriateness_notes": {
-        "1-4": "Рассказы о дружбе народов, традиции, культура",
-        "5-8": "Исторический контекст Смутного времени, подвиг Минина и Пожарского",
-        "9-11": "Дискуссия о единстве и многообразии, работа с источниками"
-      },
-      "prompt_block": "events/unity_day.md",
-      "source_collection": "unity_day",
-      "source_ids": [
-        "src_unity_day_audit_01",
-        "src_unity_day_audit_02",
-        "src_unity_day_audit_03",
-        "src_unity_day_v19_01",
-        "src_unity_day_v19_02"
-      ],
-      "review": {
-        "historical_accuracy_required": true,
-        "age_appropriateness_required": true,
         "cultural_review_required": true
       },
       "regional_variants": [
         "RU-SVE"
       ],
-      "catalog_version": "1.2",
-      "updated_at": "2026-10-19"
-    },
-    {
-      "id": "victory_day",
-      "title": "День Победы",
-      "aliases": [
-        "9 мая"
-      ],
-      "category": "federal",
-      "date_rule": {
-        "type": "fixed",
-        "value": "05-09",
-        "note": "Ежегодно, 9 мая"
-      },
-      "supported_age_groups": [
-        "1-4",
-        "5-8",
-        "9-11"
-      ],
-      "supported_formats": [
-        "class_hour",
-        "school_event",
-        "interactive_lesson"
-      ],
-      "educational_goals": [
-        "Сохранение исторической памяти о Великой Отечественной войне",
-        "Воспитание уважения к подвигу ветеранов",
-        "Формирование чувства гражданской ответственности"
-      ],
-      "age_appropriateness_notes": {
-        "1-4": "Бережное обращение с темой, акцент на мирной жизни, детях войны, без тяжёлых деталей",
-        "5-8": "Исторические факты, рассказы о героях, встречи с ветеранами/тружениками тыла",
-        "9-11": "Аналитическая работа с источниками, исследовательские проекты, волонтёрская деятельность"
-      },
-      "prompt_block": "events/victory_day.md",
-      "source_collection": "victory_day",
-      "source_ids": [
-        "src_victory_day_audit_01",
-        "src_victory_day_audit_02",
-        "src_victory_day_audit_03",
-        "src_victory_day_audit_04",
-        "src_victory_day_audit_05",
-        "src_victory_day_audit_06",
-        "src_victory_day_audit_07",
-        "src_victory_day_audit_08",
-        "src_victory_day_audit_09",
-        "src_victory_day_audit_10",
-        "src_victory_day_audit_11",
-        "src_victory_day_v19_01",
-        "src_victory_day_v19_02",
-        "src_victory_day_v19_03",
-        "src_victory_day_v19_04",
-        "src_victory_day_v19_05",
-        "src_victory_day_v19_06",
-        "src_victory_day_v19_07",
-        "src_victory_day_v19_08",
-        "src_victory_day_v19_09",
-        "src_victory_day_v19_10",
-        "src_victory_day_v19_11",
-        "src_victory_day_v19_12",
-        "src_victory_day_v19_13"
-      ],
-      "review": {
-        "historical_accuracy_required": true,
-        "age_appropriateness_required": true,
-        "cultural_review_required": true
-      },
-      "regional_variants": [
-        "RU-SVE"
-      ],
-      "catalog_version": "1.2",
-      "updated_at": "2026-10-19"
-    },
-    {
-      "id": "womens_day",
-      "title": "Международный женский день",
-      "aliases": [
-        "8 марта"
-      ],
-      "category": "federal",
-      "date_rule": {
-        "type": "fixed",
-        "value": "03-08",
-        "note": "Ежегодно, 8 марта"
-      },
-      "supported_age_groups": [
-        "1-4",
-        "5-8",
-        "9-11"
-      ],
-      "supported_formats": [
-        "class_hour",
-        "school_event",
-        "interactive_lesson"
-      ],
-      "educational_goals": [
-        "Воспитание уважения к женщинам",
-        "Развитие культуры благодарности — без гендерных стереотипов",
-        "Знакомство с вкладом женщин в историю и культуру"
-      ],
-      "age_appropriateness_notes": {
-        "1-4": "Тёплые поздравления близким, поделки, стихи",
-        "5-8": "Рассказы о выдающихся женщинах, творческие номера",
-        "9-11": "Дискуссия о роли женщин в обществе, истории, науке"
-      },
-      "prompt_block": "events/womens_day.md",
-      "source_collection": "womens_day",
-      "source_ids": [
-        "src_womens_day_audit_01",
-        "src_womens_day_audit_02",
-        "src_womens_day_audit_03",
-        "src_womens_day_v19_03",
-        "src_womens_day_v19_historical_doc"
-      ],
-      "review": {
-        "historical_accuracy_required": true,
-        "age_appropriateness_required": true,
-        "cultural_review_required": true
-      },
-      "regional_variants": [
-        "RU-SVE"
-      ],
-      "catalog_version": "1.2",
-      "updated_at": "2026-10-19"
+      "catalog_version": "2.5",
+      "updated_at": "2026-10-21"
     },
     {
       "id": "sverdlovsk_oblast_day",
@@ -701,16 +525,16 @@
       "updated_at": "2026-10-21"
     },
     {
-      "id": "middle_urals_peoples_day",
-      "title": "День народов Среднего Урала",
+      "id": "teachers_day",
+      "title": "День учителя",
       "aliases": [
-        "Праздник народов Среднего Урала"
+        "5 октября"
       ],
-      "category": "regional",
+      "category": "federal",
       "date_rule": {
-        "type": "variable",
-        "value": "дата требует ежегодного подтверждения",
-        "note": "В тексте регионального указа указан второй субботний день апреля; региональные публикации фиксируют проведение в другие даты в отдельные годы. Для календарного планирования ежегодно сверять официальный анонс региона."
+        "type": "fixed",
+        "value": "10-05",
+        "note": "Ежегодно, 5 октября"
       },
       "supported_age_groups": [
         "1-4",
@@ -719,24 +543,201 @@
       ],
       "supported_formats": [
         "class_hour",
-        "interactive_lesson",
-        "school_event"
+        "school_event",
+        "interactive_lesson"
       ],
       "educational_goals": [
-        "Знакомство с культурным многообразием народов Среднего Урала",
-        "Развитие уважительного межкультурного диалога",
-        "Изучение традиций, языков, ремёсел и локальной истории"
+        "Воспитание уважения к труду педагога",
+        "Развитие культуры благодарности и признательности"
       ],
       "age_appropriateness_notes": {
-        "1-4": "Использовать безопасные культурно-познавательные активности, сказки, ремёсла и музыку без стереотипизации.",
-        "5-8": "Сравнивать культурные традиции по проверенным источникам, избегать обобщений о людях по происхождению.",
-        "9-11": "Организовать исследовательские мини-проекты и обсуждение культурного наследия с уважением к различиям."
+        "1-4": "Благодарность без обязательных дорогих подарков и публичного выделения отдельных учителей.",
+        "5-8": "Не превращать поздравление в конкурс популярности; включать разнообразные формы благодарности.",
+        "9-11": "Допускается обсуждение педагогической профессии и условий труда с уважительным тоном."
       },
-      "prompt_block": "events/middle_urals_peoples_day.md",
-      "source_collection": "middle_urals_peoples_day",
+      "prompt_block": "events/teachers_day.md",
+      "source_collection": "teachers_day",
       "source_ids": [
-        "src_middle_urals_peoples_day_regional_01",
-        "src_middle_urals_peoples_day_regional_02"
+        "src_teachers_day_audit_01",
+        "src_teachers_day_audit_02",
+        "src_teachers_day_audit_03",
+        "src_teachers_day_v19_01",
+        "src_teachers_day_v19_02"
+      ],
+      "review": {
+        "historical_accuracy_required": false,
+        "age_appropriateness_required": true,
+        "cultural_review_required": true
+      },
+      "regional_variants": [
+        "RU-SVE"
+      ],
+      "catalog_version": "2.5",
+      "updated_at": "2026-10-21"
+    },
+    {
+      "id": "unity_day",
+      "title": "День народного единства",
+      "aliases": [
+        "4 ноября"
+      ],
+      "category": "federal",
+      "date_rule": {
+        "type": "fixed",
+        "value": "11-04",
+        "note": "Ежегодно, 4 ноября"
+      },
+      "supported_age_groups": [
+        "1-4",
+        "5-8",
+        "9-11"
+      ],
+      "supported_formats": [
+        "class_hour",
+        "school_event",
+        "interactive_lesson"
+      ],
+      "educational_goals": [
+        "Воспитание гражданской идентичности",
+        "Знакомство с событиями 1612 года",
+        "Развитие уважения к многонациональному народу России"
+      ],
+      "age_appropriateness_notes": {
+        "1-4": "Объяснять единство через сотрудничество; избегать противопоставления народов и религий.",
+        "5-8": "Проверять историческую хронологию; не описывать сложные события как конфликт «хороших» и «плохих» народов.",
+        "9-11": "Сопоставлять источники о событиях 1612 года, отмечая сложность исторического контекста."
+      },
+      "prompt_block": "events/unity_day.md",
+      "source_collection": "unity_day",
+      "source_ids": [
+        "src_unity_day_audit_01",
+        "src_unity_day_audit_02",
+        "src_unity_day_audit_03",
+        "src_unity_day_v19_01",
+        "src_unity_day_v19_02"
+      ],
+      "review": {
+        "historical_accuracy_required": true,
+        "age_appropriateness_required": true,
+        "cultural_review_required": true
+      },
+      "regional_variants": [
+        "RU-SVE"
+      ],
+      "catalog_version": "2.5",
+      "updated_at": "2026-10-21"
+    },
+    {
+      "id": "victory_day",
+      "title": "День Победы",
+      "aliases": [
+        "9 мая"
+      ],
+      "category": "federal",
+      "date_rule": {
+        "type": "fixed",
+        "value": "05-09",
+        "note": "Ежегодно, 9 мая"
+      },
+      "supported_age_groups": [
+        "1-4",
+        "5-8",
+        "9-11"
+      ],
+      "supported_formats": [
+        "class_hour",
+        "school_event",
+        "interactive_lesson"
+      ],
+      "educational_goals": [
+        "Сохранение исторической памяти о Великой Отечественной войне",
+        "Воспитание уважения к подвигу ветеранов",
+        "Формирование чувства гражданской ответственности"
+      ],
+      "age_appropriateness_notes": {
+        "1-4": "Бережное обращение с темой, без графических описаний насилия, оружейных демонстраций и запугивания; говорить о мире и помощи.",
+        "5-8": "Проверять биографии и даты по источникам; отделять документальные факты от легенд и избегать героизации насилия.",
+        "9-11": "Сопоставлять первичные и музейно-архивные источники; обсуждать потери корректно, не использовать неподтверждённые цифры."
+      },
+      "prompt_block": "events/victory_day.md",
+      "source_collection": "victory_day",
+      "source_ids": [
+        "src_victory_day_audit_01",
+        "src_victory_day_audit_02",
+        "src_victory_day_audit_03",
+        "src_victory_day_audit_04",
+        "src_victory_day_audit_05",
+        "src_victory_day_audit_06",
+        "src_victory_day_audit_07",
+        "src_victory_day_audit_08",
+        "src_victory_day_audit_09",
+        "src_victory_day_audit_10",
+        "src_victory_day_audit_11",
+        "src_victory_day_v19_01",
+        "src_victory_day_v19_02",
+        "src_victory_day_v19_03",
+        "src_victory_day_v19_04",
+        "src_victory_day_v19_05",
+        "src_victory_day_v19_06",
+        "src_victory_day_v19_07",
+        "src_victory_day_v19_08",
+        "src_victory_day_v19_09",
+        "src_victory_day_v19_10",
+        "src_victory_day_v19_11",
+        "src_victory_day_v19_12",
+        "src_victory_day_v19_13"
+      ],
+      "review": {
+        "historical_accuracy_required": true,
+        "age_appropriateness_required": true,
+        "cultural_review_required": true
+      },
+      "regional_variants": [
+        "RU-SVE"
+      ],
+      "catalog_version": "2.5",
+      "updated_at": "2026-10-21"
+    },
+    {
+      "id": "womens_day",
+      "title": "Международный женский день",
+      "aliases": [
+        "8 марта"
+      ],
+      "category": "federal",
+      "date_rule": {
+        "type": "fixed",
+        "value": "03-08",
+        "note": "Ежегодно, 8 марта"
+      },
+      "supported_age_groups": [
+        "1-4",
+        "5-8",
+        "9-11"
+      ],
+      "supported_formats": [
+        "class_hour",
+        "school_event",
+        "interactive_lesson"
+      ],
+      "educational_goals": [
+        "Воспитание уважения к женщинам",
+        "Развитие культуры благодарности — без гендерных стереотипов",
+        "Знакомство с вкладом женщин в историю и культуру"
+      ],
+      "age_appropriateness_notes": {
+        "1-4": "Не сводить праздник к внешности и домашним обязанностям; подчеркнуть уважение и достижения.",
+        "5-8": "Не закреплять стереотипы «женских» и «мужских» профессий; говорить о равных возможностях.",
+        "9-11": "Опираясь на источники, обсуждать исторический контекст и гендерное равенство без уничижительных обобщений."
+      },
+      "prompt_block": "events/womens_day.md",
+      "source_collection": "womens_day",
+      "source_ids": [
+        "src_womens_day_audit_01",
+        "src_womens_day_audit_02",
+        "src_womens_day_audit_03",
+        "src_womens_day_v19_03",
+        "src_womens_day_v19_historical_doc"
       ],
       "review": {
         "historical_accuracy_required": true,
@@ -845,10 +846,11 @@
           "url_access_checked_in_this_revision": true
         }
       ],
-      "source_count": 5,
+      "required_minimum": 3,
       "verified_count": 2,
       "status": "incomplete",
-      "note": "Строгий подсчёт v1.9: учитываются только источники с подтверждённой релевантностью и успешным прямым открытием URL; один издатель считается один раз."
+      "note": "Строгий подсчёт v1.9: учитываются только источники с подтверждённой релевантностью и успешным прямым открытием URL; один издатель считается один раз.",
+      "audit_note": "Источники с поисковым сниппетом без успешного прямого открытия, недоступные URL, дубли и записи, не подтверждающие конкретный тезис, не засчитываются."
     },
     {
       "event_id": "defender_day",
@@ -944,10 +946,11 @@
           "url_access_checked_in_this_revision": false
         }
       ],
-      "source_count": 5,
+      "required_minimum": 3,
       "verified_count": 2,
       "status": "incomplete",
-      "note": "Строгий подсчёт v1.9: учитываются только источники с подтверждённой релевантностью и успешным прямым открытием URL; один издатель считается один раз."
+      "note": "Строгий подсчёт v1.9: учитываются только источники с подтверждённой релевантностью и успешным прямым открытием URL; один издатель считается один раз.",
+      "audit_note": "Источники с поисковым сниппетом без успешного прямого открытия, недоступные URL, дубли и записи, не подтверждающие конкретный тезис, не засчитываются."
     },
     {
       "event_id": "graduation",
@@ -1043,10 +1046,11 @@
           "url_access_checked_in_this_revision": false
         }
       ],
-      "source_count": 5,
+      "required_minimum": 3,
       "verified_count": 0,
       "status": "incomplete",
-      "note": "Строгий подсчёт v1.9: учитываются только источники с подтверждённой релевантностью и успешным прямым открытием URL; один издатель считается один раз."
+      "note": "Строгий подсчёт v1.9: учитываются только источники с подтверждённой релевантностью и успешным прямым открытием URL; один издатель считается один раз.",
+      "audit_note": "Источники с поисковым сниппетом без успешного прямого открытия, недоступные URL, дубли и записи, не подтверждающие конкретный тезис, не засчитываются."
     },
     {
       "event_id": "knowledge_day",
@@ -1142,10 +1146,11 @@
           "url_access_checked_in_this_revision": false
         }
       ],
-      "source_count": 5,
+      "required_minimum": 3,
       "verified_count": 1,
       "status": "incomplete",
-      "note": "Строгий подсчёт v1.9: учитываются только источники с подтверждённой релевантностью и успешным прямым открытием URL; один издатель считается один раз."
+      "note": "Строгий подсчёт v1.9: учитываются только источники с подтверждённой релевантностью и успешным прямым открытием URL; один издатель считается один раз.",
+      "audit_note": "Источники с поисковым сниппетом без успешного прямого открытия, недоступные URL, дубли и записи, не подтверждающие конкретный тезис, не засчитываются."
     },
     {
       "event_id": "labour_day",
@@ -1241,10 +1246,11 @@
           "url_access_checked_in_this_revision": true
         }
       ],
-      "source_count": 5,
+      "required_minimum": 3,
       "verified_count": 3,
       "status": "verified_minimum_met",
-      "note": "Строгий подсчёт v1.9: учитываются только источники с подтверждённой релевантностью и успешным прямым открытием URL; один издатель считается один раз."
+      "note": "Строгий подсчёт v1.9: учитываются только источники с подтверждённой релевантностью и успешным прямым открытием URL; один издатель считается один раз.",
+      "audit_note": "Источники с поисковым сниппетом без успешного прямого открытия, недоступные URL, дубли и записи, не подтверждающие конкретный тезис, не засчитываются."
     },
     {
       "event_id": "last_bell",
@@ -1340,10 +1346,56 @@
           "url_access_checked_in_this_revision": false
         }
       ],
-      "source_count": 5,
+      "required_minimum": 3,
       "verified_count": 0,
       "status": "incomplete",
-      "note": "Строгий подсчёт v1.9: учитываются только источники с подтверждённой релевантностью и успешным прямым открытием URL; один издатель считается один раз."
+      "note": "Строгий подсчёт v1.9: учитываются только источники с подтверждённой релевантностью и успешным прямым открытием URL; один издатель считается один раз.",
+      "audit_note": "Источники с поисковым сниппетом без успешного прямого открытия, недоступные URL, дубли и записи, не подтверждающие конкретный тезис, не засчитываются."
+    },
+    {
+      "event_id": "middle_urals_peoples_day",
+      "sources": [
+        {
+          "source_id": "src_middle_urals_peoples_day_regional_01",
+          "title": "Указ Губернатора Свердловской области от 23.09.2008 № 1022-УГ «О праздниках Свердловской области»",
+          "publisher": "Текст нормативного акта на правовом справочном ресурсе",
+          "url": "https://base.garant.ru/20926350/",
+          "retrieved_at": "2026-10-21",
+          "verification_status": "candidate_date_conflict_review",
+          "topics": [
+            "middle_urals_peoples_day"
+          ],
+          "regions": [
+            "RU-SVE"
+          ],
+          "text_excerpt": "В тексте указа праздник указан как региональный; приведено правило «вторая суббота апреля».",
+          "note": "Дата расходится с сообщениями о проведении праздника в другие дни/месяцы. Не использовать для автоматической генерации даты без проверки актуального официального анонса.",
+          "content_relevance_checked": true,
+          "url_access_checked_in_this_revision": false
+        },
+        {
+          "source_id": "src_middle_urals_peoples_day_regional_02",
+          "title": "Жители Свердловской области отмечены наградами губернатора в День народов Среднего Урала за укрепление межнациональных отношений",
+          "publisher": "Министерство социальной политики Свердловской области",
+          "url": "https://msp.midural.ru/news/jiteli-sverdlovskoy-oblasti-otmecheny-nagradami-gubernatora-v-den-narodov-srednego-urala-za-ukreplenie-mejnacionalnyh-otnosheniy-137767/",
+          "retrieved_at": "2026-10-21",
+          "verification_status": "verified_event_occurrence_date_conflict",
+          "topics": [
+            "middle_urals_peoples_day"
+          ],
+          "regions": [
+            "RU-SVE"
+          ],
+          "text_excerpt": "Официальная региональная публикация описывает мероприятие 1 сентября 2024 года и подтверждает региональный характер праздника.",
+          "note": "Подтверждает проведение в конкретном году, но не отменяет необходимости проверить действующую нормативную дату и календарь текущего года.",
+          "content_relevance_checked": true,
+          "url_access_checked_in_this_revision": true
+        }
+      ],
+      "required_minimum": 3,
+      "verified_count": 0,
+      "status": "incomplete",
+      "note": "Региональная карточка-кандидат; источники записаны, но минимум независимых подтверждений и/или точная дата требуют дополнительной проверки."
     },
     {
       "event_id": "mothers_day",
@@ -1457,10 +1509,11 @@
           "url_access_checked_in_this_revision": false
         }
       ],
-      "source_count": 6,
+      "required_minimum": 3,
       "verified_count": 0,
       "status": "incomplete",
-      "note": "Строгий подсчёт v1.9: учитываются только источники с подтверждённой релевантностью и успешным прямым открытием URL; один издатель считается один раз."
+      "note": "Строгий подсчёт v1.9: учитываются только источники с подтверждённой релевантностью и успешным прямым открытием URL; один издатель считается один раз.",
+      "audit_note": "Источники с поисковым сниппетом без успешного прямого открытия, недоступные URL, дубли и записи, не подтверждающие конкретный тезис, не засчитываются."
     },
     {
       "event_id": "new_year",
@@ -1574,10 +1627,56 @@
           "url_access_checked_in_this_revision": false
         }
       ],
-      "source_count": 6,
-      "verified_count": 1,
+      "required_minimum": 3,
+      "verified_count": 2,
       "status": "incomplete",
-      "note": "Строгий подсчёт v1.9: учитываются только источники с подтверждённой релевантностью и успешным прямым открытием URL; один издатель считается один раз."
+      "note": "Строгий подсчёт v1.9: учитываются только источники с подтверждённой релевантностью и успешным прямым открытием URL; один издатель считается один раз.",
+      "audit_note": "Источники с поисковым сниппетом без успешного прямого открытия, недоступные URL, дубли и записи, не подтверждающие конкретный тезис, не засчитываются."
+    },
+    {
+      "event_id": "sverdlovsk_oblast_day",
+      "sources": [
+        {
+          "source_id": "src_sverdlovsk_oblast_day_regional_01",
+          "title": "Указ Губернатора Свердловской области от 23.09.2008 № 1022-УГ «О праздниках Свердловской области»",
+          "publisher": "Текст нормативного акта на правовом справочном ресурсе",
+          "url": "https://base.garant.ru/20926350/",
+          "retrieved_at": "2026-10-21",
+          "verification_status": "candidate_needs_direct_legal_check",
+          "topics": [
+            "sverdlovsk_oblast_day"
+          ],
+          "regions": [
+            "RU-SVE"
+          ],
+          "text_excerpt": "В опубликованном тексте указа перечислен День образования Свердловской области — 17 января.",
+          "note": "Вторичный правовой ресурс; перед окончательной приёмкой проверить действующую редакцию на официальном портале правовой информации.",
+          "content_relevance_checked": true,
+          "url_access_checked_in_this_revision": false
+        },
+        {
+          "source_id": "src_sverdlovsk_oblast_day_regional_02",
+          "title": "Официальные новости Министерства социальной политики Свердловской области: материалы к годовщине образования области",
+          "publisher": "Министерство социальной политики Свердловской области",
+          "url": "https://msp.midural.ru/news/?page=all",
+          "retrieved_at": "2026-10-21",
+          "verification_status": "candidate_needs_article_level_check",
+          "topics": [
+            "sverdlovsk_oblast_day"
+          ],
+          "regions": [
+            "RU-SVE"
+          ],
+          "text_excerpt": "В архиве регионального ведомства присутствуют публикации о годовщине образования Свердловской области, включая сообщение от 17 января 2019 года.",
+          "note": "Архивная страница не заменяет отдельную публикацию; требуется открыть и зафиксировать точный материал.",
+          "content_relevance_checked": false,
+          "url_access_checked_in_this_revision": true
+        }
+      ],
+      "required_minimum": 3,
+      "verified_count": 0,
+      "status": "incomplete",
+      "note": "Региональная карточка-кандидат; источники записаны, но минимум независимых подтверждений и/или точная дата требуют дополнительной проверки."
     },
     {
       "event_id": "teachers_day",
@@ -1673,10 +1772,11 @@
           "url_access_checked_in_this_revision": true
         }
       ],
-      "source_count": 5,
+      "required_minimum": 3,
       "verified_count": 2,
       "status": "incomplete",
-      "note": "Строгий подсчёт v1.9: учитываются только источники с подтверждённой релевантностью и успешным прямым открытием URL; один издатель считается один раз."
+      "note": "Строгий подсчёт v1.9: учитываются только источники с подтверждённой релевантностью и успешным прямым открытием URL; один издатель считается один раз.",
+      "audit_note": "Источники с поисковым сниппетом без успешного прямого открытия, недоступные URL, дубли и записи, не подтверждающие конкретный тезис, не засчитываются."
     },
     {
       "event_id": "unity_day",
@@ -1772,10 +1872,11 @@
           "url_access_checked_in_this_revision": true
         }
       ],
-      "source_count": 5,
-      "verified_count": 2,
-      "status": "incomplete",
-      "note": "Строгий подсчёт v1.9: учитываются только источники с подтверждённой релевантностью и успешным прямым открытием URL; один издатель считается один раз."
+      "required_minimum": 3,
+      "verified_count": 3,
+      "status": "verified_minimum_met",
+      "note": "Строгий подсчёт v1.9: учитываются только источники с подтверждённой релевантностью и успешным прямым открытием URL; один издатель считается один раз.",
+      "audit_note": "Источники с поисковым сниппетом без успешного прямого открытия, недоступные URL, дубли и записи, не подтверждающие конкретный тезис, не засчитываются."
     },
     {
       "event_id": "victory_day",
@@ -2213,10 +2314,11 @@
           "url_access_checked_in_this_revision": false
         }
       ],
-      "source_count": 24,
+      "required_minimum": 10,
       "verified_count": 7,
       "status": "incomplete",
-      "note": "Строгий подсчёт v1.9: учитываются только источники с подтверждённой релевантностью и успешным прямым открытием URL; один издатель считается один раз."
+      "note": "Строгий подсчёт v1.9: учитываются только источники с подтверждённой релевантностью и успешным прямым открытием URL; один издатель считается один раз.",
+      "audit_note": "Источники с поисковым сниппетом без успешного прямого открытия, недоступные URL, дубли и записи, не подтверждающие конкретный тезис, не засчитываются."
     },
     {
       "event_id": "womens_day",
@@ -2312,100 +2414,11 @@
           "url_access_checked_in_this_revision": true
         }
       ],
-      "source_count": 5,
+      "required_minimum": 3,
       "verified_count": 2,
       "status": "incomplete",
-      "note": "Строгий подсчёт v1.9: учитываются только источники с подтверждённой релевантностью и успешным прямым открытием URL; один издатель считается один раз."
-    },
-    {
-      "event_id": "sverdlovsk_oblast_day",
-      "sources": [
-        {
-          "source_id": "src_sverdlovsk_oblast_day_regional_01",
-          "title": "Указ Губернатора Свердловской области от 23.09.2008 № 1022-УГ «О праздниках Свердловской области»",
-          "publisher": "Текст нормативного акта на правовом справочном ресурсе",
-          "url": "https://base.garant.ru/20926350/",
-          "retrieved_at": "2026-10-21",
-          "verification_status": "candidate_needs_direct_legal_check",
-          "topics": [
-            "sverdlovsk_oblast_day"
-          ],
-          "regions": [
-            "RU-SVE"
-          ],
-          "text_excerpt": "В опубликованном тексте указа перечислен День образования Свердловской области — 17 января.",
-          "note": "Вторичный правовой ресурс; перед окончательной приёмкой проверить действующую редакцию на официальном портале правовой информации.",
-          "content_relevance_checked": true,
-          "url_access_checked_in_this_revision": false
-        },
-        {
-          "source_id": "src_sverdlovsk_oblast_day_regional_02",
-          "title": "Официальные новости Министерства социальной политики Свердловской области: материалы к годовщине образования области",
-          "publisher": "Министерство социальной политики Свердловской области",
-          "url": "https://msp.midural.ru/news/?page=all",
-          "retrieved_at": "2026-10-21",
-          "verification_status": "candidate_needs_article_level_check",
-          "topics": [
-            "sverdlovsk_oblast_day"
-          ],
-          "regions": [
-            "RU-SVE"
-          ],
-          "text_excerpt": "В архиве регионального ведомства присутствуют публикации о годовщине образования Свердловской области, включая сообщение от 17 января 2019 года.",
-          "note": "Архивная страница не заменяет отдельную публикацию; требуется открыть и зафиксировать точный материал.",
-          "content_relevance_checked": false,
-          "url_access_checked_in_this_revision": true
-        }
-      ],
-      "source_count": 2,
-      "verified_count": 0,
-      "status": "incomplete",
-      "note": "Региональная карточка-кандидат; источники записаны, но минимум независимых подтверждений и/или точная дата требуют дополнительной проверки."
-    },
-    {
-      "event_id": "middle_urals_peoples_day",
-      "sources": [
-        {
-          "source_id": "src_middle_urals_peoples_day_regional_01",
-          "title": "Указ Губернатора Свердловской области от 23.09.2008 № 1022-УГ «О праздниках Свердловской области»",
-          "publisher": "Текст нормативного акта на правовом справочном ресурсе",
-          "url": "https://base.garant.ru/20926350/",
-          "retrieved_at": "2026-10-21",
-          "verification_status": "candidate_date_conflict_review",
-          "topics": [
-            "middle_urals_peoples_day"
-          ],
-          "regions": [
-            "RU-SVE"
-          ],
-          "text_excerpt": "В тексте указа праздник указан как региональный; приведено правило «вторая суббота апреля».",
-          "note": "Дата расходится с сообщениями о проведении праздника в другие дни/месяцы. Не использовать для автоматической генерации даты без проверки актуального официального анонса.",
-          "content_relevance_checked": true,
-          "url_access_checked_in_this_revision": false
-        },
-        {
-          "source_id": "src_middle_urals_peoples_day_regional_02",
-          "title": "Жители Свердловской области отмечены наградами губернатора в День народов Среднего Урала за укрепление межнациональных отношений",
-          "publisher": "Министерство социальной политики Свердловской области",
-          "url": "https://msp.midural.ru/news/jiteli-sverdlovskoy-oblasti-otmecheny-nagradami-gubernatora-v-den-narodov-srednego-urala-za-ukreplenie-mejnacionalnyh-otnosheniy-137767/",
-          "retrieved_at": "2026-10-21",
-          "verification_status": "verified_event_occurrence_date_conflict",
-          "topics": [
-            "middle_urals_peoples_day"
-          ],
-          "regions": [
-            "RU-SVE"
-          ],
-          "text_excerpt": "Официальная региональная публикация описывает мероприятие 1 сентября 2024 года и подтверждает региональный характер праздника.",
-          "note": "Подтверждает проведение в конкретном году, но не отменяет необходимости проверить действующую нормативную дату и календарь текущего года.",
-          "content_relevance_checked": true,
-          "url_access_checked_in_this_revision": true
-        }
-      ],
-      "source_count": 2,
-      "verified_count": 0,
-      "status": "incomplete",
-      "note": "Региональная карточка-кандидат; источники записаны, но минимум независимых подтверждений и/или точная дата требуют дополнительной проверки."
+      "note": "Строгий подсчёт v1.9: учитываются только источники с подтверждённой релевантностью и успешным прямым открытием URL; один издатель считается один раз.",
+      "audit_note": "Источники с поисковым сниппетом без успешного прямого открытия, недоступные URL, дубли и записи, не подтверждающие конкретный тезис, не засчитываются."
     }
   ],
   "source_quality_note": "source_count counts source records, not independent verified publishers; see acceptance report and source audits."
