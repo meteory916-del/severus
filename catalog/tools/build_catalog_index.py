@@ -212,7 +212,7 @@ def build(cards: dict, sources: dict) -> dict[Path, str]:
         writer.writerow([
             eid, c["title"], c["category"], c["date_rule"]["type"], c["date_rule"]["value"], c["date_rule"]["note"],
             "|".join(c["supported_age_groups"]), "|".join(c["supported_formats"]), len(c["educational_goals"]),
-            " | ".join(c["educational_goals"]), "|".join(c["values"]), "|".join(c["regional_topics"]), len(c["facts_to_verify"]),
+            " | ".join(c["educational_goals"]), "|".join(c.get("values", [])), "|".join(c.get("regional_topics", [])), len(c.get("facts_to_verify", [])),
             str(review.get("historical_accuracy_required", False)).lower(), str(review.get("age_appropriateness_required", False)).lower(),
             str(review.get("cultural_review_required", False)).lower(), c["source_collection"], "|".join(c["source_ids"]),
             st["source_count"], "|".join(c["regional_variants"]), c["catalog_version"], c["updated_at"], st["verified_source_count"],
