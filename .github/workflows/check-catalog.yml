@@ -5,7 +5,7 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-  workflow_dispatch:  # позволяет запускать вручную
+  workflow_dispatch:
 
 jobs:
   check-catalog:
@@ -13,12 +13,20 @@ jobs:
     
     steps:
     - uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
     
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.10'
     
-    - name: Run catalog check
- run: python catalog/tools/build_catalog_index.py
-     
+    - name: Run catalog check and rebuild
+      run: python catalog/tools/build_catalog_index.py
+    
+    - name: Commit changes if any
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git add -A
+        git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update catalog files" && git push)
