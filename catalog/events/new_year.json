@@ -5,7 +5,7 @@
     "Новогодний праздник",
     "Зимние каникулы"
   ],
-  "category": "calendar",
+  "category": "federal",
   "date_rule": {
     "type": "fixed",
     "value": "12-31",
