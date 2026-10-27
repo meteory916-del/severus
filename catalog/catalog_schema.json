@@ -11,7 +11,6 @@
     "supported_age_groups",
     "supported_formats",
     "educational_goals",
-    "values",
     "age_appropriateness_notes",
     "source_collection",
     "source_ids",
@@ -19,9 +18,7 @@
     "regional_variants",
     "catalog_version",
     "updated_at",
-    "regional_topics",
-    "facts_to_verify"
-  ],
+    ],
   "properties": {
     "id": {
       "type": "string",
