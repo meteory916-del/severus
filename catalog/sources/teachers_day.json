@@ -90,11 +90,114 @@
       "note": "Прямое открытие URL и релевантность проверены в веб-аудите v1.9.",
       "content_relevance_checked": true,
       "url_access_checked_in_this_revision": true
+    },
+    {
+      "source_id": "src_teachers_day_001",
+      "title": "О проведении Дня учителя в образовательных организациях Свердловской области",
+      "publisher": "Министерство образования и молодёжной политики Свердловской области",
+      "url": "https://minobr.egov66.ru/.../teachers_day",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "pending",
+      "topics": [
+        "teachers_day"
+      ],
+      "regions": [
+        "RU-SVE"
+      ],
+      "text_excerpt": "Рекомендуется проводить мероприятия в формате классных часов и общешкольных праздников с участием учеников, педагогов и родителей.",
+      "note": "Источник приведён в исходном материале; URL содержит многоточие и требует замены на точный адрес. Статус изменён при сборке: URL неполный или отсутствует, независимая проверка невозможна. Перенесено из regions/RU-SVE/verified_sources.json в v2.6."
     }
   ],
   "required_minimum": 3,
   "verified_count": 2,
   "status": "incomplete",
   "note": "Строгий подсчёт v1.9: учитываются только источники с подтверждённой релевантностью и успешным прямым открытием URL; один издатель считается один раз.",
-  "audit_note": "Источники с поисковым сниппетом без успешного прямого открытия, недоступные URL, дубли и записи, не подтверждающие конкретный тезис, не засчитываются."
+  "audit_note": "Источники с поисковым сниппетом без успешного прямого открытия, недоступные URL, дубли и записи, не подтверждающие конкретный тезис, не засчитываются.",
+  "fragments": [
+    {
+      "fragment_id": "frag_teachers_day_001",
+      "source_id": "src_teachers_day_v19_01",
+      "quote": "Всемирный день учителя ежегодно отмечается 5 октября.",
+      "events": [
+        "teachers_day"
+      ],
+      "topics": [],
+      "regions": [
+        "RU-SVE"
+      ],
+      "verification_status": "draft",
+      "collected_by": "claude-auto",
+      "verified_by": null,
+      "retrieved_at": "2026-10-26",
+      "note": "Черновик: цитата выписана автоматически (не длиннее 125 знаков). Сверить дословно со страницей, при необходимости расширить до абзаца, затем указать verified_by (другой человек) и статус verified."
+    },
+    {
+      "fragment_id": "frag_teachers_day_002",
+      "source_id": "src_teachers_day_v19_01",
+      "quote": "Он празднуется в годовщину принятия Рекомендации МОТ/ЮНЕСКО от 1966 года о положении учителей",
+      "events": [
+        "teachers_day"
+      ],
+      "topics": [],
+      "regions": [
+        "RU-SVE"
+      ],
+      "verification_status": "draft",
+      "collected_by": "claude-auto",
+      "verified_by": null,
+      "retrieved_at": "2026-10-26",
+      "note": "Черновик: цитата выписана автоматически (не длиннее 125 знаков). Сверить дословно со страницей, при необходимости расширить до абзаца, затем указать verified_by (другой человек) и статус verified."
+    },
+    {
+      "fragment_id": "frag_teachers_day_003",
+      "source_id": "src_teachers_day_v19_02",
+      "quote": "5 октября отмечается День учителя.",
+      "events": [
+        "teachers_day"
+      ],
+      "topics": [],
+      "regions": [
+        "RU-SVE"
+      ],
+      "verification_status": "draft",
+      "collected_by": "claude-auto",
+      "verified_by": null,
+      "retrieved_at": "2026-10-26",
+      "note": "Черновик: цитата выписана автоматически (не длиннее 125 знаков). Сверить дословно со страницей, при необходимости расширить до абзаца, затем указать verified_by (другой человек) и статус verified."
+    },
+    {
+      "fragment_id": "frag_teachers_day_004",
+      "source_id": "src_teachers_day_v19_02",
+      "quote": "В Советском Союзе День учителя праздновали с 1965 года, тогда он приходился на первое воскресенье октября.",
+      "events": [
+        "teachers_day"
+      ],
+      "topics": [],
+      "regions": [
+        "RU-SVE"
+      ],
+      "verification_status": "draft",
+      "collected_by": "claude-auto",
+      "verified_by": null,
+      "retrieved_at": "2026-10-26",
+      "note": "Черновик: цитата выписана автоматически (не длиннее 125 знаков). Сверить дословно со страницей, при необходимости расширить до абзаца, затем указать verified_by (другой человек) и статус verified."
+    },
+    {
+      "fragment_id": "frag_teachers_day_005",
+      "source_id": "src_teachers_day_v19_02",
+      "quote": "В 1994 году ЮНЕСКО объявило Международный день учителя 5 октября",
+      "events": [
+        "teachers_day"
+      ],
+      "topics": [],
+      "regions": [
+        "RU-SVE"
+      ],
+      "verification_status": "draft",
+      "collected_by": "claude-auto",
+      "verified_by": null,
+      "retrieved_at": "2026-10-26",
+      "note": "Черновик: цитата выписана автоматически (не длиннее 125 знаков). Сверить дословно со страницей, при необходимости расширить до абзаца, затем указать verified_by (другой человек) и статус verified."
+    }
+  ]
 }

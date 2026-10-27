@@ -404,13 +404,21 @@ def build_client(settings, model_key: str | None = None) -> LLMClient:
 
     models = settings.models()
     key = settings.active_model_key(model_key)
-    cfg = models.get("models", {}).get(key)
-    if not cfg:
+    raw_cfg = models.get("models", {}).get(key)
+    if not raw_cfg:
         raise LLMError("MODEL_UNAVAILABLE", f"Модель {key} не описана в config/models.json")
+    cfg = dict(raw_cfg)
     if not cfg.get("enabled", False):
         raise LLMError("MODEL_UNAVAILABLE", f"Модель {key} выключена (enabled=false) в config/models.json")
+    if cfg.get("base_url_env"):
+        base_url = settings.get(cfg["base_url_env"], cfg.get("base_url"))
+        if not base_url:
+            raise LLMError("MODEL_UNAVAILABLE", f"Не задан {cfg.get('base_url_env')}")
+        cfg["base_url"] = base_url
     api_key = settings.get(cfg["api_key_env"]) if cfg.get("api_key_env") else None
     provider = cfg.get("provider")
+    if cfg.get("api_key_env") and not api_key and not bool(cfg.get("local", False)):
+        raise LLMError("MODEL_AUTH_ERROR", f"Не задан {cfg.get('api_key_env')}")
     if provider in ("openai_compatible", "openai"):
         if provider == "openai" and not api_key:
             raise LLMError("MODEL_AUTH_ERROR", f"Не задан {cfg.get('api_key_env')}")

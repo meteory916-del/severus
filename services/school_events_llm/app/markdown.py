@@ -5,6 +5,35 @@ from __future__ import annotations
 from typing import Any
 
 FORMAT = {"class_hour": "классный час", "school_event": "общешкольное мероприятие", "interactive_lesson": "интерактивное занятие"}
+QUALITY_STATUS = {"passed": "замечаний нет", "warning": "есть замечания", "failed": "есть критические ошибки"}
+SEVERITY = {"critical": "Критично", "warning": "Замечание", "info": "Справка"}
+
+
+def issue_place(v: dict[str, Any], location: str) -> str:
+    """Переводит место проблемы (`timeline.block_02`, `materials.card_task`, `roles.parent_helpers`) в понятное название.
+
+    Параметры:
+        v: вариант; location: поле `location` проблемы.
+
+    Возвращает:
+        Например «блок «Встреча и цель» (0-5 мин)»; пустую строку, если место не относится к блоку, материалу или роли.
+    """
+    kind, _, key = location.partition(".")
+    key = key.split(".")[0]
+    if kind == "timeline":
+        for b in v.get("timeline", []):
+            if b["block_id"] == key:
+                end = b["start_minute"] + b["duration_minutes"]
+                return f"блок «{b['title']}» ({b['start_minute']}-{end} мин)"
+    if kind == "materials":
+        for m in v.get("materials", []):
+            if m["material_id"] == key:
+                return f"материал «{m['title']}»"
+    if kind == "roles":
+        for r in v.get("roles", []):
+            if r["role_id"] == key:
+                return f"роль «{r['title']}»"
+    return ""
 
 
 def variant_to_markdown(v: dict[str, Any], inp: dict[str, Any] | None = None, event_title: str | None = None) -> str:
@@ -55,5 +84,9 @@ def variant_to_markdown(v: dict[str, Any], inp: dict[str, Any] | None = None, ev
         out += ["", "## Источники"] + [f"- {s['title']} - {s['publisher']} ({s['url']})" for s in v["sources"]]
     qr = v.get("quality_report")
     if qr:
-        out += ["", f"## Проверка качества: {qr['status']}"] + [f"- {i['severity']}: {i['message']}" for i in qr.get("issues", [])]
+        status = QUALITY_STATUS.get(qr["status"], qr["status"])
+        out += ["", f"## Проверка качества: {status}"]
+        for i in qr.get("issues", []):
+            where = issue_place(v, i.get("location", ""))
+            out.append(f"- {SEVERITY.get(i['severity'], i['severity'])}{' · ' + where if where else ''}: {i['message']} (`{i['code']}`)")
     return "\n".join(out) + "\n"

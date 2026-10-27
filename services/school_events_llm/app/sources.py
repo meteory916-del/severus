@@ -1,7 +1,8 @@
 """Проверка кураторского корпуса культурно-исторических источников.
 
-Команда не обращается в интернет. Она проверяет только локальные JSON-файлы корпуса,
-их структуру, уникальность идентификаторов, статусы и покрытие каталога.
+Команда не обращается в интернет. Она проверяет файлы источников общего каталога
+`catalog/sources/<event_id>.json` (поля `sources` и `fragments`): структуру, уникальность
+идентификаторов, статусы и покрытие каталога проверенными фрагментами.
 """
 
 from __future__ import annotations
@@ -46,7 +47,7 @@ def _known_topics(events: dict[str, dict[str, Any]]) -> set[str]:
 
 
 def check_sources(settings: Settings) -> dict[str, Any]:
-    """Проверяет все ``verified_sources.json`` и рассчитывает покрытие каталога.
+    """Проверяет все файлы ``catalog/sources/*.json`` и рассчитывает покрытие каталога.
 
     Параметры:
         settings: Настройки сервиса с корнем проекта.
@@ -64,9 +65,9 @@ def check_sources(settings: Settings) -> dict[str, Any]:
         - ссылки только на существующие события и известные темы;
         - у каждого фрагмента указан source_id из списка источников корпуса.
     """
-    root = settings.root
+    catalog_dir = settings.catalog_dir
     events: dict[str, dict[str, Any]] = {}
-    for path in sorted((root / "catalog" / "events").glob("*.json")):
+    for path in sorted((catalog_dir / "events").glob("*.json")):
         event = read_json(path)
         events[event["id"]] = event
     known_topics = _known_topics(events)
@@ -82,9 +83,9 @@ def check_sources(settings: Settings) -> dict[str, Any]:
     verified_fragments = 0
     allowed_statuses = {"draft", "pending", "verified", "rejected", "expired"}
 
-    corpora = sorted((root / "catalog" / "regions").glob("*/verified_sources.json"))
+    corpora = sorted((catalog_dir / "sources").glob("*.json"))
     for corpus in corpora:
-        rel = str(corpus.relative_to(root)).replace("\\", "/")
+        rel = "catalog/sources/" + corpus.name
         data = read_json(corpus)
         sources = data.get("sources", [])
         fragments = data.get("fragments", [])
@@ -150,7 +151,7 @@ def check_sources(settings: Settings) -> dict[str, Any]:
     for duplicated in sorted(key for key, count in Counter(fragment_ids).items() if count > 1):
         issues.append(SourceCheckIssue("FRAGMENT-DUPLICATE", "error", "*", "fragments", f"Повторяется fragment_id: {duplicated}"))
 
-    historical_events = {"victory_day", "defender_day", "unity_day", "christmas", "ural_culture"}
+    historical_events = {"victory_day", "defender_day", "unity_day", "christmas"}
     coverage_events: dict[str, dict[str, int | bool]] = {}
     for event_id, event in sorted(events.items()):
         required = 3 if event_id in historical_events or event.get("category") in {"regional", "cultural"} else 1

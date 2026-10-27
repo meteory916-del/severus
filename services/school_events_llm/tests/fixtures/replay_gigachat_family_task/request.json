@@ -1,0 +1,21 @@
+{
+  "event_id": "mothers_day",
+  "region_id": "RU-SVE",
+  "grade": 2,
+  "pupils_count": 20,
+  "duration_minutes": 30,
+  "format": "interactive_lesson",
+  "resources": {
+    "projector": false,
+    "printer": true,
+    "room": "classroom",
+    "available_materials": [
+      "paper",
+      "colored_pencils"
+    ]
+  },
+  "generation": {
+    "variants_count": 1,
+    "language": "ru"
+  }
+}

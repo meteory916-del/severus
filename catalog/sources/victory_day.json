@@ -432,11 +432,238 @@
       "note": "Поисковый индекс даёт релевантный фрагмент, но прямое открытие URL в текущем аудите не удалось либо источник не подтверждает основной тезис; не засчитывать в строгий минимум до повторной проверки.",
       "content_relevance_checked": false,
       "url_access_checked_in_this_revision": false
+    },
+    {
+      "source_id": "src_victory_day_001",
+      "title": "Методические рекомендации по проведению уроков мужества, посвящённых Дню Победы",
+      "publisher": "Министерство просвещения Российской Федерации",
+      "url": "https://edu.gov.ru/.../victory_day_methodology",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "pending",
+      "topics": [
+        "victory_day",
+        "age_appropriateness"
+      ],
+      "regions": [
+        "RU"
+      ],
+      "text_excerpt": "Для обучающихся 1–4 классов рекомендуется акцент на мирной жизни, детях войны, подвигах тружеников тыла без демонстрации тяжёлых сцен.",
+      "note": "Источник приведён в исходном материале; URL содержит многоточие и требует замены на точный адрес. Статус изменён при сборке: URL неполный или отсутствует, независимая проверка невозможна. Перенесено из regions/RU-SVE/verified_sources.json в v2.6."
+    },
+    {
+      "source_id": "src_victory_day_002",
+      "title": "Свердловская область в годы Великой Отечественной войны: хроника",
+      "publisher": "Свердловский областной краеведческий музей им. О.Е. Клера",
+      "url": "https://kraevied.ekburg.ru/.../sve_wwii",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "pending",
+      "topics": [
+        "victory_day",
+        "regional_history"
+      ],
+      "regions": [
+        "RU-SVE"
+      ],
+      "text_excerpt": "Свердловская область в 1941–1945 гг. приняла более 600 эвакуированных предприятий; на фронт ушло более 1,2 млн жителей области.",
+      "note": "Источник приведён в исходном материале; URL содержит многоточие и требует замены на точный адрес. Статус изменён при сборке: URL неполный или отсутствует, независимая проверка невозможна. Перенесено из regions/RU-SVE/verified_sources.json в v2.6."
     }
   ],
   "required_minimum": 10,
   "verified_count": 7,
   "status": "incomplete",
   "note": "Строгий подсчёт v1.9: учитываются только источники с подтверждённой релевантностью и успешным прямым открытием URL; один издатель считается один раз.",
-  "audit_note": "Источники с поисковым сниппетом без успешного прямого открытия, недоступные URL, дубли и записи, не подтверждающие конкретный тезис, не засчитываются."
+  "audit_note": "Источники с поисковым сниппетом без успешного прямого открытия, недоступные URL, дубли и записи, не подтверждающие конкретный тезис, не засчитываются.",
+  "fragments": [
+    {
+      "fragment_id": "frag_victory_day_001",
+      "source_id": "src_victory_day_audit_01",
+      "quote": "День 9 Мая является всенародным праздником - Днем Победы.",
+      "events": [
+        "victory_day"
+      ],
+      "topics": [],
+      "regions": [
+        "RU-SVE"
+      ],
+      "verification_status": "draft",
+      "collected_by": "claude-auto",
+      "verified_by": null,
+      "retrieved_at": "2026-10-26",
+      "note": "Черновик: цитата выписана автоматически (не длиннее 125 знаков). Сверить дословно со страницей, при необходимости расширить до абзаца, затем указать verified_by (другой человек) и статус verified. Федеральный закон от 19.05.1995 N 80-ФЗ, статья 1."
+    },
+    {
+      "fragment_id": "frag_victory_day_002",
+      "source_id": "src_victory_day_audit_01",
+      "quote": "День Победы - нерабочий день и ежегодно отмечается военным парадом и артиллерийским салютом.",
+      "events": [
+        "victory_day"
+      ],
+      "topics": [],
+      "regions": [
+        "RU-SVE"
+      ],
+      "verification_status": "draft",
+      "collected_by": "claude-auto",
+      "verified_by": null,
+      "retrieved_at": "2026-10-26",
+      "note": "Черновик: цитата выписана автоматически (не длиннее 125 знаков). Сверить дословно со страницей, при необходимости расширить до абзаца, затем указать verified_by (другой человек) и статус verified. Федеральный закон от 19.05.1995 N 80-ФЗ, статья 1."
+    },
+    {
+      "fragment_id": "frag_victory_day_003",
+      "source_id": "src_victory_day_audit_05",
+      "quote": "О формировании Особого Добровольческого танкового корпуса на территории Уральского военного округа",
+      "events": [
+        "victory_day"
+      ],
+      "topics": [
+        "ural_volunteer_tank_corps"
+      ],
+      "regions": [
+        "RU-SVE"
+      ],
+      "verification_status": "draft",
+      "collected_by": "claude-auto",
+      "verified_by": null,
+      "retrieved_at": "2026-10-26",
+      "note": "Черновик: цитата выписана автоматически (не длиннее 125 знаков). Сверить дословно со страницей, при необходимости расширить до абзаца, затем указать verified_by (другой человек) и статус verified. Заголовки архивных документов на странице проекта ГАСПИ СО, а не связный текст."
+    },
+    {
+      "fragment_id": "frag_victory_day_004",
+      "source_id": "src_victory_day_audit_05",
+      "quote": "о собранных ими средствах на строительство тяжелого танка для формируемого Уральского танкового корпуса",
+      "events": [
+        "victory_day"
+      ],
+      "topics": [
+        "ural_volunteer_tank_corps"
+      ],
+      "regions": [
+        "RU-SVE"
+      ],
+      "verification_status": "draft",
+      "collected_by": "claude-auto",
+      "verified_by": null,
+      "retrieved_at": "2026-10-26",
+      "note": "Черновик: цитата выписана автоматически (не длиннее 125 знаков). Сверить дословно со страницей, при необходимости расширить до абзаца, затем указать verified_by (другой человек) и статус verified. Заголовки архивных документов на странице проекта ГАСПИ СО, а не связный текст."
+    },
+    {
+      "fragment_id": "frag_victory_day_005",
+      "source_id": "src_victory_day_v19_01",
+      "quote": "в пригороде Берлина Карлсхорсте был подписан акт о безоговорочной капитуляции германских вооружённых сил",
+      "events": [
+        "victory_day"
+      ],
+      "topics": [],
+      "regions": [
+        "RU-SVE"
+      ],
+      "verification_status": "draft",
+      "collected_by": "claude-auto",
+      "verified_by": null,
+      "retrieved_at": "2026-10-26",
+      "note": "Черновик: цитата выписана автоматически (не длиннее 125 знаков). Сверить дословно со страницей, при необходимости расширить до абзаца, затем указать verified_by (другой человек) и статус verified."
+    },
+    {
+      "fragment_id": "frag_victory_day_006",
+      "source_id": "src_victory_day_v19_01",
+      "quote": "подписал указ Президиума Верховного Совета СССР о провозглашении 9 мая Днём Победы",
+      "events": [
+        "victory_day"
+      ],
+      "topics": [],
+      "regions": [
+        "RU-SVE"
+      ],
+      "verification_status": "draft",
+      "collected_by": "claude-auto",
+      "verified_by": null,
+      "retrieved_at": "2026-10-26",
+      "note": "Черновик: цитата выписана автоматически (не длиннее 125 знаков). Сверить дословно со страницей, при необходимости расширить до абзаца, затем указать verified_by (другой человек) и статус verified."
+    },
+    {
+      "fragment_id": "frag_victory_day_007",
+      "source_id": "src_victory_day_v19_02",
+      "quote": "В ночь на 9 мая 1945 года ни москвичи, ни ленинградцы, ни жители других городов и сел Советского Союза не спали.",
+      "events": [
+        "victory_day"
+      ],
+      "topics": [],
+      "regions": [
+        "RU-SVE"
+      ],
+      "verification_status": "draft",
+      "collected_by": "claude-auto",
+      "verified_by": null,
+      "retrieved_at": "2026-10-26",
+      "note": "Черновик: цитата выписана автоматически (не длиннее 125 знаков). Сверить дословно со страницей, при необходимости расширить до абзаца, затем указать verified_by (другой человек) и статус verified."
+    },
+    {
+      "fragment_id": "frag_victory_day_008",
+      "source_id": "src_victory_day_v19_02",
+      "quote": "В 2 часа 10 минут диктор Юрий Левитан прочитал Акт о военной капитуляции Германии.",
+      "events": [
+        "victory_day"
+      ],
+      "topics": [],
+      "regions": [
+        "RU-SVE"
+      ],
+      "verification_status": "draft",
+      "collected_by": "claude-auto",
+      "verified_by": null,
+      "retrieved_at": "2026-10-26",
+      "note": "Черновик: цитата выписана автоматически (не длиннее 125 знаков). Сверить дословно со страницей, при необходимости расширить до абзаца, затем указать verified_by (другой человек) и статус verified."
+    },
+    {
+      "fragment_id": "frag_victory_day_009",
+      "source_id": "src_victory_day_v19_03",
+      "quote": "Здесь же и указы 1947 года, возвращающие день 9 мая в число рабочих",
+      "events": [
+        "victory_day"
+      ],
+      "topics": [],
+      "regions": [
+        "RU-SVE"
+      ],
+      "verification_status": "draft",
+      "collected_by": "claude-auto",
+      "verified_by": null,
+      "retrieved_at": "2026-10-26",
+      "note": "Черновик: цитата выписана автоматически (не длиннее 125 знаков). Сверить дословно со страницей, при необходимости расширить до абзаца, затем указать verified_by (другой человек) и статус verified."
+    },
+    {
+      "fragment_id": "frag_victory_day_010",
+      "source_id": "src_victory_day_v19_04",
+      "quote": "Официальный сайт главного военно-исторического музея России по тематике Великой Отечественной и Второй мировой войн.",
+      "events": [
+        "victory_day"
+      ],
+      "topics": [],
+      "regions": [
+        "RU-SVE"
+      ],
+      "verification_status": "draft",
+      "collected_by": "claude-auto",
+      "verified_by": null,
+      "retrieved_at": "2026-10-26",
+      "note": "Черновик: цитата выписана автоматически (не длиннее 125 знаков). Сверить дословно со страницей, при необходимости расширить до абзаца, затем указать verified_by (другой человек) и статус verified. Описание музея, а не исторический факт: годится как ссылка для педагога."
+    },
+    {
+      "fragment_id": "frag_victory_day_011",
+      "source_id": "src_victory_day_v19_11",
+      "quote": "9 мая - День Победы;",
+      "events": [
+        "victory_day"
+      ],
+      "topics": [],
+      "regions": [
+        "RU-SVE"
+      ],
+      "verification_status": "draft",
+      "collected_by": "claude-auto",
+      "verified_by": null,
+      "retrieved_at": "2026-10-26",
+      "note": "Черновик: цитата выписана автоматически (не длиннее 125 знаков). Сверить дословно со страницей, при необходимости расширить до абзаца, затем указать verified_by (другой человек) и статус verified. Страница КонсультантПлюс: Приказ Роструда от 11.11.2022 N 253, раздел «4. Нерабочие праздничные дни»."
+    }
+  ]
 }

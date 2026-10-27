@@ -19,9 +19,6 @@ ParentRole = Literal["helper", "active_participant", "audience", "evaluator"]
 AudienceEngagement = Literal["none", "feedback", "vote", "audience_award"]
 RoomType = Literal["classroom", "assembly_hall", "gym", "other"]
 
-MAX_NOTE_CHARS = 500
-
-
 def grade_to_group(grade: int) -> str:
     """Определяет возрастную группу 1-4, 5-8 или 9-11 по номеру класса.
 
@@ -41,12 +38,12 @@ def grade_to_group(grade: int) -> str:
 class Participants(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    teachers_count: StrictInt = Field(ge=1, le=10)
+    teachers_count: StrictInt = Field(ge=1)
     parents_enabled: StrictBool
-    parents_count: StrictInt | None = Field(default=None, ge=0, le=200)
+    parents_count: StrictInt | None = Field(default=None, ge=0)
     parent_roles: list[ParentRole]
     parent_audience_engagement: AudienceEngagement
-    parent_notes: str | None = Field(default=None, max_length=MAX_NOTE_CHARS)
+    parent_notes: str | None = None
 
     @model_validator(mode="after")
     def check_parents(self) -> "Participants":
@@ -83,8 +80,8 @@ class Resources(BaseModel):
     internet: StrictBool | None
     audio: StrictBool | None
     room: RoomType | None
-    available_materials: list[str] = Field(max_length=50)
-    extra_notes: str | None = Field(default=None, max_length=MAX_NOTE_CHARS)
+    available_materials: list[str]
+    extra_notes: str | None = None
 
 
 class TeacherPreferences(BaseModel):
@@ -96,7 +93,7 @@ class TeacherPreferences(BaseModel):
     interaction_level: Literal["low", "medium", "high"]
     group_work: StrictBool
     preparation_effort: Literal["minimal", "standard", "extended"]
-    notes: str | None = Field(default=None, max_length=MAX_NOTE_CHARS)
+    notes: str | None = None
 
 
 class GenerationSettings(BaseModel):
@@ -111,7 +108,7 @@ class GenerationRequest(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    event_id: str = Field(min_length=1, max_length=64)
+    event_id: str = Field(min_length=1)
     region_id: Literal["RU-SVE"]
     grade_group: GradeGroup | None = None
     grade: StrictInt | None = Field(default=None, ge=1, le=11)

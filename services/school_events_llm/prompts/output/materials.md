@@ -1,4 +1,4 @@
-<!-- id: output.materials | version: 1.0.0 -->
+<!-- id: output.materials | version: 1.2.0 -->
 ## Формат ответа
 
 Верни один JSON-объект с материалами варианта `{{variant_id}}`.
@@ -23,11 +23,13 @@
       "family_task": false
     }
   ],
-  "teacher_instructions": ["Что подготовить и как провести"],
+  "teacher_instructions": ["Что подготовить заранее", "Как организовать класс", "Что делать, если что-то пошло не так"],
   "voting": {{voting_example}},
   "teacher_fallback": {{fallback_example}},
   "fact_claims": []
 }
 ```
 
-Допустимые `dependencies`: {{dependency_ids}}.
+Материалы из плана: {{planned_materials_list}}. `material_id` каждого материала - ровно ID из этого списка, без изменений и без суффиксов вроде `_01`; `type` - как в списке.
+
+Допустимые `dependencies`: {{dependency_ids}}. Это расходники и оборудование, а не материалы: в `material_id` их не используй.

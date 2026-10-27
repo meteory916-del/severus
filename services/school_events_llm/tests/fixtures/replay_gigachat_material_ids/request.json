@@ -1,0 +1,45 @@
+{
+  "event_id": "knowledge_day",
+  "region_id": "RU-SVE",
+  "grade_group": "5-8",
+  "grade": 6,
+  "pupils_count": 27,
+  "duration_minutes": 45,
+  "format": "class_hour",
+  "participants": {
+    "teachers_count": 1,
+    "parents_enabled": true,
+    "parents_count": 12,
+    "parent_roles": [
+      "helper",
+      "audience"
+    ],
+    "parent_audience_engagement": "audience_award",
+    "parent_notes": "Двое родителей помогают с раздатками, остальные присутствуют как зрители и могут голосовать."
+  },
+  "resources": {
+    "projector": true,
+    "printer": true,
+    "internet": false,
+    "audio": false,
+    "room": "classroom",
+    "available_materials": [
+      "paper",
+      "markers"
+    ],
+    "extra_notes": "Нет отдельного актового зала."
+  },
+  "teacher_preferences": {
+    "style": "interactive",
+    "script_detail": "detailed",
+    "difficulty": "standard",
+    "interaction_level": "high",
+    "group_work": true,
+    "preparation_effort": "minimal",
+    "notes": "Меньше монологов, больше работы в командах."
+  },
+  "generation": {
+    "variants_count": 1,
+    "language": "ru"
+  }
+}

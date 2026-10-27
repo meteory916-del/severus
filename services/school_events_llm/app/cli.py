@@ -15,7 +15,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from .catalog import Catalog
+from .catalog import Catalog, CatalogError
 from .contracts import llm as c03
 from .contracts.request import GenerationRequest
 from .llm.client import LLMError, build_client, strict_schema
@@ -57,6 +57,27 @@ def _package_from(path: str) -> dict[str, Any]:
 def _job_id() -> str:
     """Создаёт локальный уникальный идентификатор задачи для трассировки прототипа."""
     return f"job_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:6]}"
+
+
+def cmd_serve(args: argparse.Namespace, settings: Settings) -> int:
+    """Запускает внутренний HTTP-сервис для основного Backend Severus.
+
+    Параметры:
+        args: Аргументы ``--host`` и ``--port``.
+        settings: Настройки LLM-сервиса.
+
+    Возвращает:
+        Код завершения процесса.
+    """
+    import uvicorn
+
+    from .http_api import create_app
+
+    host = args.host or settings.get("SERVICE_HOST", "127.0.0.1")
+    port = args.port or int(settings.get("SERVICE_PORT", "8090"))
+    log_level = (settings.get("APP_LOG_LEVEL", "INFO") or "INFO").lower()
+    uvicorn.run(create_app(settings), host=host, port=port, log_level=log_level)
+    return 0
 
 
 def cmd_health(args: argparse.Namespace, settings: Settings) -> int:
@@ -143,7 +164,7 @@ def _run_generation(
         Код процесса: 0 при полном успехе, 1 при partial/failed, 2 при ошибке модели,
         3 при ошибке входного запроса.
     """
-    from .generation.pipeline import Generator
+    from .generation.pipeline import Generator, StageFailed
 
     catalog = Catalog.load(settings)
     client = _build_client_for_generation(args, settings)
@@ -173,6 +194,12 @@ def _run_generation(
     except LLMError as exc:
         _print({"error": {"code": exc.code, "message": exc.message, "field": None, "retryable": exc.retryable}})
         return 2
+    except StageFailed as exc:
+        # Ответ модели не прошёл схему на общем этапе (до вариантов): понятная ошибка вместо трассировки Python.
+        _print({"job_id": job_id, "status": "failed", "llm_calls": generator.calls, "tokens": generator.tokens.totals(),
+                "error": {"code": exc.code, "stage": exc.stage, "message": str(exc), "field": None, "retryable": True},
+                "trace_dir": str(run_dir) if run_dir else None})
+        return 2
 
     if run_dir:
         from .markdown import variant_to_markdown
@@ -194,6 +221,7 @@ def _run_generation(
         "completed_variants": outcome.project["completed_variants"],
         "llm_calls": outcome.calls,
         "duration_ms": outcome.duration_ms,
+        "tokens": outcome.tokens,
         "result_file": str(out_path) if out_path else None,
         "trace_dir": outcome.run_dir,
         "context_mode": context_mode,
@@ -276,6 +304,23 @@ def cmd_export_schemas(args: argparse.Namespace, settings: Settings) -> int:
     return 0
 
 
+def cmd_catalog_check(args: argparse.Namespace, settings: Settings) -> int:
+    """Загружает общий каталог так же, как при генерации, и печатает сводку по событиям.
+
+    Возвращает 0, если каталог подходит генератору; при ошибках `main` печатает список проблем и возвращает 4.
+    """
+    catalog = Catalog.load(settings)
+    verified = sum(1 for f in catalog.fragments.values() if f.get("verification_status") == "verified")
+    _print({
+        "status": "ok",
+        "catalog_dir": str(settings.catalog_dir),
+        "events": sorted(catalog.events),
+        "sources": len(catalog.sources),
+        "fragments": {"total": len(catalog.fragments), "verified": verified},
+    })
+    return 0
+
+
 def cmd_sources_check(args: argparse.Namespace, settings: Settings) -> int:
     """Проверяет локальный корпус источников и выводит покрытие каталога."""
     del args
@@ -301,6 +346,10 @@ def main(argv: list[str] | None = None) -> int:
 
     parser = argparse.ArgumentParser(prog="python -m app", description="Прототип генератора школьных мероприятий")
     subparsers = parser.add_subparsers(dest="cmd", required=True)
+
+    serve = subparsers.add_parser("serve", help="запустить внутренний HTTP-сервис")
+    serve.add_argument("--host")
+    serve.add_argument("--port", type=int)
 
     health = subparsers.add_parser("health", help="проверить подключение к выбранной модели")
     health.add_argument("--model")
@@ -333,10 +382,13 @@ def main(argv: list[str] | None = None) -> int:
 
     subparsers.add_parser("export-schemas", help="обновить JSON Schema")
     subparsers.add_parser("sources-check", help="проверить кураторский корпус источников")
+    subparsers.add_parser("catalog-check", help="проверить, что общий каталог событий подходит генератору")
 
     args = parser.parse_args(argv)
     settings = Settings.load()
     try:
+        if args.cmd == "serve":
+            return cmd_serve(args, settings)
         if args.cmd == "health":
             return cmd_health(args, settings)
         if args.cmd == "compose":
@@ -353,7 +405,12 @@ def main(argv: list[str] | None = None) -> int:
             return cmd_export_schemas(args, settings)
         if args.cmd == "sources-check":
             return cmd_sources_check(args, settings)
+        if args.cmd == "catalog-check":
+            return cmd_catalog_check(args, settings)
     except RequestError as exc:
         _print(exc.to_dict())
         return 3
+    except CatalogError as exc:
+        sys.stderr.write(str(exc) + "\n")
+        return 4
     return 2

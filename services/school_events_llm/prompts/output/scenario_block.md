@@ -1,4 +1,4 @@
-<!-- id: output.scenario_block | version: 1.0.0 -->
+<!-- id: output.scenario_block | version: 1.2.0 -->
 ## Формат ответа
 
 Верни один JSON-объект для блока `{{block_id}}` варианта `{{variant_id}}`. Время, ID, роли и материалы - как в плане.
@@ -14,8 +14,8 @@
     "duration_minutes": {{block_minutes}},
     "title": "Как в плане",
     "purpose": "Как в плане",
-    "teacher_script": "Реплики педагога прямой речью и инструкции. Не меньше {{script_min_chars}} символов.",
-    "pupil_actions": ["Конкретное действие учеников"],
+    "teacher_script": "Полный текст для педагога: реплики в кавычках, действия в скобках. Объём {{script_min_chars}}.",
+    "pupil_actions": ["Что делают ученики сначала (в каком составе)", "Что делают дальше и что получается"],
     "role_ids": ["teacher_1", "pupils_all"],
     "material_ids": []
   },

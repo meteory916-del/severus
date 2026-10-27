@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/sources_schema.json",
+  "title": "Event sources file catalog/sources/<event_id>.json (v2.6)",
+  "type": "object",
+  "required": [
+    "event_id",
+    "sources",
+    "fragments"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "required_minimum": {
+      "type": "integer"
+    },
+    "verified_count": {
+      "type": "integer"
+    },
+    "status": {
+      "type": "string"
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "source_id",
+          "title",
+          "url",
+          "verification_status"
+        ],
+        "properties": {
+          "source_id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "publisher": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "retrieved_at": {
+            "type": "string"
+          },
+          "verification_status": {
+            "type": "string"
+          },
+          "topics": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "regions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "text_excerpt": {
+            "type": "string",
+            "description": "Краткое описание, что подтверждает источник (не цитата)."
+          }
+        }
+      }
+    },
+    "fragments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "fragment_id",
+          "source_id",
+          "quote",
+          "events",
+          "regions",
+          "verification_status",
+          "collected_by"
+        ],
+        "properties": {
+          "fragment_id": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+$"
+          },
+          "source_id": {
+            "type": "string"
+          },
+          "quote": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Точный текст со страницы источника, без пересказа."
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "topics": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "regions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "verification_status": {
+            "enum": [
+              "draft",
+              "verified",
+              "rejected"
+            ]
+          },
+          "collected_by": {
+            "type": "string",
+            "minLength": 1
+          },
+          "verified_by": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "retrieved_at": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "verification_status": {
+                  "const": "verified"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "verified_by"
+              ],
+              "properties": {
+                "verified_by": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "additionalProperties": true
+}

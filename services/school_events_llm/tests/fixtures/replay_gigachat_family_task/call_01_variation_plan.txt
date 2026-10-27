@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.2",
+  "task": "variation_plan",
+  "concepts": [
+    {
+      "variant_id": "v1",
+      "title": "Сердечные послания",
+      "summary": "Дети создают открытки-благодарности для близкого взрослого, выполняют творческие задания и обсуждают добрые поступки.",
+      "narrative_approach": "Мероприятие начинается с обсуждения значения заботы, затем ребята создают сердечные открытки и завершают событием общим кругом благодарностей.",
+      "primary_mechanic": "creative_workshop",
+      "engagement_mode": "whole_class",
+      "planned_structure": [
+        {
+          "order": 1,
+          "title": "Доброе начало",
+          "activity_type": "discussion",
+          "approx_minutes": 5
+        },
+        {
+          "order": 2,
+          "title": "Творческий мастер-класс",
+          "activity_type": "creative_product",
+          "approx_minutes": 12
+        },
+        {
+          "order": 3,
+          "title": "Общий круг благодарностей",
+          "activity_type": "reflection",
+          "approx_minutes": 8
+        },
+        {
+          "order": 4,
+          "title": "Завершение",
+          "activity_type": "individual_task",
+          "approx_minutes": 5
+        }
+      ],
+      "key_activities": [
+        {
+          "activity_type": "creative_product",
+          "description": "Создание открыток-сердечек с добрыми словами"
+        },
+        {
+          "activity_type": "discussion",
+          "description": "Беседа о том, кто заботиться о нас и почему важно говорить спасибо"
+        }
+      ],
+      "distinctive_result": "Индивидуальные открытки-сердца с теплыми словами благодарности близким взрослым",
+      "differs_from": [],
+      "values_to_mechanics": [
+        {
+          "value_id": "family",
+          "mechanic_type": "joint_product",
+          "mechanic": "Каждый ребенок создает открытку для близкого взрослого, выражая чувства и благодарность."
+        }
+      ]
+    }
+  ]
+}

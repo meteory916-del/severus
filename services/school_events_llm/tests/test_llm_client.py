@@ -7,7 +7,8 @@ import unittest
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 
-from app.llm.client import LLMError, OpenAICompatibleClient
+from app.llm.client import LLMError, OpenAICompatibleClient, build_client
+from app.settings import Settings
 
 
 class FakeLMStudio(BaseHTTPRequestHandler):
@@ -131,9 +132,57 @@ class ClientTest(unittest.TestCase):
         self.assertFalse(schema["$defs"]["Block"]["additionalProperties"])
         self.assertNotIn("title", schema["$defs"]["Block"])  # служебная подпись удалена
 
+    def test_gateway_profile_uses_environment_only(self):
+        """Проверяет, что адрес и ключ командного шлюза берутся только из ENV."""
+        config_path = Path(__file__).resolve().parents[1] / "config" / "models.json"
+        models = json.loads(config_path.read_text(encoding="utf-8"))["models"]
+        gateway = models["urfu_qwen_27b"]
+        self.assertIsNone(gateway["base_url"])
+        self.assertEqual(gateway["base_url_env"], "LITELLM_BASE_URL")
+        self.assertEqual(gateway["api_key_env"], "LITELLM_API_KEY")
+        self.assertNotIn("api_key", gateway)
+        self.assertTrue(gateway["enabled"])
+
+    def test_gateway_base_url_and_key_can_come_from_environment(self):
+        """Проверяет конфигурацию OpenAI-compatible шлюза через имена ENV-переменных."""
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "config").mkdir()
+            (root / "config" / "models.json").write_text(
+                json.dumps({
+                    "default_model": "gateway",
+                    "models": {
+                        "gateway": {
+                            "provider": "openai_compatible",
+                            "base_url": None,
+                            "base_url_env": "TEST_GATEWAY_URL",
+                            "model_id": "qwen3.5-9b",
+                            "api_key_env": "TEST_GATEWAY_KEY",
+                            "timeout_seconds": 10,
+                            "structured_output_mode": "none",
+                            "reasoning_mode": "disabled",
+                            "local": False,
+                            "enabled": True,
+                        }
+                    },
+                }),
+                encoding="utf-8",
+            )
+            settings = Settings(
+                root=root,
+                env={
+                    "TEST_GATEWAY_URL": self.base,
+                    "TEST_GATEWAY_KEY": "secret-test-key",
+                },
+            )
+            client = build_client(settings)
+            self.assertEqual(client.base_url, self.base)
+            self.assertEqual(client.api_key, "secret-test-key")
+            self.assertEqual(client.model_id(), "qwen3.5-9b")
+
     def test_t020_unavailable(self):
         """Проверяет сценарий теста: t020 unavailable."""
-        c = OpenAICompatibleClient("x", {"base_url": "http://127.0.0.1:9/v1", "model_id": "m", "timeout_seconds": 2, "local": True}, None, None)
+        c = OpenAICompatibleClient("x", {"base_url": "http://127.0.0.1:9/v1", "model_id": "m", "timeout_seconds": 10, "local": True}, None, None)
         with self.assertRaises(LLMError) as ctx:
             c.generate(messages=[{"role": "user", "content": "x"}], task_name="t", output_schema=None, max_tokens=5, temperature=0)
         self.assertEqual(ctx.exception.code, "MODEL_UNAVAILABLE")

@@ -6,6 +6,7 @@ from app.catalog import Catalog
 from app.settings import SERVICE_ROOT, Settings
 
 ROOT = SERVICE_ROOT
+SHARED_CATALOG = Settings(root=SERVICE_ROOT, env={}).catalog_dir
 EXAMPLES = ROOT / "examples"
 EXAMPLE_NAMES = ["ex1_knowledge_day", "ex2_mothers_day", "ex3_labour_day"]
 

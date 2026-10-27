@@ -8,15 +8,22 @@
     "max_concept_retries": 2,
     "allow_partial_result": true,
     "min_block_minutes": 2,
-    "block_detail_mode": "auto",
+    "block_detail_mode": "per_block",
     "per_block_from_minutes": 60,
     "llm_quality_review": false,
     "max_repair_attempts_per_stage": 2
   },
-  "script_min_chars": {
-    "brief": 150,
-    "standard": 350,
-    "detailed": 600
+  "script_length": {
+    "base_chars": {
+      "brief": 100,
+      "standard": 250,
+      "detailed": 400
+    },
+    "chars_per_minute": {
+      "brief": 5,
+      "standard": 12,
+      "detailed": 20
+    }
   },
   "audience_award_min_voters_warning": 6,
   "tasks": {

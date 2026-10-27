@@ -1,5 +1,6 @@
 """Трассы генерации (ТЗ 19, упрощённо для прототипа).
 
+data/runs/runs.jsonl                - журнал: одна строка на каждую генерацию (статус, время, вызовы, токены)
 data/runs/<job_id>/
   input.json, normalized_request.json, metadata.json, concepts.json, final_result.json
   events.jsonl                      - события этапов и вызовов (одна JSON-запись на строку)
@@ -104,6 +105,23 @@ class RunTrace:
         line, _ = self._redact(json.dumps(record, ensure_ascii=False, default=str))
         with (self.run_dir / "events.jsonl").open("a", encoding="utf-8") as fh:
             fh.write(line + "\n")
+
+    def append_run_log(self, record: dict[str, Any]) -> None:
+        """Добавляет строку о завершённой генерации в общий журнал `runs.jsonl` рядом с папками прогонов.
+
+        Журнал пишется только при включённой трассе. Ошибка записи журнала не должна ломать генерацию.
+
+        Параметры:
+            `record`: сводка прогона.
+        """
+        if not self.run_dir:
+            return
+        line, _ = self._redact(json.dumps(record, ensure_ascii=False, default=str))
+        try:
+            with (self.run_dir.parent / "runs.jsonl").open("a", encoding="utf-8") as fh:
+                fh.write(line + "\n")
+        except OSError:
+            pass
 
     def next_call_id(self) -> str:
         """Выдаёт следующий уникальный идентификатор LLM-вызова внутри запуска.

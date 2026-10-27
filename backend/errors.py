@@ -5,6 +5,7 @@ from starlette.exceptions import HTTPException
 
 
 def error_response(code, message, field=None, retryable=False):
+    """Формирует единый JSON-ответ об ошибке для публичного Backend API."""
     return {
         "error": {
             "code": code,
@@ -16,9 +17,11 @@ def error_response(code, message, field=None, retryable=False):
 
 
 def register_error_handlers(app: FastAPI):
+    """Регистрирует обработчики ошибок в приложении FastAPI."""
 
     @app.exception_handler(RequestValidationError)
     async def validation_error_handler(request, exc):
+        """Преобразует ошибки валидации Pydantic в стабильный контракт Backend API."""
         errors = exc.errors()
         first = errors[0] if errors else {}
 
@@ -49,12 +52,15 @@ def register_error_handlers(app: FastAPI):
 
     @app.exception_handler(HTTPException)
     async def http_error_handler(request, exc):
+        """Преобразует HTTPException в единый ответ, сохраняя признак retryable."""
         detail = exc.detail
 
+        retryable = False
         if isinstance(detail, dict) and "code" in detail:
             code = detail["code"]
             message = detail.get("message", "Ошибка запроса")
             field = detail.get("field")
+            retryable = bool(detail.get("retryable", False))
         else:
             code = (
                 "RESOURCE_NOT_FOUND"
@@ -68,6 +74,6 @@ def register_error_handlers(app: FastAPI):
 
         return JSONResponse(
             status_code=exc.status_code,
-            content=error_response(code, message, field),
+            content=error_response(code, message, field, retryable),
             headers=exc.headers,
         )
