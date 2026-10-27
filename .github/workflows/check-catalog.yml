@@ -20,4 +20,5 @@ jobs:
         python-version: '3.10'
     
     - name: Run catalog check
-      run: python catalog/tools/build_catalog_index.py
+ run: python catalog/tools/build_catalog_index.py
+     
