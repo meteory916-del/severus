@@ -4,183 +4,57 @@
   "title": "School event catalog card (v2.6)",
   "type": "object",
   "required": [
-  "id",
-  "title",
-  "category",
-  "date_rule",
-  "supported_age_groups",
-  "supported_formats",
-  "educational_goals",
-  "age_appropriateness_notes",
-  "source_collection",
-  "source_ids",
-  "review",
-  "regional_variants",
-  "catalog_version",
-  "updated_at"
-],
+    "id",
+    "title",
+    "category",
+    "date_rule",
+    "supported_age_groups",
+    "supported_formats",
+    "educational_goals",
+    "age_appropriateness_notes",
+    "source_collection",
+    "source_ids",
+    "review",
+    "regional_variants",
+    "catalog_version",
+    "updated_at"
+  ],
   "properties": {
-    "id": {
-      "type": "string",
-      "pattern": "^[a-z0-9_]+$"
-    },
-    "title": {
-      "type": "string",
-      "minLength": 1
-    },
-    "aliases": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
+    "id": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
     "category": {
-      "enum": [
-        "federal",
-        "regional",
-        "school",
-        "cultural"
-      ]
+      "type": "string",
+      "enum": ["federal", "regional", "school", "cultural", "calendar"]
     },
     "date_rule": {
       "type": "object",
-      "required": [
-        "type",
-        "value",
-        "note"
-      ],
+      "required": ["type", "value"],
       "properties": {
-        "type": {
-          "type": "string"
-        },
-        "value": {
-          "type": "string"
-        },
-        "note": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": true
-    },
-    "supported_age_groups": {
-      "type": "array",
-      "minItems": 1,
-      "items": {
-        "enum": [
-          "1-4",
-          "5-8",
-          "9-11"
-        ]
+        "type": { "type": "string" },
+        "value": { "type": "string" },
+        "note": { "type": "string" }
       }
     },
-    "supported_formats": {
-      "type": "array",
-      "minItems": 1,
-      "items": {
-        "enum": [
-          "class_hour",
-          "school_event",
-          "interactive_lesson"
-        ]
-      }
-    },
-    "educational_goals": {
-      "type": "array",
-      "minItems": 1,
-      "maxItems": 3,
-      "items": {
-        "type": "string",
-        "minLength": 1
-      }
-    },
-    "values": {
-      "type": "array",
-      "minItems": 1,
-      "maxItems": 3,
-      "uniqueItems": true,
-      "items": {
-        "enum": [
-          "family",
-          "mutual_aid",
-          "historical_memory",
-          "labour_creation",
-          "cultural_diversity",
-          "citizenship"
-        ]
-      },
-      "description": "Ценности в порядке приоритета; справочник services/school_events_llm/catalog/values.json."
-    },
-    "age_appropriateness_notes": {
-      "type": "object",
-      "required": [
-        "1-4",
-        "5-8",
-        "9-11"
-      ],
-      "properties": {
-        "1-4": {
-          "type": "string"
-        },
-        "5-8": {
-          "type": "string"
-        },
-        "9-11": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false
-    },
-    "facts_to_verify": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "minLength": 1
-      },
-      "description": "Что нельзя утверждать без проверенного фрагмента и где нужна осторожность."
-    },
-    "regional_topics": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "pattern": "^[A-Z]{2}-[A-Z0-9]{2,3}/[a-z0-9_]+$"
-      },
-      "description": "Региональные темы вида RU-SVE/<topic>, подключаются только через проверенные фрагменты."
-    },
-    "source_collection": {
-      "type": "string"
-    },
-    "source_ids": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
+    "supported_age_groups": { "type": "array", "items": { "type": "string" } },
+    "supported_formats": { "type": "array", "items": { "type": "string" } },
+    "educational_goals": { "type": "array", "items": { "type": "string" } },
+    "values": { "type": "array", "items": { "type": "string" } },
+    "age_appropriateness_notes": { "type": "object", "additionalProperties": { "type": "string" } },
+    "source_collection": { "type": "string" },
+    "source_ids": { "type": "array", "items": { "type": "string" } },
     "review": {
       "type": "object",
       "properties": {
-        "historical_accuracy_required": {
-          "type": "boolean"
-        },
-        "age_appropriateness_required": {
-          "type": "boolean"
-        },
-        "cultural_review_required": {
-          "type": "boolean"
-        }
+        "historical_accuracy_required": { "type": "boolean" },
+        "age_appropriateness_required": { "type": "boolean" },
+        "cultural_review_required": { "type": "boolean" }
       }
     },
-    "regional_variants": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
-    "catalog_version": {
-      "type": "string"
-    },
-    "updated_at": {
-      "type": "string"
-    }
+    "regional_variants": { "type": "array", "items": { "type": "string" } },
+    "catalog_version": { "type": "string" },
+    "updated_at": { "type": "string" },
+    "regional_topics": { "type": "array", "items": { "type": "string" } },
+    "facts_to_verify": { "type": "array", "items": { "type": "string" } }
   },
   "additionalProperties": true
 }
