@@ -11,6 +11,8 @@ services/school_events_llm/data/runs/runs.jsonl
 
 `data/` не коммитится в git: артефакты локальные. Для команды их нужно приложить файлом или отрендерить в markdown.
 
+Готовые markdown-версии 18 сценариев лежат в `qa/docs/review/generated/`.
+
 ## Что внутри
 
 | Файл | Что это |
