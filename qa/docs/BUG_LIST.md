@@ -36,7 +36,8 @@
 - **Где:** `services/school_events_llm/app/llm/fixture.py`, `_golden()`.
 - **Факт:** `mothers_day` (30 мин) и `labour_day` (60 мин) через HTTP завершаются `failed`, хотя CLI с соответствующим эталоном (`--fixture examples/golden/ex2_mothers_day.json` / `ex3_labour_day.json`) завершает их как `completed`. HTTP-клиент берёт эталон по порядку (`goldens[0]` для `v1`), а не по `event_id`.
 - **Ожидаемо:** эталон выбирается по событию запроса; иначе fixture-режим пригоден только для `knowledge_day`.
-- **Влияние:** нельзя прогнать E2E и демо на других событиях без реальной модели.
+- **Обход:** запустить сервис с `LLM_SERVICE_FIXTURES=<один golden>` под нужное событие. Так проверены `mothers_day` и `labour_day` (`E2E_RUN_2026-10-28.md`).
+- **Влияние:** нельзя одним запуском прогнать E2E и демо на разных событиях без реальной модели.
 
 ### BUG-05. `SCRIPT-SHORT` в обоих реальных прогонах
 
@@ -65,6 +66,8 @@
 
 - `GET /api/v1/catalog/events` → 14 событий, `ural_culture` отсутствует.
 - `POST /api/v1/generations` → 202, `knowledge_day` 45 мин: 5 блоков, сумма 45, старт с 0, `teacher_script` заполнен, `quality_report.status=passed`.
+- `mothers_day` 30 мин без родителей → `completed`, 5 блоков, сумма 30, `passed`.
+- `labour_day` 60 мин с родителями-жюри → `completed`, 6 блоков, сумма 60, `passed`.
 - Неизвестное событие → 422 `EVENT_NOT_FOUND`.
 - Неподдерживаемый формат → 422 `CONFLICTING_CONSTRAINTS`.
 - LLM-сервис остановлен → 503 `MODEL_UNAVAILABLE`, `retryable=true`, без переключения на mock.
