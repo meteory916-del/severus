@@ -164,7 +164,7 @@ def _run_generation(
         Код процесса: 0 при полном успехе, 1 при partial/failed, 2 при ошибке модели,
         3 при ошибке входного запроса.
     """
-    from .generation.pipeline import Generator
+    from .generation.pipeline import Generator, StageFailed
 
     catalog = Catalog.load(settings)
     client = _build_client_for_generation(args, settings)
@@ -194,6 +194,12 @@ def _run_generation(
     except LLMError as exc:
         _print({"error": {"code": exc.code, "message": exc.message, "field": None, "retryable": exc.retryable}})
         return 2
+    except StageFailed as exc:
+        # Ответ модели не прошёл схему на общем этапе (до вариантов): понятная ошибка вместо трассировки Python.
+        _print({"job_id": job_id, "status": "failed", "llm_calls": generator.calls, "tokens": generator.tokens.totals(),
+                "error": {"code": exc.code, "stage": exc.stage, "message": str(exc), "field": None, "retryable": True},
+                "trace_dir": str(run_dir) if run_dir else None})
+        return 2
 
     if run_dir:
         from .markdown import variant_to_markdown
@@ -215,6 +221,7 @@ def _run_generation(
         "completed_variants": outcome.project["completed_variants"],
         "llm_calls": outcome.calls,
         "duration_ms": outcome.duration_ms,
+        "tokens": outcome.tokens,
         "result_file": str(out_path) if out_path else None,
         "trace_dir": outcome.run_dir,
         "context_mode": context_mode,

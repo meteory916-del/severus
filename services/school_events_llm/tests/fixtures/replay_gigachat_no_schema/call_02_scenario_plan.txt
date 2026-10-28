@@ -1,0 +1,106 @@
+```json
+{
+  "schema_version": "1.2",
+  "task": "scenario_plan",
+  "variant_id": "v1",
+  "title": "Маршрут успеха",
+  "concept": {
+    "summary": "Класc делится на команды, каждая получает карту маршрута с заданиями, направленными на мотивацию к учебе, формирование чувства общности и постановку личных и общих целей.",
+    "goal": "Создание условий для формирования учебной мотивации через командную работу и совместное планирование деятельности класса на новый учебный год.",
+    "tasks": [
+      "Организация взаимодействия учащихся в команде",
+      "Развитие навыков постановки целей и планирования",
+      "Формирование ответственности за результаты общей деятельности"
+    ],
+    "expected_outcomes": [
+      "Групповой план класса на учебный год, отражённый в карте маршрутов",
+      "Повышение интереса учащихся к новому учебному году",
+      "Укрепление чувства единства и взаимоподдержки среди одноклассников"
+    ],
+    "values_to_mechanics": [
+      {
+        "value_id": "mutual_aid",
+        "mechanic_type": "team_task",
+        "mechanic": "Выполнение заданий квеста требует распределения обязанностей и взаимопомощи внутри команд",
+        "block_ids": ["block_03"]
+      },
+      {
+        "value_id": "citizenship",
+        "mechanic_type": "real_problem_solving",
+        "mechanic": "На станции 'Наш класс' команды предлагают идеи по улучшению школьной среды",
+        "block_ids": ["block_03"]
+      }
+    ]
+  },
+  "grouping_request": {
+    "mode": "small_groups",
+    "groups_count": 5,
+    "block_ids": ["block_03"]
+  },
+  "roles": [
+    {"role_id": "teacher_1", "participant_type": "teacher", "title": "Ведущий педагог", "count": 1},
+    {"role_id": "pupils_all", "participant_type": "pupils_group", "title": "Учащиеся", "count": 27},
+    {"role_id": "parent_helpers", "participant_type": "parent", "role_mode": "helper", "title": "Помощники-педагоги", "count": 2},
+    {"role_id": "parent_audience", "participant_type": "parent", "role_mode": "audience", "title": "Родители-зрители", "count": 10}
+  ],
+  "blocks": [
+    {
+      "block_id": "block_01",
+      "title": "Встреча и приветствие",
+      "purpose": "Настроить атмосферу доброжелательности и готовности к сотрудничеству",
+      "proposed_minutes": 3,
+      "role_ids": ["teacher_1", "pupils_all", "parent_helpers", "parent_audience"],
+      "planned_material_ids": []
+    },
+    {
+      "block_id": "block_02",
+      "title": "Объяснение формата дня",
+      "purpose": "Ознакомить участников с правилами и структурой предстоящего мероприятия",
+      "proposed_minutes": 4,
+      "role_ids": ["teacher_1", "pupils_all", "parent_helpers", "parent_audience"],
+      "planned_material_ids": []
+    },
+    {
+      "block_id": "block_03",
+      "title": "Путешествие по маршруту",
+      "purpose": "Организовать выполнение командных заданий, направленных на реализацию ценностей взаимопомощи и гражданской активности",
+      "proposed_minutes": 20,
+      "role_ids": ["teacher_1", "pupils_all", "parent_helpers"],
+      "planned_material_ids": ["route_map", "station_cards", "markers", "paper"]
+    },
+    {
+      "block_id": "block_04",
+      "title": "Представление результатов",
+      "purpose": "Позволить командам поделиться своими идеями и результатами работы",
+      "proposed_minutes": 10,
+      "role_ids": ["teacher_1", "pupils_all", "parent_helpers", "parent_audience"],
+      "planned_material_ids": ["audience_ballot"]
+    },
+    {
+      "block_id": "block_05",
+      "title": "Награждение и церемония зрительских симпатий",
+      "purpose": "Подвести итоги конкурса и отметить лучшие работы",
+      "proposed_minutes": 5,
+      "role_ids": ["teacher_1", "pupils_all", "parent_helpers", "parent_audience"],
+      "planned_material_ids": ["award_instruction"]
+    },
+    {
+      "block_id": "block_06",
+      "title": "Рефлексия",
+      "purpose": "Обсудить впечатления и получить обратную связь от участников",
+      "proposed_minutes": 3,
+      "role_ids": ["teacher_1", "pupils_all"],
+      "planned_material_ids": []
+    }
+  ],
+  "planned_materials": [
+    {"material_id": "route_map", "type": "props_checklist", "purpose": "Для организации движения команд по станциям"},
+    {"material_id": "station_cards", "type": "activity_card", "purpose": "Карточки с заданиями для каждой станции"},
+    {"material_id": "markers", "type": "handout", "purpose": "Для оформления результатов командной работы"},
+    {"material_id": "paper", "type": "handout", "purpose": "Бумага для записей и рисунков"},
+    {"material_id": "parent_instruction", "type": "parent_instruction", "purpose": "Памятка для родителей-помощников"},
+    {"material_id": "audience_ballot", "type": "audience_ballot", "purpose": "Бюллетени для голосования зрителей"},
+    {"material_id": "award_instruction", "type": "award_instruction", "purpose": "Инструкция по проведению церемонии награждения"}
+  ]
+}
+```

@@ -14,10 +14,22 @@ from typing import Any
 from ..catalog import Catalog
 from ..generation.timing import check_grid
 from ..normalize import NormalizedRequest
+from ..script_length import script_min_chars
 
 _YEAR = re.compile(r"(?<!\d)(1[0-9]{3}|20[0-9]{2})(?!\d)")
 _DATE = re.compile(r"\b\d{1,2}\s+(января|февраля|марта|апреля|мая|июня|июля|августа|сентября|октября|ноября|декабря)\b", re.I)
 
+
+# Признаки равноценной альтернативы в задании семье: модели формулируют её по-разному
+# («Если поговорить не получается… представь, как ответил бы герой книги»).
+FAMILY_ALTERNATIVE = re.compile(
+    r"альтернатив|если дома|если некому|можно вместо|вместо этого|если нет возможност|если рядом нет"
+    r"|если\s+(?:\w+\s+){0,3}не\s+(?:получа|получит|получил|може|сможе|хоч|успе)"
+    r"|если\s+(?:\w+\s+){0,3}нет\b|(?:подумай|придумай)\s+сам"
+    r"|или\s+(?:просто\s+)?(?:расскажи|придумай|напиши|нарисуй|представь|выбери)"
+    r"|геро\w*\s+(?:\w+\s+){0,2}(?:книг|книж|фильм|мультфильм|мультик|сказк|рассказ|истори)",
+    re.I,
+)
 
 @dataclass
 class Issue:
@@ -92,11 +104,13 @@ def validate_variant(v: dict[str, Any], n: NormalizedRequest, catalog: Catalog, 
                 add("REF-ROLE", "critical", f"timeline.{b['block_id']}", f"Роль {rid} не описана в roles", "blocks")
         for mid in b["material_ids"]:
             if mid not in mat_by_id:
-                add("REF-MATERIAL", "critical", f"timeline.{b['block_id']}", f"Материал {mid} не создан", "materials")
+                add("REF-MATERIAL", "critical", f"timeline.{b['block_id']}", f"Материал `{mid}` из плана не создан: добавь материал с material_id `{mid}` без изменений", "materials")
     for r in roles:
         for bid in r.get("block_ids", []):
             if bid not in block_ids:
                 add("REF-BLOCK", "critical", f"roles.{r['role_id']}", f"Блок {bid} не существует", "plan")
+        if not any(r["role_id"] in b["role_ids"] for b in timeline):
+            add("ROLE-UNUSED", "warning", f"roles.{r['role_id']}", "Роль не участвует ни в одном блоке", "plan")
     for m in materials:
         for bid in m["used_in_blocks"]:
             if bid not in block_ids:
@@ -153,12 +167,18 @@ def validate_variant(v: dict[str, Any], n: NormalizedRequest, catalog: Catalog, 
                 for mid in voting.get("material_ids", []):
                     if mid not in mat_by_id:
                         add("VOTING-MATERIAL", "critical", "parent_participation_plan.voting", f"Бланк {mid} не создан", "materials")
+                if not voting.get("voters_count_planned"):
+                    add("VOTING-NO-VOTERS", "warning", "parent_participation_plan.voting", "В блоке голосования нет родителей-зрителей", "plan")
             if "audience_ballot" not in types:
                 add("BALLOT-MISSING", "critical", "materials", "Нет бюллетеня для голосования зрителей", "materials")
+            if eng == "audience_award" and "award_instruction" not in types:
+                add("AWARD-INSTRUCTION", "warning", "materials", "Нет инструкции к награждению (award_instruction)", "materials")
         else:
             for m in materials:
                 if m["type"] in ("audience_ballot", "award_instruction"):
                     add("BALLOT-NOT-ALLOWED", "critical", f"materials.{m['material_id']}", "Бюллетень/приз без выбранного режима голосования", "materials")
+        if any(r.get("role_mode") == "helper" for r in parent_roles) and "parent_instruction" not in types:
+            add("PARENT-INSTRUCTION", "warning", "materials", "Есть родители-помощники, но нет памятки для них (parent_instruction)", "materials")
         if "evaluator" not in n.parent_roles and "jury_scorecard" in types:
             add("JURY-NOT-ALLOWED", "critical", "materials", "Лист жюри без роли evaluator", "materials")
         if "evaluator" in n.parent_roles and any(r.get("role_mode") == "evaluator" for r in parent_roles) and "jury_scorecard" not in types:
@@ -203,7 +223,7 @@ def validate_variant(v: dict[str, Any], n: NormalizedRequest, catalog: Catalog, 
                 add("VAL-005", "critical", loc, "Задание семье без ценности «Семья»", "materials")
             if m["type"] != "handout" or "по желанию" not in m["title"].lower():
                 add("VAL-005", "critical", loc, "Задание семье: тип handout и пометка «(по желанию, до мероприятия)»", "materials")
-            if not re.search(r"альтернатив|если дома|если некому|можно вместо", m["content"], re.I):
+            if not FAMILY_ALTERNATIVE.search(m["content"]):
                 add("VAL-005", "critical", loc, "Задание семье без равноценной альтернативы", "materials")
     if res.get("internet") is False:
         for b in timeline:
@@ -211,10 +231,14 @@ def validate_variant(v: dict[str, Any], n: NormalizedRequest, catalog: Catalog, 
                 add("RESOURCE-INTERNET", "warning", f"timeline.{b['block_id']}", "Похоже на онлайн-активность при отсутствии интернета", "blocks")
 
     # Проверка содержимого сценарных блоков.
-    min_chars = gen_cfg["script_min_chars"][n.teacher_preferences["script_detail"]]
+    detail = n.teacher_preferences["script_detail"]
     for b in timeline:
+        min_chars = script_min_chars(gen_cfg, detail, b["duration_minutes"])
         if len(b["teacher_script"]) < min_chars:
-            add("SCRIPT-SHORT", "warning", f"timeline.{b['block_id']}", f"Реплики педагога короче {min_chars} символов ({len(b['teacher_script'])})", "blocks")
+            add("SCRIPT-SHORT", "warning", f"timeline.{b['block_id']}",
+                f"Реплики педагога короче {min_chars} символов для блока на {b['duration_minutes']} мин ({len(b['teacher_script'])})", "blocks")
+        if len(b["pupil_actions"]) < 2:
+            add("PUPIL-ACTIONS-FEW", "warning", f"timeline.{b['block_id']}", f"Действий учеников меньше двух ({len(b['pupil_actions'])})", "blocks")
 
     # Проверка связи ценностей с механиками по правилам VAL-001..VAL-004.
     vtm = v["concept"].get("values_to_mechanics", [])

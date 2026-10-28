@@ -8,11 +8,12 @@ scenario_blocks (или scenario_block по одному) → materials → сб
 from __future__ import annotations
 
 import json
+import re
 import time
 import uuid
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any
+from typing import Any, get_args
 
 from pydantic import BaseModel, ValidationError
 
@@ -22,9 +23,11 @@ from ..llm.client import LLMClient, LLMError
 from ..llm.jsonx import JSONExtractionError, extract_json
 from ..normalize import NormalizedRequest, normalize
 from ..prompting.composer import Composer
+from ..script_length import script_size_text
 from ..render import render_project, render_variant
 from ..settings import Settings, sha256_file
 from ..trace import RunTrace
+from ..usage import TokenTally
 from ..validation.checks import Issue, diversity_issues, report_status, validate_variant
 from .grouping import compute_grouping, describe
 from .timing import build_grid, normalize_minutes
@@ -72,6 +75,268 @@ class GenerationOutcome:
     calls: int = 0
     duration_ms: int = 0
     warnings: list[dict[str, Any]] = field(default_factory=list)
+    tokens: dict[str, Any] = field(default_factory=dict)
+
+
+_SUFFIX = re.compile(r"^(?P<base>.+?)_\d+$")
+_LIST_MARKER = re.compile(r"^\s*(?:[-*•–]\s+|\d{1,2}[.)]\s+)")
+
+
+AUDIENCES = ("teacher", "pupil", "pupils_group", "parent", "all")
+# Расходники и техника: модели иногда объявляют их материалами («paper», «markers») с пустым содержанием.
+RESOURCE_IDS = {"paper", "markers", "pens", "pencils", "colored_pencils", "scissors", "glue", "whiteboard", "board",
+                "chalk", "projector", "printer", "audio", "internet", "computer", "laptop", "speakers"}
+
+
+def resource_ids(n: NormalizedRequest) -> set[str]:
+    """Имена ресурсов запроса и типовых расходников, которые не могут быть ID материала."""
+    named = list(n.resources.get("available_materials") or []) + n.available_resources + n.unavailable_resources
+    return RESOURCE_IDS | {str(x).strip().lower() for x in named if x}
+
+
+def _audience(value: Any) -> Any:
+    """Приводит адресата материала к допустимому значению: `parent_audience` -> `parent`, `pupils_all` -> `pupils_group`."""
+    if not isinstance(value, str) or value in AUDIENCES:
+        return value
+    v = value.strip().lower()
+    for prefix, target in (("teacher", "teacher"), ("parent", "parent"), ("pupils", "pupils_group"), ("pupil", "pupil"),
+                           ("student", "pupils_group"), ("class", "pupils_group")):
+        if v.startswith(prefix):
+            return target
+    return value
+
+
+_ENUMS: dict[str, tuple[str, ...]] = {
+    "activity_type": get_args(c03.ActivityType),
+    "engagement_mode": get_args(c03.EngagementMode),
+    "primary_mechanic": get_args(c03.PrimaryMechanic),
+    "mechanic_type": get_args(c03.MechanicType),
+    "material_type": get_args(c03.MaterialType),
+    "role_mode": get_args(c03.RoleMode),
+}
+_SYNONYMS: dict[str, dict[str, str]] = {
+    "activity_type": {
+        "creative": "creative_product", "creative_workshop": "creative_product", "craft": "creative_product",
+        "drawing": "creative_product", "handicraft": "creative_product", "workshop": "creative_product",
+        "presentation": "performance", "show": "performance", "concert": "performance", "staging": "performance",
+        "conversation": "discussion", "talk": "discussion", "dialogue": "discussion", "discussion_club": "discussion",
+        "intro": "discussion", "introduction": "discussion", "greeting": "discussion", "briefing": "discussion",
+        "team_game": "game", "quest": "game", "quest_route": "game", "warmup": "game", "warm_up": "game",
+        "quiz_competition": "quiz", "mini_project": "project_pitch", "project": "project_pitch",
+        "group_task": "team_task", "group_work": "team_task", "teamwork": "team_task",
+        "individual": "individual_task", "individual_work": "individual_task",
+        "pair": "pair_task", "pair_work": "pair_task", "vote": "voting",
+        "summary": "reflection", "conclusion": "reflection", "final": "reflection", "closing": "reflection",
+        "interview": "research", "source_research": "source_work",
+    },
+    "material_type": {
+        "template": "handout", "examples": "handout", "example": "handout", "reference": "handout", "memo": "handout",
+        "sheet": "handout", "printout": "handout", "card": "activity_card", "cards": "activity_card", "task_card": "activity_card",
+        "instruction": "teacher_instruction", "teacher_notes": "teacher_instruction", "script": "teacher_instruction",
+        "questions": "discussion_questions", "checklist": "props_checklist", "props": "props_checklist",
+        "slides": "slide_outline", "presentation": "slide_outline", "ballot": "audience_ballot", "scorecard": "jury_scorecard",
+    },
+    "engagement_mode": {
+        "individual": "whole_class", "individual_task": "whole_class", "individual_work": "whole_class", "frontal": "whole_class", "class": "whole_class", "whole": "whole_class",
+        "group": "small_groups", "groups": "small_groups", "teams": "small_groups", "team": "small_groups",
+        "pair": "pairs", "mix": "mixed", "combined": "mixed",
+    },
+}
+# Если значение так и не распозналось, берём нейтральное, чтобы этап не падал целиком: для описательных полей концепции
+# и для типа материала (раздаточный лист - самый общий тип; проверки по типам касаются только бюллетеней, листов жюри и памяток).
+_FALLBACK = {"activity_type": "discussion", "engagement_mode": "mixed", "material_type": "handout"}
+
+
+def _fix_enum(value: Any, kind: str) -> Any:
+    """Приводит значение перечисления к допустимому: регистр, пробелы, синонимы, «одно из: a | b» из примера."""
+    allowed = _ENUMS[kind]
+    if not isinstance(value, str) or value in allowed:
+        return value
+    s = value.strip().lower()
+    norm = re.sub(r"[\s\-]+", "_", s)
+    if norm in allowed:
+        return norm
+    if norm in _SYNONYMS.get(kind, {}):
+        return _SYNONYMS[kind][norm]
+    found = sorted((m.start(), a) for a in allowed for m in re.finditer(rf"(?<![a-z_]){re.escape(a)}(?![a-z_])", s))
+    if found:
+        return found[0][1]
+    return _FALLBACK.get(kind, value)
+
+
+def _fix_enums(data: dict, stage: str, changes: list[dict[str, Any]]) -> None:
+    """Проходит по полям-перечислениям ответа этапа и исправляет значения через `_fix_enum`."""
+    def fix(obj: Any, key: str, kind: str, where: str) -> None:
+        if isinstance(obj, dict) and key in obj:
+            new = _fix_enum(obj[key], kind)
+            if new != obj[key]:
+                changes.append({"kind": "enum_fixed", "field": where, "from": obj[key], "to": new})
+                obj[key] = new
+
+    def items(obj: Any, key: str) -> list:
+        value = obj.get(key) if isinstance(obj, dict) else None
+        return value if isinstance(value, list) else []
+
+    if stage == "variation_plan":
+        for i, c in enumerate(items(data, "concepts")):
+            fix(c, "engagement_mode", "engagement_mode", f"concepts.{i}.engagement_mode")
+            fix(c, "primary_mechanic", "primary_mechanic", f"concepts.{i}.primary_mechanic")
+            for j, s in enumerate(items(c, "planned_structure")):
+                fix(s, "activity_type", "activity_type", f"concepts.{i}.planned_structure.{j}.activity_type")
+            for j, a in enumerate(items(c, "key_activities")):
+                fix(a, "activity_type", "activity_type", f"concepts.{i}.key_activities.{j}.activity_type")
+            for j, v in enumerate(items(c, "values_to_mechanics")):
+                fix(v, "mechanic_type", "mechanic_type", f"concepts.{i}.values_to_mechanics.{j}.mechanic_type")
+    if stage == "scenario_plan":
+        fix(data.get("grouping_request"), "mode", "engagement_mode", "grouping_request.mode")
+        for j, v in enumerate(items(data.get("concept"), "values_to_mechanics")):
+            fix(v, "mechanic_type", "mechanic_type", f"concept.values_to_mechanics.{j}.mechanic_type")
+        for j, r in enumerate(items(data, "roles")):
+            if isinstance(r, dict) and r.get("role_mode") is not None:
+                fix(r, "role_mode", "role_mode", f"roles.{j}.role_mode")
+        for j, m in enumerate(items(data, "planned_materials")):
+            fix(m, "type", "material_type", f"planned_materials.{j}.type")
+    if stage == "materials":
+        for j, m in enumerate(items(data, "materials")):
+            fix(m, "type", "material_type", f"materials.{j}.type")
+
+
+def prepare_stage_output(stage: str, data: Any, resources: set[str]) -> list[dict[str, Any]]:
+    """Исправляет до проверки схемы ошибки ответа, которые однозначно понятны программе.
+
+    - План: материалы с ID ресурса (`paper`, `markers`) убираются из `planned_materials` и из блоков.
+    - Материалы: такие же материалы убираются; адресат вида `parent_audience` приводится к `parent`.
+    Всё остальное проверяет схема, и при ошибке модель исправляет ответ сама.
+
+    Параметры:
+        stage: этап; data: разобранный JSON ответа (меняется на месте); resources: см. `resource_ids`.
+
+    Возвращает:
+        Список исправлений для трассы.
+    """
+    changes: list[dict[str, Any]] = []
+    if not isinstance(data, dict):
+        return changes
+    _fix_enums(data, stage, changes)
+    if stage == "scenario_plan" and isinstance(data.get("planned_materials"), list):
+        drop = {m.get("material_id") for m in data["planned_materials"]
+                if isinstance(m, dict) and str(m.get("material_id", "")).lower() in resources}
+        if drop:
+            data["planned_materials"] = [m for m in data["planned_materials"] if not (isinstance(m, dict) and m.get("material_id") in drop)]
+            for b in data.get("blocks") or []:
+                if isinstance(b, dict) and isinstance(b.get("planned_material_ids"), list):
+                    b["planned_material_ids"] = [mid for mid in b["planned_material_ids"] if mid not in drop]
+            changes.append({"kind": "resource_materials_dropped", "material_ids": sorted(drop)})
+    if stage == "materials" and isinstance(data.get("materials"), list):
+        kept = []
+        for m in data["materials"]:
+            if isinstance(m, dict) and str(m.get("material_id", "")).lower() in resources:
+                changes.append({"kind": "resource_material_dropped", "material_id": m.get("material_id")})
+                continue
+            if isinstance(m, dict) and "audience" in m:
+                fixed = _audience(m["audience"])
+                if fixed != m["audience"]:
+                    changes.append({"kind": "audience_fixed", "material_id": m.get("material_id"), "from": m["audience"], "to": fixed})
+                    m["audience"] = fixed
+            kept.append(m)
+        data["materials"] = kept
+    return changes
+
+
+def strip_list_markers(items: list[str]) -> list[str]:
+    """Убирает маркер списка, который модель сама ставит в начало пункта («1. », «2) », «- »).
+
+    Пункты и так выводятся списком, поэтому без этого получается «- 1. Подготовьте…».
+    Пустые после очистки пункты отбрасываются.
+
+    Параметры:
+        items: пункты списка из ответа модели.
+
+    Возвращает:
+        Очищенные пункты в том же порядке.
+    """
+    cleaned = [_LIST_MARKER.sub("", item, count=1).strip() for item in items]
+    return [item for item in cleaned if item] or [item.strip() for item in items if item.strip()]
+
+
+def _get(obj: Any, key: str) -> Any:
+    return obj[key] if isinstance(obj, dict) else getattr(obj, key)
+
+
+def _set(obj: Any, key: str, value: Any) -> None:
+    if isinstance(obj, dict):
+        obj[key] = value
+    else:
+        setattr(obj, key, value)
+
+
+def reconcile_material_ids(planned_materials: list[dict], materials: list[Any]) -> dict[str, str]:
+    """Приводит ID материалов, созданных моделью, к ID из утверждённого плана.
+
+    Модели часто слегка меняют ID (дописывают `_01`) или придумывают свой. Правила, по порядку:
+    1. ID есть в плане - не трогаем.
+    2. ID вида `<id из плана>_<число>` - убираем числовой суффикс.
+    3. В плане ровно один ещё не занятый материал того же типа - берём его ID.
+    Материалы без пары остаются как есть. Один ID из плана получает не больше одного материала.
+
+    Параметры:
+        planned_materials: `planned_materials` из плана (словари с `material_id` и `type`).
+        materials: материалы этапа materials (словари или Pydantic-модели); ID меняются на месте.
+
+    Возвращает:
+        Словарь `старый ID -> новый ID` для переименованных материалов.
+    """
+    planned_ids = [m["material_id"] for m in planned_materials]
+    planned_type = {m["material_id"]: m["type"] for m in planned_materials}
+    taken = {_get(m, "material_id") for m in materials if _get(m, "material_id") in planned_ids}
+    mapping: dict[str, str] = {}
+    for m in materials:
+        mid = _get(m, "material_id")
+        if mid in planned_ids:
+            continue
+        target = None
+        match = _SUFFIX.match(mid)
+        if match and match["base"] in planned_ids and match["base"] not in taken:
+            target = match["base"]
+        else:
+            same_type = [pid for pid in planned_ids if planned_type[pid] == _get(m, "type")]
+            free = [pid for pid in same_type if pid not in taken]
+            if len(same_type) == 1 and free:
+                target = free[0]
+        if target:
+            _set(m, "material_id", target)
+            taken.add(target)
+            mapping[mid] = target
+    return mapping
+
+
+def complete_block_roles(plan: dict) -> dict[str, list[str]]:
+    """Дополняет `role_ids` блоков плана теми, кто присутствует на мероприятии всё время.
+
+    Модели часто пишут в `role_ids` только «главное действующее лицо» блока. Правила:
+    1. Ведущий педагог (`teacher`) и все учащиеся (`pupils_group`) есть в каждом блоке.
+    2. Роль родителей, не указанная ни в одном блоке, присутствует во всех блоках
+       (так же её трактует план участия родителей).
+    Роли, которые модель уже расставила по блокам, не трогаются.
+
+    Параметры:
+        plan: план варианта (словарь `scenario_plan`); `role_ids` блоков меняются на месте.
+
+    Возвращает:
+        Словарь `role_id -> список блоков`, куда роль была добавлена.
+    """
+    blocks = plan.get("blocks", [])
+    used = {rid for b in blocks for rid in b["role_ids"]}
+    always = [r["role_id"] for r in plan.get("roles", [])
+              if r["participant_type"] in ("teacher", "pupils_group")
+              or (r["participant_type"] == "parent" and r["role_id"] not in used)]
+    added: dict[str, list[str]] = {}
+    for b in blocks:
+        for rid in always:
+            if rid not in b["role_ids"]:
+                b["role_ids"].append(rid)
+                added.setdefault(rid, []).append(b["block_id"])
+    return added
 
 
 def _issue_lines(issues: list[Issue]) -> list[dict[str, str]]:
@@ -101,6 +366,7 @@ class Generator:
         self.defaults = self.cfg["defaults"]
         self.trace = trace or RunTrace(None)
         self.calls = 0
+        self.tokens = TokenTally()
 
     # Лимит ответа модели для этапа.
     def max_output_tokens(self, stage: str, n: NormalizedRequest) -> int:
@@ -156,6 +422,9 @@ class Generator:
                                               temperature=float(task_cfg["temperature_hint"]), meta=meta or {})
                 raw = result.text
                 data = extract_json(raw)
+                fixes = prepare_stage_output(stage, data, resource_ids(n))
+                if fixes:
+                    self.trace.event("stage_output_fixed", call_id=call_id, stage=stage, variant_id=variant_id, fixes=fixes)
                 parsed_obj = model_cls.model_validate(data)
                 return StageResult(parsed_obj, raw, call_id)
             except (JSONExtractionError, ValidationError) as exc:
@@ -182,6 +451,8 @@ class Generator:
                     "request_params": getattr(result, "request_params", None),
                     "status": status, "error_code": error_code, "error": last_error if status == "failed" else None,
                 }
+                if result is not None:
+                    self.tokens.add(stage, getattr(result, "usage", None))
                 self.trace.save_call(call_id, manifest=manifest, messages=composed.messages, prompt_md=composed.as_markdown(),
                                      raw=raw, parsed=parsed_obj.model_dump() if parsed_obj is not None else None)
                 self.trace.event("llm_call_completed" if status == "completed" else "llm_call_invalid", call_id=call_id,
@@ -227,11 +498,12 @@ class Generator:
 
     @staticmethod
     def plan_text(plan: dict, grid: list[tuple[int, int]], grouping: tuple[str, list[int]], focus_block: str | None = None,
-                  previous_excerpt: str | None = None) -> str:
+                  previous_excerpt: str | None = None, script_chars: Any = None) -> str:
         """Формирует текстовое представление утверждённого плана, рассчитанного тайминга и группировки.
 
         Параметры:
-            `plan`, `grid`, `grouping`, `focus_block`, `previous_excerpt`.
+            `plan`, `grid`, `grouping`, `focus_block`, `previous_excerpt`;
+            `script_chars` - функция «минуты -> текст про нужный объём реплик», для этапов блоков.
 
         Возвращает:
             str.
@@ -247,8 +519,9 @@ class Generator:
         lines.append("\nБлоки (время утверждено программой - не менять):")
         for b, (start, dur) in zip(plan["blocks"], grid):
             mark = "  ← ТЕКУЩИЙ БЛОК" if focus_block == b["block_id"] else ""
+            size = f" | реплики педагога: {script_chars(dur)}" if script_chars else ""
             lines.append(f"- `{b['block_id']}` | {start}–{start + dur} мин ({dur}) | {b['title']} | цель: {b['purpose']} | "
-                         f"роли: {', '.join(b['role_ids'])} | материалы: {', '.join(b['planned_material_ids']) or '-'}{mark}")
+                         f"роли: {', '.join(b['role_ids'])} | материалы: {', '.join(b['planned_material_ids']) or '-'}{size}{mark}")
         lines.append("\nЦенности → механики:")
         for vm in plan["concept"]["values_to_mechanics"]:
             lines.append(f"- {vm['value_id']} ({vm['mechanic_type']}): {vm['mechanic']} - блоки {', '.join(vm.get('block_ids', []))}")
@@ -259,6 +532,14 @@ class Generator:
         if previous_excerpt:
             lines.append(f"\nКонец предыдущего блока (для связности): «{previous_excerpt}»")
         return "\n".join(lines)
+
+    @staticmethod
+    def planned_materials_list(plan: dict) -> str:
+        """Список материалов плана для формата ответа этапа materials: ID и тип, которые нельзя менять."""
+        items = plan.get("planned_materials") or []
+        if not items:
+            return "в плане материалов нет; создавай материал, только если без него блок невыполним"
+        return ", ".join(f"`{m['material_id']}` ({m['type']})" for m in items)
 
     @staticmethod
     def blocks_text(blocks: list[dict]) -> str:
@@ -334,7 +615,7 @@ class Generator:
                         "count": r["count"], "block_ids": r["block_ids"] or block_ids} for r in parent_roles]
         voting = None
         if n.parent_audience_engagement in ("vote", "audience_award") and mat.voting:
-            voters = sum(r["count"] for r in parent_roles if r.get("role_mode") == "audience" and mat.voting.block_id in r["block_ids"])
+            voters = sum(a["count"] for a in assignments if a["role_mode"] == "audience" and mat.voting.block_id in a["block_ids"])
             voting = {"enabled": True,
                       "award_title": mat.voting.award_title if n.parent_audience_engagement == "audience_award" else None,
                       "voters_count_planned": voters, "criterion": mat.voting.criterion, "method": "paper_ballot",
@@ -361,6 +642,8 @@ class Generator:
         block_raw: dict[str, str] = {}
         repair_for: dict[str, dict] = {}
         min_block = int(self.defaults.get("min_block_minutes", 2))
+        detail = n.teacher_preferences["script_detail"]
+        script_chars = lambda minutes: script_size_text(self.cfg, detail, minutes)  # noqa: E731
         per_block_mode = self.defaults.get("block_detail_mode", "auto")
         per_block = per_block_mode == "per_block" or (per_block_mode == "auto" and n.duration_minutes >= int(self.defaults.get("per_block_from_minutes", 60)))
         vmeta = {**meta, "variant_id": vid}
@@ -381,6 +664,9 @@ class Generator:
                     return VariantOutcome(vid, None, plan_issues, None, "failed", "План не прошёл проверку")
                 blocks_res = mat_res = None
             plan = plan_res.model.model_dump()
+            roles_added = complete_block_roles(plan)
+            if roles_added:
+                self.trace.event("block_roles_completed", variant_id=vid, added=roles_added)
             minutes = normalize_minutes([b["proposed_minutes"] for b in plan["blocks"]], n.duration_minutes, min_block)
             grid = build_grid(minutes)
             g_mode, sizes, g_notes = compute_grouping(plan["grouping_request"]["mode"], n.pupils_count,
@@ -389,7 +675,7 @@ class Generator:
             # Генерация и проверка сценарных блоков.
             if blocks_res is None:
                 if not per_block:
-                    res = self.call_stage("scenario_blocks", n, stage_input=self.plan_text(plan, grid, (g_mode, sizes)),
+                    res = self.call_stage("scenario_blocks", n, stage_input=self.plan_text(plan, grid, (g_mode, sizes), script_chars=script_chars),
                                           output_vars={"variant_id": vid}, meta=vmeta, variant_id=vid, repair=repair_for.pop("blocks", None))
                     block_details = {b.block_id: b.model_dump() for b in res.model.blocks}
                     block_raw = {"__all__": res.raw}
@@ -399,7 +685,7 @@ class Generator:
                     rep_all = repair_for.pop("blocks", None)
                     for b, (start, dur) in zip(plan["blocks"], grid):
                         res = self.call_stage("scenario_block", n,
-                                              stage_input=self.plan_text(plan, grid, (g_mode, sizes), b["block_id"], prev),
+                                              stage_input=self.plan_text(plan, grid, (g_mode, sizes), b["block_id"], prev, script_chars),
                                               output_vars={"variant_id": vid, "block_id": b["block_id"], "start_minute": str(start), "block_minutes": str(dur)},
                                               meta={**vmeta, "block_id": b["block_id"]}, variant_id=vid, repair=rep_all)
                         block_details[b["block_id"]] = res.model.block.model_dump()
@@ -410,21 +696,52 @@ class Generator:
                 blocks_res = {"claims": claims}
                 mat_res = None
 
+            planned_ids = [m["material_id"] for m in plan.get("planned_materials", [])]
+            plan_role_ids = {r["role_id"] for r in plan["roles"]}
+            dropped_refs: list[dict[str, str]] = []
             timeline = []
             for b, (start, dur) in zip(plan["blocks"], grid):
                 d = block_details.get(b["block_id"])
                 if d is None:
                     d = {"teacher_script": "", "pupil_actions": [], "role_ids": b["role_ids"], "material_ids": b["planned_material_ids"]}
+                # Ссылаться можно только на материалы из плана; расходники (бумага, маркеры) - не материалы.
+                block_mats = []
+                for mid in list(b["planned_material_ids"]) + list(d.get("material_ids") or []):
+                    if mid in planned_ids:
+                        if mid not in block_mats:
+                            block_mats.append(mid)
+                    else:
+                        dropped_refs.append({"block_id": b["block_id"], "material_id": mid})
+                # Роли блока задаёт план; этап блоков может только добавить роли, описанные в плане.
+                block_roles = list(b["role_ids"])
+                for rid in d.get("role_ids") or []:
+                    if rid in plan_role_ids and rid not in block_roles:
+                        block_roles.append(rid)
                 timeline.append({"block_id": b["block_id"], "start_minute": start, "duration_minutes": dur, "title": b["title"],
                                  "purpose": b["purpose"], "teacher_script": d.get("teacher_script", ""),
-                                 "pupil_actions": d.get("pupil_actions") or [], "role_ids": d.get("role_ids") or b["role_ids"],
-                                 "material_ids": d.get("material_ids", b["planned_material_ids"])})
+                                 "pupil_actions": strip_list_markers(d.get("pupil_actions") or []), "role_ids": block_roles,
+                                 "material_ids": block_mats})
+            if dropped_refs:
+                self.trace.event("block_material_refs_dropped", variant_id=vid, refs=dropped_refs)
 
             # Генерация и проверка материалов.
             if mat_res is None:
                 mat_res = self.call_stage("materials", n, stage_input=self.plan_text(plan, grid, (g_mode, sizes)) + self.blocks_text(timeline),
-                                          output_vars={"variant_id": vid}, meta=vmeta, variant_id=vid, repair=repair_for.pop("materials", None))
+                                          output_vars={"variant_id": vid, "planned_materials_list": self.planned_materials_list(plan)},
+                                          meta=vmeta, variant_id=vid, repair=repair_for.pop("materials", None))
             mat = mat_res.model
+            renamed = reconcile_material_ids(plan.get("planned_materials", []), mat.materials)
+            if renamed:
+                if mat.voting:
+                    mat.voting.material_ids = [renamed.get(mid, mid) for mid in mat.voting.material_ids]
+                self.trace.event("material_ids_reconciled", variant_id=vid, renamed=renamed)
+            # Блок ссылается на материал, если материал указан для этого блока.
+            created = {m.material_id for m in mat.materials}
+            for b in timeline:
+                for m in mat.materials:
+                    if b["block_id"] in m.used_in_blocks and m.material_id not in b["material_ids"]:
+                        b["material_ids"].append(m.material_id)
+                b["material_ids"] = [mid for mid in b["material_ids"] if mid in created or mid in planned_ids]
 
             # Сборка полного варианта и итоговая проверка.
             roles = []
@@ -440,7 +757,7 @@ class Generator:
                                    "block_ids": plan["grouping_request"].get("block_ids", [])},
                 "roles": roles, "timeline": timeline, "materials": [m.model_dump() for m in mat.materials],
                 "parent_participation_plan": self._build_parent_plan(n, roles, mat, [b["block_id"] for b in timeline]),
-                "teacher_instructions": mat.teacher_instructions, "fact_claims": claims, "sources": [],
+                "teacher_instructions": strip_list_markers(mat.teacher_instructions), "fact_claims": claims, "sources": [],
             }
             issues: list[Issue] = [Issue("GROUPING-NOTE", "info", "pupil_grouping", note, "local", False) for note in g_notes]
             try:
@@ -507,6 +824,53 @@ class Generator:
     def run(self, raw_request: dict[str, Any], *, job_id: str | None = None, project_id: str | None = None,
             context_mode: str = "full", cultural_context: bool = True, experiment_tag: str | None = None,
             experiment_pair_id: str | None = None) -> GenerationOutcome:
+        """Запускает генерацию и записывает итог в журнал прогонов `runs.jsonl`, в том числе при ошибке.
+
+        Параметры и результат - как у `_run`.
+        """
+        started = time.monotonic()
+        job_id = job_id or f"job_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:6]}"
+        extra = {"context_mode": context_mode, "cultural_context": cultural_context,
+                 "experiment_tag": experiment_tag, "experiment_pair_id": experiment_pair_id}
+        try:
+            outcome = self._run(raw_request, job_id=job_id, project_id=project_id, **extra)
+        except Exception as exc:
+            error = {"code": getattr(exc, "code", type(exc).__name__), "stage": getattr(exc, "stage", None),
+                     "message": str(getattr(exc, "message", None) or exc)[:500]}
+            self.trace.append_run_log(self._run_record(job_id, raw_request, started, extra, None, error))
+            raise
+        self.trace.append_run_log(self._run_record(job_id, raw_request, started, extra, outcome, None))
+        return outcome
+
+    def _run_record(self, job_id: str, raw_request: dict[str, Any], started: float, extra: dict[str, Any],
+                    outcome: GenerationOutcome | None, error: dict[str, Any] | None) -> dict[str, Any]:
+        """Строка журнала прогонов: что генерировали, чем закончилось, сколько вызовов, времени и токенов."""
+        record: dict[str, Any] = {
+            "job_id": job_id,
+            "finished_at": datetime.now().astimezone().isoformat(timespec="seconds"),
+            "event_id": raw_request.get("event_id") if isinstance(raw_request, dict) else None,
+            "grade": raw_request.get("grade") if isinstance(raw_request, dict) else None,
+            "format": raw_request.get("format") if isinstance(raw_request, dict) else None,
+            "duration_minutes": raw_request.get("duration_minutes") if isinstance(raw_request, dict) else None,
+            "model_key": getattr(self.client, "model_key", "unknown"),
+            "block_detail_mode": self.defaults.get("block_detail_mode", "auto"),
+            "status": outcome.project["status"] if outcome else "failed",
+            "requested_variants": outcome.project["requested_variants"] if outcome else None,
+            "completed_variants": outcome.project["completed_variants"] if outcome else 0,
+            "llm_calls": self.calls,
+            "duration_ms": int((time.monotonic() - started) * 1000),
+            "tokens": self.tokens.as_dict(),
+            "issues": [f"{i.severity}:{i.code}:{i.location}" for v in (outcome.variants if outcome else []) for i in v.issues
+                       if i.severity != "info"],
+            "error": error,
+        }
+        if extra.get("experiment_tag") or extra.get("context_mode") != "full" or not extra.get("cultural_context", True):
+            record.update(extra)
+        return record
+
+    def _run(self, raw_request: dict[str, Any], *, job_id: str, project_id: str | None = None,
+             context_mode: str = "full", cultural_context: bool = True, experiment_tag: str | None = None,
+             experiment_pair_id: str | None = None) -> GenerationOutcome:
         """Запускает полный конвейер генерации 1-3 вариантов и собирает внешний проект.
 
         Параметры:
@@ -516,7 +880,6 @@ class Generator:
             GenerationOutcome.
         """
         started = time.monotonic()
-        job_id = job_id or f"job_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:6]}"
         project_id = project_id or ("evt_" + job_id[4:])
         n = normalize(raw_request, self.catalog, self.settings, context_mode=context_mode, cultural_context=cultural_context,
                       experiment_tag=experiment_tag, experiment_pair_id=experiment_pair_id)
@@ -586,7 +949,9 @@ class Generator:
             "school_profile_hash": self.catalog.hashes.get("config/school_profile.json"),
             "experiment_modes_hash": sha256_file(self.settings.experiment_modes_file),
             "duration_ms": int((time.monotonic() - started) * 1000), "status": project["status"],
+            "tokens": self.tokens.as_dict(),
         })
         self.trace.event("job_" + project["status"], job_id=job_id, calls=self.calls)
         return GenerationOutcome(job_id, project, n, concepts, outcomes, str(self.trace.run_dir) if self.trace.run_dir else None,
-                                 self.calls, int((time.monotonic() - started) * 1000), [w.__dict__ for w in n.warnings])
+                                 self.calls, int((time.monotonic() - started) * 1000), [w.__dict__ for w in n.warnings],
+                                 tokens=self.tokens.totals())

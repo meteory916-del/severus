@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.2",
+  "task": "scenario_plan",
+  "variant_id": "v1",
+  "title": "Сердечные послания",
+  "concept": {
+    "summary": "Дети обсудят важность заботы и внимания, создадут открытки-благодарности для близкого взрослого и выразят свои чувства в общем кругу благодарностей.",
+    "goal": "Формирование культуры благодарности и уважительного отношения к близким взрослым через создание совместных творческих продуктов и обсуждение важности заботы.",
+    "tasks": [
+      "Развитие умения выражать благодарность близкими словами и рисунками.",
+      "Осознание важности заботы и внимания в отношениях с близкими людьми."
+    ],
+    "expected_outcomes": [
+      "Созданы индивидуальные открытки-сердца с тёплыми словами благодарности близким взрослым.",
+      "Участники продемонстрировали понимание ценности заботы и благодарности."
+    ],
+    "values_to_mechanics": [
+      {
+        "value_id": "family",
+        "mechanic_type": "joint_product",
+        "mechanic": "Каждый участник создаст открытку для близкого взрослого, выражая чувства и благодарность.",
+        "block_ids": ["block_02"]
+      }
+    ]
+  },
+  "grouping_request": {
+    "mode": "whole_class",
+    "groups_count": 1,
+    "block_ids": ["block_01", "block_02", "block_03", "block_04"]
+  },
+  "roles": [
+    {"role_id": "teacher_1", "participant_type": "teacher", "title": "Ведущий педагог", "count": 1},
+    {"role_id": "pupils_all", "participant_type": "pupils_group", "title": "Учащиеся", "count": 20}
+  ],
+  "blocks": [
+    {
+      "block_id": "block_01",
+      "title": "Доброе начало",
+      "purpose": "Настроить участников на позитивный лад, обсудить значение заботы и внимания.",
+      "proposed_minutes": 5,
+      "role_ids": ["teacher_1", "pupils_all"],
+      "planned_material_ids": []
+    },
+    {
+      "block_id": "block_02",
+      "title": "Творческий мастер-класс",
+      "purpose": "Создание открыток-сердец с добрыми словами для близкого взрослого.",
+      "proposed_minutes": 12,
+      "role_ids": ["teacher_1", "pupils_all"],
+      "planned_material_ids": ["paper", "colored_pencils"]
+    },
+    {
+      "block_id": "block_03",
+      "title": "Общий круг благодарностей",
+      "purpose": "Поделиться впечатлениями и чувствами, связанными с созданием открыток.",
+      "proposed_minutes": 8,
+      "role_ids": ["teacher_1", "pupils_all"],
+      "planned_material_ids": []
+    },
+    {
+      "block_id": "block_04",
+      "title": "Завершение",
+      "purpose": "Подвести итоги занятия, поблагодарить друг друга за участие.",
+      "proposed_minutes": 5,
+      "role_ids": ["teacher_1", "pupils_all"],
+      "planned_material_ids": []
+    }
+  ],
+  "planned_materials": [
+    {"material_id": "paper", "type": "props_checklist", "purpose": "Бумага для создания открыток"},
+    {"material_id": "colored_pencils", "type": "props_checklist", "purpose": "Цветные карандаши для оформления открыток"}
+  ]
+}
