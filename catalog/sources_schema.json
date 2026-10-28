@@ -41,7 +41,9 @@
           "text_excerpt": { "type": "string" },
           "note": { "type": "string" },
           "content_relevance_checked": { "type": "boolean" },
-          "url_access_checked_in_this_revision": { "type": "boolean" }
+          "url_access_checked_in_this_revision": { "type": "boolean" },
+          "verified_by": { "type": "string" },
+          "verified_at": { "type": "string" }
         },
         "additionalProperties": false
       }
