@@ -27,7 +27,9 @@ jobs:
     
     - name: Run catalog rebuild
       run: python catalog/tools/build_catalog_index.py
+    
     - name: Create Pull Request
+      if: failure()
       uses: peter-evans/create-pull-request@v6
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
