@@ -2,23 +2,23 @@
 
 ## Что реализовано
 
-- `app/validation/structural_validator.py`
+- `qa/validators/structural_validator.py`
   - обязательные разделы `concept`, `timeline`, `roles`, `materials`, `teacher_instructions`;
   - минимум 2 блока и непустые `teacher_script`;
   - ссылочная целостность `role_id`, `material_id`, `block_id`;
   - логика родителей: запрет ролей/плана при `parents_enabled=false`, обязательный план при `parents_enabled=true`, лимит `parents_count` в блоке;
   - контроль печати по `materials[].print_required`, `dependencies` и `resources.printer`.
-- `app/validation/timing_validator.py`
+- `qa/validators/timing_validator.py`
   - сумма длительностей равна запрошенной;
   - первый блок начинается с 0;
   - блоки без разрывов и пересечений;
   - положительные длительности;
   - безопасная обработка блоков с некорректными типами.
-- `app/validation/age_heuristics.py`
+- `qa/validators/age_heuristics.py`
   - `1-4`: блок длиннее 15 минут — `medium`, слова длиннее 12 букв — `low`;
   - `9-11`: все блоки ≤ 5 минут — `low`;
   - для `5-8` предупреждений нет.
-- `app/validation/__init__.py` — экспорт трёх функций без изменения публичных имён.
+- `qa/validators/__init__.py` — экспорт трёх функций без изменения публичных имён.
 - Тесты переведены на корректный путь к фикстурам: `Path(__file__).parent / "fixtures"`.
 
 Все проверки возвращают только `list[dict]`. При некорректном `variant` или входных данных возвращается issue, исключения не пробрасываются.

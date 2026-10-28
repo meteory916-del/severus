@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from app.validation import validate_timing
+from qa.validators import validate_timing
 
 FIXTURES = Path(__file__).parent / "fixtures"
 

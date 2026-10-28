@@ -9,17 +9,18 @@
 | `acceptance/` | Критерии приёмки, граница «авто / эксперт», чек-лист содержательной проверки, шкала severity QA-модуля | Когда решаем, можно ли выдавать сценарий |
 | `testing/` | E2E-кейсы, отчёт о прогоне, баг-лист | Когда проверяем приложение и фиксируем дефекты |
 | `review/` | Разбор реальных сценариев и сами сценарии Андрея | Когда оцениваем содержание и тайминг |
-| `reports/` | Статус Sprint 2 и отчёт о реализации QA-модуля | Когда нужен общий итог |
+| `reports/` | Итоговый отчёт Sprint 2, статус QA и отчёт о реализации QA-модуля | Когда нужен общий итог |
 | `tz/` | ТЗ проекта v1.5: фронтенд-запрос, ответ бэкенда, ответ модели, общее ТЗ | Когда нужна первоисточная формулировка |
 
 ## С чего начать
 
-1. **Общий статус:** `qa/docs/reports/SPRINT2_QA_STATUS.md`.
-2. **Что сломано и кому чинить:** `qa/docs/testing/BUG_LIST.md`.
-3. **Что считаем готовым сценарием:** `qa/docs/acceptance/ACCEPTANCE_CRITERIA.md`.
-4. **Кто что проверяет:** `qa/docs/acceptance/AUTO_VS_EXPERT.md`.
-5. **Как проверять содержание:** `qa/docs/acceptance/CONTENT_REVIEW_CHECKLIST.md`.
-6. **Как гонять приложение:** `qa/docs/testing/E2E_TEST_CASES.md` и `qa/docs/testing/E2E_RUN_2026-10-28.md`.
+1. **Итог Sprint 2:** `qa/docs/reports/SPRINT2_REPORT.md`.
+2. **Оперативный статус:** `qa/docs/reports/SPRINT2_QA_STATUS.md`.
+3. **Что сломано и кому чинить:** `qa/docs/testing/BUG_LIST.md`.
+4. **Что считаем готовым сценарием:** `qa/docs/acceptance/ACCEPTANCE_CRITERIA.md`.
+5. **Кто что проверяет:** `qa/docs/acceptance/AUTO_VS_EXPERT.md`.
+6. **Как проверять содержание:** `qa/docs/acceptance/CONTENT_REVIEW_CHECKLIST.md`.
+7. **Как гонять приложение:** `qa/docs/testing/E2E_TEST_CASES.md` и `qa/docs/testing/E2E_RUN_2026-10-28.md`.
 
 ## Роли
 

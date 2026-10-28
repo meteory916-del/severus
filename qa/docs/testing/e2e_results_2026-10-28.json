@@ -1,0 +1,296 @@
+[
+  {
+    "case": "01_happy_path_45min.json",
+    "http": 202,
+    "project_status": "completed",
+    "variants": 1,
+    "checks": [
+      {
+        "id": "v1",
+        "title": "Маршрут успеха",
+        "blocks": 6,
+        "sum_min": 45,
+        "start_zero": true,
+        "scripts_ok": true,
+        "quality_status": "passed",
+        "issues": []
+      }
+    ],
+    "job_status": "completed",
+    "job_errors": [],
+    "job_warnings": [],
+    "duration_sec": 3.9
+  },
+  {
+    "case": "02_short_30min_1-4.json",
+    "http": 202,
+    "project_status": "completed",
+    "variants": 1,
+    "checks": [
+      {
+        "id": "v1",
+        "title": "Путешествие за знаниями",
+        "blocks": 6,
+        "sum_min": 30,
+        "start_zero": true,
+        "scripts_ok": true,
+        "quality_status": "passed",
+        "issues": []
+      }
+    ],
+    "job_status": "completed",
+    "job_errors": [],
+    "job_warnings": [],
+    "duration_sec": 129.1
+  },
+  {
+    "case": "03_long_90min_9-11.json",
+    "http": 202,
+    "project_status": "completed",
+    "variants": 1,
+    "checks": [
+      {
+        "id": "v1",
+        "title": "Стена Памяти: Исследуем Историю Вместе",
+        "blocks": 6,
+        "sum_min": 90,
+        "start_zero": true,
+        "scripts_ok": true,
+        "quality_status": "passed",
+        "issues": []
+      }
+    ],
+    "job_status": "completed",
+    "job_errors": [],
+    "job_warnings": [],
+    "duration_sec": 125.6
+  },
+  {
+    "case": "04_parents_enabled.json",
+    "http": 202,
+    "project_status": "completed",
+    "variants": 1,
+    "checks": [
+      {
+        "id": "v1",
+        "title": "Тепло в ладошках",
+        "blocks": 5,
+        "sum_min": 45,
+        "start_zero": true,
+        "scripts_ok": true,
+        "quality_status": "warning",
+        "issues": [
+          {
+            "code": "RESOURCE-UNKNOWN",
+            "severity": "warning"
+          }
+        ]
+      }
+    ],
+    "job_status": "completed",
+    "job_errors": [],
+    "job_warnings": [],
+    "duration_sec": 106.3
+  },
+  {
+    "case": "05_no_parents.json",
+    "http": 202,
+    "project_status": "completed",
+    "variants": 1,
+    "checks": [
+      {
+        "id": "v1",
+        "title": "Учителя глазами учеников",
+        "blocks": 5,
+        "sum_min": 45,
+        "start_zero": true,
+        "scripts_ok": true,
+        "quality_status": "passed",
+        "issues": []
+      }
+    ],
+    "job_status": "completed",
+    "job_errors": [],
+    "job_warnings": [],
+    "duration_sec": 84.0
+  },
+  {
+    "case": "06_school_event.json",
+    "http": 202,
+    "project_status": "completed",
+    "variants": 1,
+    "checks": [
+      {
+        "id": "v1",
+        "title": "Классный старт: вместе к целям!",
+        "blocks": 6,
+        "sum_min": 60,
+        "start_zero": true,
+        "scripts_ok": true,
+        "quality_status": "passed",
+        "issues": []
+      }
+    ],
+    "job_status": "completed",
+    "job_errors": [],
+    "job_warnings": [
+      {
+        "code": "PROFILE_MISMATCH",
+        "message": "Число педагогов в запросе отличается от профиля школы; используется значение запроса.",
+        "field": "participants.teachers_count"
+      }
+    ],
+    "duration_sec": 122.6
+  },
+  {
+    "case": "07_interactive_lesson.json",
+    "http": 202,
+    "project_status": "completed",
+    "variants": 1,
+    "checks": [
+      {
+        "id": "v1",
+        "title": "Наш выбор – наше единство!",
+        "blocks": 5,
+        "sum_min": 60,
+        "start_zero": true,
+        "scripts_ok": true,
+        "quality_status": "passed",
+        "issues": []
+      }
+    ],
+    "job_status": "completed",
+    "job_errors": [],
+    "job_warnings": [],
+    "duration_sec": 96.9
+  },
+  {
+    "case": "08_minimal_resources.json",
+    "http": 202,
+    "project_status": "completed",
+    "variants": 1,
+    "checks": [
+      {
+        "id": "v1",
+        "title": "Классный час \"Учителя глазами детей\"",
+        "blocks": 5,
+        "sum_min": 30,
+        "start_zero": true,
+        "scripts_ok": true,
+        "quality_status": "passed",
+        "issues": []
+      }
+    ],
+    "job_status": "completed",
+    "job_errors": [],
+    "job_warnings": [],
+    "duration_sec": 84.1
+  },
+  {
+    "case": "09_large_group.json",
+    "http": 202,
+    "project_status": "completed",
+    "variants": 1,
+    "checks": [
+      {
+        "id": "v1",
+        "title": "Новогодняя мастерская добрых пожеланий",
+        "blocks": 5,
+        "sum_min": 45,
+        "start_zero": true,
+        "scripts_ok": true,
+        "quality_status": "passed",
+        "issues": []
+      }
+    ],
+    "job_status": "completed",
+    "job_errors": [],
+    "job_warnings": [],
+    "duration_sec": 106.6
+  },
+  {
+    "case": "10_small_group.json",
+    "http": 202,
+    "project_status": "completed",
+    "variants": 1,
+    "checks": [
+      {
+        "id": "v1",
+        "title": "Школа мечты",
+        "blocks": 5,
+        "sum_min": 30,
+        "start_zero": true,
+        "scripts_ok": true,
+        "quality_status": "passed",
+        "issues": []
+      }
+    ],
+    "job_status": "completed",
+    "job_errors": [],
+    "job_warnings": [],
+    "duration_sec": 96.7
+  },
+  {
+    "case": "11_grade_boundary.json",
+    "http": 202,
+    "project_status": "completed",
+    "variants": 1,
+    "checks": [
+      {
+        "id": "v1",
+        "title": "Последний звонок: Капсула времени нашего выпуска",
+        "blocks": 5,
+        "sum_min": 45,
+        "start_zero": true,
+        "scripts_ok": true,
+        "quality_status": "passed",
+        "issues": []
+      }
+    ],
+    "job_status": "completed",
+    "job_errors": [],
+    "job_warnings": [],
+    "duration_sec": 125.6
+  },
+  {
+    "case": "12_audience_award.json",
+    "http": 202,
+    "project_status": "completed",
+    "variants": 1,
+    "checks": [
+      {
+        "id": "v1",
+        "title": "Книга добрых слов",
+        "blocks": 5,
+        "sum_min": 45,
+        "start_zero": true,
+        "scripts_ok": true,
+        "quality_status": "warning",
+        "issues": [
+          {
+            "code": "PARENT-INSTRUCTION",
+            "severity": "warning"
+          },
+          {
+            "code": "RESOURCE-UNKNOWN",
+            "severity": "warning"
+          }
+        ]
+      }
+    ],
+    "job_status": "completed",
+    "job_errors": [],
+    "job_warnings": [],
+    "duration_sec": 100.0
+  },
+  {
+    "case": "unknown_event",
+    "http": 422,
+    "body": "{\"error\":{\"code\":\"EVENT_NOT_FOUND\",\"message\":\"Неизвестное мероприятие\",\"field\":\"event_id\",\"retryable\":false}}"
+  },
+  {
+    "case": "wrong_format",
+    "http": 422,
+    "body": "{\"error\":{\"code\":\"CONFLICTING_CONSTRAINTS\",\"message\":\"Формат мероприятия не поддерживается\",\"field\":\"format\",\"retryable\":false}}"
+  }
+]

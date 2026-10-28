@@ -82,7 +82,7 @@
 
 ## Отложено на следующие итерации
 
-Это зона QA-модуля `app/validation/`. Часть проверок уже есть в сервисе `services/school_events_llm` и в общем Backend; здесь они появятся позже, чтобы не дублировать логику.
+Это зона QA-модуля `qa/validators/`. Часть проверок уже есть в сервисе `services/school_events_llm` и в общем Backend; здесь они появятся позже, чтобы не дублировать логику.
 
 - Культурный контент: регион, праздники, тематика.
 - LLM-as-judge и семантическая оценка текстов.
@@ -100,7 +100,7 @@ python -m pytest qa/tests/ -v
 ## Пример вызова в пайплайне
 
 ```python
-from app.validation import validate_structure, validate_timing, check_age_heuristics
+from qa.validators import validate_structure, validate_timing, check_age_heuristics
 
 issues = [
     *validate_structure(variant, input_data),

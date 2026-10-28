@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from app.validation import check_age_heuristics
+from qa.validators import check_age_heuristics
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
