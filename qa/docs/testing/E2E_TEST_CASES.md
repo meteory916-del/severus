@@ -135,7 +135,7 @@ python -m uvicorn backend.main:app --port 8000
 
 ## Прогон
 
-Фактический результат 28.10 на живой модели — `qa/docs/testing/E2E_RUN_2026-10-28.md`. Сырые результаты — `qa/docs/testing/e2e_results_2026-10-28.json`.
+Фактический результат 28.10 на живой модели — `qa/docs/testing/E2E_RUN_2026-10-28.md`. Сырые результаты хранятся локально в `qa/docs/testing/e2e_results_2026-10-28.json` (в git не коммитятся).
 
 ## Как использовать
 
