@@ -182,6 +182,43 @@ def create_app(settings: Settings | None = None, client_factory: ClientFactory |
             job["completed_variants"] = outcome.project["completed_variants"]
             job["status"] = outcome.project["status"]
             job["warnings"] = outcome.warnings
+            variant_statuses = {
+                variant.variant_id: variant.status
+                for variant in outcome.variants
+            }
+            job["variants"] = [
+                {
+                    "variant_id": f"v{i}",
+                    "status": variant_statuses.get(f"v{i}", "failed"),
+                    "revision": 1,
+                }
+                for i in range(1, job["requested_variants"] + 1)
+            ]
+            # Передаём причины отклонения вариантов в статус задачи.
+            errors = []
+            for variant in outcome.variants:
+                if variant.status == "completed":
+                    continue
+
+                critical_issues = [
+                    issue for issue in variant.issues
+                    if issue.severity == "critical"
+                ]
+
+                if critical_issues:
+                    for issue in critical_issues:
+                        errors.append(_error(
+                            issue.code,
+                            f"Вариант {variant.variant_id}: {issue.message}",
+                            field=issue.location,
+                        )["error"])
+                else:
+                    errors.append(_error(
+                        "VARIANT_GENERATION_FAILED",
+                        f"Вариант {variant.variant_id}: сценарий не удалось сформировать",
+                    )["error"])
+
+            job["errors"] = errors
         except RequestError as exc:
             job["status"] = "failed"
             job["errors"] = [exc.to_dict()["error"]]
@@ -254,18 +291,17 @@ def create_app(settings: Settings | None = None, client_factory: ClientFactory |
         job = app.state.jobs.get(job_id)
         if job is None:
             raise HTTPException(status_code=404, detail=_error("RESOURCE_NOT_FOUND", "Задание не найдено")["error"])
-        completed = job["completed_variants"]
         return {
             **job,
             "phase": job["status"],
-            "variants": [
+            "variants": job.get("variants", [
                 {
                     "variant_id": f"v{i}",
-                    "status": "completed" if i <= completed else job["status"],
+                    "status": job["status"],
                     "revision": 1,
                 }
                 for i in range(1, job["requested_variants"] + 1)
-            ],
+            ]),
         }
 
     @app.get("/api/v1/projects/{project_id}", dependencies=[Depends(require_service_token)])

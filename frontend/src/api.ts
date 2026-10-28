@@ -17,14 +17,43 @@ export async function loadCatalog(){return Promise.all([getJson<EventItem[]>('/a
 export async function createProject(request:RequestData,onStatus:(status:string)=>void):Promise<Project>{
  const started=await getJson<{job_id:string;project_id:string;status_url:string;project_url:string}>('/api/v1/generations',{method:'POST',body:JSON.stringify(request)});
  const statusUrl=started.status_url||`/api/v1/generations/${started.job_id}`;
+ const projectUrl=started.project_url||`/api/v1/projects/${started.project_id}`;
+
  for(let i=0;i<90;i++){
-  const state=await getJson<{status:string}>(statusUrl);onStatus(state.status);
-  if(state.status==='completed')return await getJson<Project>(started.project_url||`/api/v1/projects/${started.project_id}`);
-  if(state.status==='failed')throw new Error('Генерация завершилась с ошибкой');
+  const state=await getJson<{
+   status:string;
+   completed_variants?:number;
+   errors?:{code?:string;message?:string}[];
+  }>(statusUrl);
+
+  onStatus(state.status);
+
+  if(state.status==='completed'){
+   return await getJson<Project>(projectUrl);
+  }
+
+  if(state.status==='partial'&&(state.completed_variants??0)>0){
+   return await getJson<Project>(projectUrl);
+  }
+
+  if(state.status==='failed'||state.status==='partial'){
+   const reasons=(state.errors||[])
+    .map(error=>error.message||error.code)
+    .filter(Boolean);
+
+   throw new Error(
+    reasons.length
+     ? reasons.join('; ')
+     : `Генерация не завершена (${state.status}). Сервис не передал подробную причину. Задание: ${started.job_id}`
+   );
+  }
+
   await new Promise(resolve=>setTimeout(resolve,1200));
  }
+
  throw new Error('Превышено время ожидания генерации');
 }
+
 export const DEMO_EVENTS:EventItem[]=[{id:'knowledge_day',title:'День знаний',category:'Праздники',supported_age_groups:['1-4','5-8','9-11'],supported_formats:['class_hour','school_event','interactive_lesson']},{id:'teacher_day',title:'День учителя',category:'Школьные праздники',supported_age_groups:['1-4','5-8','9-11'],supported_formats:['class_hour','school_event']}];
 export const DEMO_OPTIONS:Options={regions:[{value:'RU-SVE',label:'Свердловская область'}],grades:Array.from({length:11},(_,i)=>i+1),duration_minutes:[30,45,60,90].map(v=>({value:v,label:`${v} минут`})),formats:[{value:'class_hour',label:'Классный час'},{value:'school_event',label:'Общешкольное мероприятие'},{value:'interactive_lesson',label:'Интерактивное занятие'}],rooms:[{value:'classroom',label:'Класс'},{value:'assembly_hall',label:'Актовый зал'},{value:'gym',label:'Спортзал'},{value:'other',label:'Другое'}],teacher_preferences:{style:[{value:'classic',label:'Классический'},{value:'interactive',label:'Интерактивный'},{value:'creative',label:'Творческий'},{value:'research',label:'Исследовательский'}],script_detail:[{value:'brief',label:'Краткая'},{value:'standard',label:'Стандартная'},{value:'detailed',label:'Подробная'}]}};
 export function makeDemoProject(input:RequestData,events:EventItem[]):Project{
