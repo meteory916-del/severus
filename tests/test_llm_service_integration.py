@@ -194,3 +194,187 @@ def test_full_backend_to_llm_fixture_flow(monkeypatch, tmp_path):
     assert project["generation_meta"]["model_key"] == "fixture_integration"
     assert project["input"] == BackendGenerationRequest.model_validate(full_payload).model_dump(mode="json")
     assert sum(block["duration_minutes"] for block in project["variants"][0]["timeline"]) == 45
+
+
+def test_failed_fixture_exposes_validation_errors(monkeypatch, tmp_path):
+    """Причины отказа валидатора доступны через Backend API."""
+    golden = json.loads(
+        (LLM_ROOT / "examples" / "golden" / "ex1_knowledge_day.json")
+        .read_text(encoding="utf-8")
+    )
+
+    settings = Settings(
+        root=LLM_ROOT,
+        env={
+            "DATA_DIR": str(tmp_path / "llm_data"),
+            "LOG_FULL_PROMPTS": "false",
+            "LOG_FULL_RESPONSES": "false",
+        },
+    )
+
+    service_app = create_app(
+        settings,
+        client_factory=lambda: FixtureLLM(
+            [golden],
+            model_key="fixture_integration",
+        ),
+    )
+
+    bridge = ServiceClientBridge(TestClient(service_app))
+
+    import backend.generations as generations
+
+    monkeypatch.setenv("GENERATOR_MODE", "llm_service")
+    monkeypatch.setattr(
+        generations,
+        "get_llm_service_client",
+        lambda: bridge,
+    )
+
+    client = TestClient(backend_app)
+
+    payload = json.loads(
+        (LLM_ROOT / "examples" / "requests" / "ex1_knowledge_day.json")
+        .read_text(encoding="utf-8")
+    )
+
+    payload["pupils_count"] = 25
+    payload["participants"] = {
+        "teachers_count": 1,
+        "parents_enabled": False,
+        "parents_count": 0,
+        "parent_roles": [],
+    }
+
+    response = client.post("/api/v1/generations", json=payload)
+    assert response.status_code == 202
+
+    accepted = response.json()
+    status_response = client.get(accepted["status_url"])
+    assert status_response.status_code == 200
+
+    job = status_response.json()
+
+    assert job["status"] == "failed"
+    assert job["completed_variants"] == 0
+    assert job["errors"], "API не передал причины отказа"
+
+    codes = {error["code"] for error in job["errors"]}
+
+    assert "PLAN-PUPILS" in codes
+    assert "PARENTS-DISABLED" in codes
+
+    assert all(
+        error.get("message")
+        for error in job["errors"]
+    )
+
+
+def test_partial_generation_preserves_variant_statuses(monkeypatch, tmp_path):
+    """При partial статусы привязаны к ID вариантов, а не к их порядку."""
+    from types import SimpleNamespace
+
+    from app.generation.pipeline import Generator
+
+    golden = json.loads(
+        (LLM_ROOT / "examples" / "golden" / "ex1_knowledge_day.json")
+        .read_text(encoding="utf-8")
+    )
+
+    settings = Settings(
+        root=LLM_ROOT,
+        env={
+            "DATA_DIR": str(tmp_path / "llm_data"),
+            "LOG_FULL_PROMPTS": "false",
+            "LOG_FULL_RESPONSES": "false",
+        },
+    )
+
+    def fake_run(self, raw_request, *, job_id, project_id):
+        return SimpleNamespace(
+            project={
+                "job_id": job_id,
+                "project_id": project_id,
+                "status": "partial",
+                "requested_variants": 2,
+                "completed_variants": 1,
+                "variants": [
+                    {"variant_id": "v2", "status": "completed"}
+                ],
+            },
+            variants=[
+                SimpleNamespace(
+                    variant_id="v1",
+                    status="failed",
+                    issues=[],
+                    error="Проверка не пройдена",
+                ),
+                SimpleNamespace(
+                    variant_id="v2",
+                    status="completed",
+                    issues=[],
+                    error=None,
+                ),
+            ],
+            warnings=[],
+        )
+
+    monkeypatch.setattr(Generator, "run", fake_run)
+
+    service_app = create_app(
+        settings,
+        client_factory=lambda: FixtureLLM([golden]),
+    )
+    bridge = ServiceClientBridge(TestClient(service_app))
+
+    import backend.generations as generations
+
+    monkeypatch.setenv("GENERATOR_MODE", "llm_service")
+    monkeypatch.setattr(
+        generations,
+        "get_llm_service_client",
+        lambda: bridge,
+    )
+
+    client = TestClient(backend_app)
+
+    payload = json.loads(
+        (LLM_ROOT / "examples" / "requests" / "ex1_knowledge_day.json")
+        .read_text(encoding="utf-8")
+    )
+    payload["generation"]["variants_count"] = 2
+
+    response = client.post("/api/v1/generations", json=payload)
+    assert response.status_code == 202
+
+    accepted = response.json()
+    status_response = client.get(accepted["status_url"])
+    assert status_response.status_code == 200
+
+    job = status_response.json()
+
+    assert job["status"] == "partial"
+    assert job["completed_variants"] == 1
+    assert job["requested_variants"] == 2
+
+    statuses = {
+        item["variant_id"]: item["status"]
+        for item in job["variants"]
+    }
+
+    assert statuses == {
+        "v1": "failed",
+        "v2": "completed",
+    }
+
+    assert any(
+        error["code"] == "VARIANT_GENERATION_FAILED"
+        for error in job["errors"]
+    )
+
+    project_response = client.get(accepted["project_url"])
+    assert project_response.status_code == 200
+    assert [
+        variant["variant_id"]
+        for variant in project_response.json()["variants"]
+    ] == ["v2"]
