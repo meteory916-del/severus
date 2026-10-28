@@ -34,7 +34,7 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         commit-message: "Auto-update catalog files"
-        title: "🤖 Auto-update catalog files"
+        title: "Auto-update catalog files"
         body: "Automatically updated by GitHub Actions"
         branch: auto-update-catalog
         delete-branch: true
