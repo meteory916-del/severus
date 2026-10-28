@@ -22,6 +22,7 @@
 6. **Как проверять содержание:** `qa/docs/acceptance/CONTENT_REVIEW_CHECKLIST.md`.
 7. **Как гонять приложение:** `qa/docs/testing/E2E_TEST_CASES.md` и `qa/docs/testing/E2E_RUN_2026-10-28.md`.
 8. **Насколько полно покрыто:** `qa/docs/testing/COVERAGE.md`.
+9. **Где смотреть артефакты прогона:** `qa/docs/testing/ARTIFACTS.md`.
 
 ## Роли
 
