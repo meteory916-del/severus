@@ -14,7 +14,7 @@
       "note": "Прямое открытие URL и релевантность проверены вручную.",
       "content_relevance_checked": true,
       "url_access_checked_in_this_revision": true,
-      "verified_by": "manual_audit",
+      "verified_by": "meteory916-del",
       "verified_at": "2026-10-29"
     },
     {
@@ -30,7 +30,7 @@
       "note": "Прямое открытие URL и релевантность проверены вручную.",
       "content_relevance_checked": true,
       "url_access_checked_in_this_revision": true,
-      "verified_by": "manual_audit",
+      "verified_by": "meteory916-del",
       "verified_at": "2026-10-29"
     },
     {
@@ -46,7 +46,7 @@
       "note": "Прямое открытие URL и релевантность проверены в веб-аудите v1.9.",
       "content_relevance_checked": true,
       "url_access_checked_in_this_revision": true,
-      "verified_by": "manual_audit",
+      "verified_by": "meteory916-del",
       "verified_at": "2026-10-29"
     },
     {
@@ -62,7 +62,7 @@
       "note": "Прямое открытие URL и релевантность проверены в веб-аудите v1.9.",
       "content_relevance_checked": true,
       "url_access_checked_in_this_revision": true,
-      "verified_by": "manual_audit",
+      "verified_by": "meteory916-del",
       "verified_at": "2026-10-29"
     },
     {
@@ -95,7 +95,7 @@
       "regions": ["RU-SVE"],
       "verification_status": "verified",
       "collected_by": "claude-auto",
-      "verified_by": "manual_audit",
+      "verified_by": "meteory916-del",
       "retrieved_at": "2026-10-26",
       "note": "Цитата проверена вручную, сверена с первоисточником."
     },
@@ -108,7 +108,7 @@
       "regions": ["RU-SVE"],
       "verification_status": "verified",
       "collected_by": "claude-auto",
-      "verified_by": "manual_audit",
+      "verified_by": "meteory916-del",
       "retrieved_at": "2026-10-26",
       "note": "Цитата проверена вручную, сверена с первоисточником."
     },
@@ -121,7 +121,7 @@
       "regions": ["RU-SVE"],
       "verification_status": "verified",
       "collected_by": "claude-auto",
-      "verified_by": "manual_audit",
+      "verified_by": "meteory916-del",
       "retrieved_at": "2026-10-26",
       "note": "Цитата проверена вручную, сверена с первоисточником."
     },
@@ -134,7 +134,7 @@
       "regions": ["RU-SVE"],
       "verification_status": "verified",
       "collected_by": "claude-auto",
-      "verified_by": "manual_audit",
+      "verified_by": "meteory916-del",
       "retrieved_at": "2026-10-26",
       "note": "Цитата проверена вручную, сверена с первоисточником."
     },
@@ -147,7 +147,7 @@
       "regions": ["RU-SVE"],
       "verification_status": "verified",
       "collected_by": "claude-auto",
-      "verified_by": "manual_audit",
+      "verified_by": "meteory916-del",
       "retrieved_at": "2026-10-26",
       "note": "Цитата проверена вручную, сверена с первоисточником."
     }
