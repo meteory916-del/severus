@@ -45,6 +45,13 @@ export async function startProject(request: RequestData): Promise<ActiveGenerati
   };
 }
 
+export class FinalGenerationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'FinalGenerationError';
+  }
+}
+
 export async function waitForProject(
   started: ActiveGeneration,
   onStatus: (status: string) => void,
@@ -83,7 +90,7 @@ export async function waitForProject(
         .map(error => error.message || error.code)
         .filter(Boolean);
 
-      throw new Error(
+      throw new FinalGenerationError(
         reasons.length
           ? reasons.join('; ')
           : `Генерация не завершена (${state.status}). Сервис не передал подробную причину. Задание: ${started.jobId}`
@@ -114,7 +121,7 @@ export async function waitForProject(
 });
   }
 
-  throw new Error(
+  throw new FinalGenerationError(
     `Превышено время ожидания генерации. Задание: ${started.jobId}. Генерация могла продолжиться на сервере.`
   );
 }

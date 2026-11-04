@@ -1,6 +1,6 @@
 import {useEffect,useMemo,useState} from 'react';
 import {ArrowLeft,ArrowRight,BookOpen,CalendarDays,Check,ChevronDown,ClipboardList,FileText,Gem,GraduationCap,Lightbulb,LoaderCircle,RefreshCw,Sparkles,Stars,Users,WandSparkles} from 'lucide-react';
-import {startProject,waitForProject,DEMO_EVENTS,DEMO_OPTIONS,loadCatalog,makeDemoProject,type EventItem,type Options,type Project,type RequestData,type ActiveGeneration} from './api';
+import {startProject,waitForProject,FinalGenerationError,DEMO_EVENTS,DEMO_OPTIONS,loadCatalog,makeDemoProject,type EventItem,type Options,type Project,type RequestData,type ActiveGeneration} from './api';
 type Page='welcome'|'form'|'loading'|'result';
 const star='✦';
 function MagicStar({small=false}:{small?:boolean}){return <span aria-hidden="true" className={'magic-star '+(small?'small':'')}>{star}</span>}
@@ -69,7 +69,7 @@ function App(){
   result = await waitForProject(started, setStatus);
   clearActiveGeneration();
 }
-await new Promise<void>(resolve=>setTimeout(resolve,Math.max(0,6800-(Date.now()-loadingStartedAt))));setProject(result);setSelectedVariant(0);setSection('timeline');setPage('result')}catch(e){setPage('form');setError(e instanceof Error?e.message:'Не удалось получить сценарий')}}
+await new Promise<void>(resolve=>setTimeout(resolve,Math.max(0,6800-(Date.now()-loadingStartedAt))));setProject(result);setSelectedVariant(0);setSection('timeline');setPage('result')}catch(e){if(e instanceof FinalGenerationError)clearActiveGeneration();setPage('form');setError(e instanceof Error?e.message:'Не удалось получить сценарий')}}
  const variant=project?.variants[selectedVariant];const mappedMaterials=useMemo(()=>new Map((variant?.materials||[]).map(m=>[m.material_id,m])),[variant]); 
 
  const [copied, setCopied] = useState(false);
@@ -106,6 +106,8 @@ useEffect(() => {
     })
     .catch((error) => {
       if (cancelled) return;
+
+      if (error instanceof FinalGenerationError) clearActiveGeneration();
 
       setPage('form');
       setError(
