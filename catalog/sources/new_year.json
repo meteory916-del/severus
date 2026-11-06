@@ -8,8 +8,12 @@
       "url": "https://www.consultant.ru/document/cons_doc_LAW_34683/98ef2900507766e70ff29c0b9d8e2353ea80a1cf/",
       "retrieved_at": "2026-10-29",
       "verification_status": "verified",
-      "topics": ["new_year"],
-      "regions": ["RU"],
+      "topics": [
+        "new_year"
+      ],
+      "regions": [
+        "RU"
+      ],
       "text_excerpt": "Подтверждает новогодние каникулы 1-6 и 8 января как нерабочие праздничные дни согласно ст. 112 ТК РФ. 7 января отдельно указано как Рождество Христово.",
       "note": "Прямое открытие URL и релевантность проверены вручную.",
       "content_relevance_checked": true,
@@ -19,15 +23,19 @@
     },
     {
       "source_id": "src_new_year_audit_02",
-      "title": "Постановление Правительства РФ о переносе выходных дней",
-      "publisher": "Правительство Российской Федерации",
-      "url": "http://government.ru/docs/all/",
-      "retrieved_at": "2026-10-29",
+      "title": "Когда в России начали отмечать Новый год",
+      "publisher": "Культура.РФ",
+      "url": "https://www.culture.ru/s/vopros/pervyi-novyi-god",
+      "retrieved_at": "2026-10-20",
       "verification_status": "needs_content_review",
-      "topics": ["new_year"],
-      "regions": ["RU"],
-      "text_excerpt": "Содержит информацию о переносе выходных дней на новогодние каникулы.",
-      "note": "Источник восстановлен для устранения разорванной ссылки в карточке мероприятия. Требует дополнительной проверки актуального URL и релевантности.",
+      "topics": [
+        "new_year"
+      ],
+      "regions": [
+        "RU"
+      ],
+      "text_excerpt": "Исторический материал о смене дат Нового года и традициях в России.",
+      "note": "Аудитная запись v1.4. Статус отражает только проверку в рамках доступного веб-поиска; для VERIFIED требуется открытие URL и сверка полного текста с конкретным утверждением карточки. Прямое открытие в текущем аудите не удалось/не завершилось; веб-сниппет не заменяет проверку URL.",
       "content_relevance_checked": false,
       "url_access_checked_in_this_revision": false
     },
@@ -38,8 +46,12 @@
       "url": "https://www.culture.ru/events/4397307/obychai-i-tradicii-rossii",
       "retrieved_at": "2026-10-20",
       "verification_status": "verified",
-      "topics": ["new_year"],
-      "regions": ["RU"],
+      "topics": [
+        "new_year"
+      ],
+      "regions": [
+        "RU"
+      ],
       "text_excerpt": "Описывает современные новогодние традиции в России.",
       "note": "Прямое открытие URL и релевантность проверены вручную.",
       "content_relevance_checked": true,
@@ -54,8 +66,12 @@
       "url": "https://www.prlib.ru/news/659263",
       "retrieved_at": "2026-10-20",
       "verification_status": "verified",
-      "topics": ["new_year"],
-      "regions": ["RU"],
+      "topics": [
+        "new_year"
+      ],
+      "regions": [
+        "RU"
+      ],
       "text_excerpt": "Исторический обзор новогодних обычаев; материал описывает перенос начала года на 1 января при Петре I.",
       "note": "Прямое открытие URL и релевантность проверены в веб-аудите v1.9.",
       "content_relevance_checked": true,
@@ -70,8 +86,12 @@
       "url": "https://www.prlib.ru/node/619836",
       "retrieved_at": "2026-10-20",
       "verification_status": "verified",
-      "topics": ["new_year"],
-      "regions": ["RU"],
+      "topics": [
+        "new_year"
+      ],
+      "regions": [
+        "RU"
+      ],
       "text_excerpt": "Историческая справка об изменении даты начала года в России.",
       "note": "Прямое открытие URL и релевантность проверены в веб-аудите v1.9.",
       "content_relevance_checked": true,
@@ -86,8 +106,12 @@
       "url": "https://old.bigenc.ru/ethnology/text/2668984",
       "retrieved_at": "2026-10-20",
       "verification_status": "needs_content_review",
-      "topics": ["new_year"],
-      "regions": ["RU"],
+      "topics": [
+        "new_year"
+      ],
+      "regions": [
+        "RU"
+      ],
       "text_excerpt": "Энциклопедическая статья о календарном празднике и его традициях.",
       "note": "Поисковый индекс даёт релевантный фрагмент, но прямое открытие URL в текущем аудите не удалось либо источник не подтверждает основной тезис.",
       "content_relevance_checked": false,
@@ -104,9 +128,13 @@
       "fragment_id": "frag_new_year_001",
       "source_id": "src_new_year_v19_01",
       "quote": "а потом постановил начать год с 1 января 1700 года.",
-      "events": ["new_year"],
+      "events": [
+        "new_year"
+      ],
       "topics": [],
-      "regions": ["RU-SVE"],
+      "regions": [
+        "RU-SVE"
+      ],
       "verification_status": "verified",
       "collected_by": "claude-auto",
       "verified_by": "meteory916-del",
@@ -117,9 +145,13 @@
       "fragment_id": "frag_new_year_002",
       "source_id": "src_new_year_v19_01",
       "quote": "1 января духовенство, послы и бояре приглашались на праздничный обед к царю.",
-      "events": ["new_year"],
+      "events": [
+        "new_year"
+      ],
       "topics": [],
-      "regions": ["RU-SVE"],
+      "regions": [
+        "RU-SVE"
+      ],
       "verification_status": "verified",
       "collected_by": "claude-auto",
       "verified_by": "meteory916-del",
@@ -130,9 +162,13 @@
       "fragment_id": "frag_new_year_003",
       "source_id": "src_new_year_v19_01",
       "quote": "Вечером царь объезжал главные улицы и поздравлял народ с Новым годом.",
-      "events": ["new_year"],
+      "events": [
+        "new_year"
+      ],
       "topics": [],
-      "regions": ["RU-SVE"],
+      "regions": [
+        "RU-SVE"
+      ],
       "verification_status": "verified",
       "collected_by": "claude-auto",
       "verified_by": "meteory916-del",
@@ -143,9 +179,13 @@
       "fragment_id": "frag_new_year_004",
       "source_id": "src_new_year_v19_02",
       "quote": "а новолетье начинать не с 1 сентября, а с 1 января, как во многих европейских странах.",
-      "events": ["new_year"],
+      "events": [
+        "new_year"
+      ],
       "topics": [],
-      "regions": ["RU-SVE"],
+      "regions": [
+        "RU-SVE"
+      ],
       "verification_status": "verified",
       "collected_by": "claude-auto",
       "verified_by": "meteory916-del",
@@ -156,9 +196,13 @@
       "fragment_id": "frag_new_year_005",
       "source_id": "src_new_year_v19_02",
       "quote": "В день 1 января, когда по старому летоисчислению шёл 7208 г., по введённому новому летоисчислению наступал 1700-й г.",
-      "events": ["new_year"],
+      "events": [
+        "new_year"
+      ],
       "topics": [],
-      "regions": ["RU-SVE"],
+      "regions": [
+        "RU-SVE"
+      ],
       "verification_status": "verified",
       "collected_by": "claude-auto",
       "verified_by": "meteory916-del",

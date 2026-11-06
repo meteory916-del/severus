@@ -8,8 +8,12 @@
       "url": "https://base.garant.ru/20926350/",
       "retrieved_at": "2026-10-29",
       "verification_status": "verified",
-      "topics": ["sverdlovsk_oblast_day"],
-      "regions": ["RU-SVE"],
+      "topics": [
+        "sverdlovsk_oblast_day"
+      ],
+      "regions": [
+        "RU-SVE"
+      ],
       "text_excerpt": "В опубликованном тексте указа перечислен День образования Свердловской области — 17 января.",
       "note": "Прямое открытие URL и релевантность проверены вручную. Указ подтверждает дату 17 января.",
       "content_relevance_checked": true,
@@ -24,8 +28,12 @@
       "url": "https://xn--b1albebc0apl.xn--80acgfbsl1azdqr.xn--p1ai/novosti/288855",
       "retrieved_at": "2026-10-29",
       "verification_status": "verified",
-      "topics": ["sverdlovsk_oblast_day"],
-      "regions": ["RU-SVE"],
+      "topics": [
+        "sverdlovsk_oblast_day"
+      ],
+      "regions": [
+        "RU-SVE"
+      ],
       "text_excerpt": "Официальная публикация подтверждает, что 17 января 1934 года Уральская область была разделена на Свердловскую, Челябинскую и Обско-Иртышскую области. В 2026 году отмечается 92-летие со дня создания Свердловской области.",
       "note": "Прямое открытие URL и релевантность проверены вручную. Актуальная официальная публикация от 17 января 2026 года.",
       "content_relevance_checked": true,
@@ -40,8 +48,12 @@
       "url": "https://msp.midural.ru/activity/holidays/",
       "retrieved_at": "2026-10-29",
       "verification_status": "verified",
-      "topics": ["sverdlovsk_oblast_day"],
-      "regions": ["RU-SVE"],
+      "topics": [
+        "sverdlovsk_oblast_day"
+      ],
+      "regions": [
+        "RU-SVE"
+      ],
       "text_excerpt": "Официальный перечень праздников Свердловской области, включающий День образования области 17 января.",
       "note": "Дополнительное независимое подтверждение от профильного министерства. Прямое открытие URL и релевантность проверены вручную.",
       "content_relevance_checked": true,
@@ -59,23 +71,31 @@
     {
       "fragment_id": "frag_sverdlovsk_001",
       "source_id": "src_sverdlovsk_oblast_day_regional_01",
-      "quote": "17 января — День образования Свердловской области.",
-      "events": ["sverdlovsk_oblast_day"],
+      "quote": "День образования Свердловской области - 17 января;",
+      "events": [
+        "sverdlovsk_oblast_day"
+      ],
       "topics": [],
-      "regions": ["RU-SVE"],
+      "regions": [
+        "RU-SVE"
+      ],
       "verification_status": "verified",
       "collected_by": "claude-auto",
       "verified_by": "meteory916-del",
       "retrieved_at": "2026-10-29",
-      "note": "Цитата проверена вручную. Дословная формулировка из приложения к Указу № 1022-УГ."
+      "note": "Дословная формулировка из подпункта 1 пункта 1 Указа № 1022-УГ."
     },
     {
       "fragment_id": "frag_sverdlovsk_002",
       "source_id": "src_sverdlovsk_oblast_day_regional_02",
       "quote": "17 января 1934 года Уральская область была разделена на Свердловскую, Челябинскую и Обско-Иртышскую области.",
-      "events": ["sverdlovsk_oblast_day"],
+      "events": [
+        "sverdlovsk_oblast_day"
+      ],
       "topics": [],
-      "regions": ["RU-SVE"],
+      "regions": [
+        "RU-SVE"
+      ],
       "verification_status": "verified",
       "collected_by": "claude-auto",
       "verified_by": "meteory916-del",
