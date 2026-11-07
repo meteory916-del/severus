@@ -18,16 +18,18 @@ function Select({label,value,onChange,options}:{label:string;value:string;onChan
 function NumberField({label,value,onChange,min,max}:{label:string;value:number;onChange:(n:number)=>void;min:number;max:number}){return <label className="field"><span>{label}</span><input type="number" value={value} min={min} max={max} onChange={e=>onChange(Number(e.target.value))}/></label>}
 const ACTIVE_GENERATION_KEY = 'severus_active_generation';
 
-function saveActiveGeneration(data: ActiveGeneration) {
+type StoredActiveGeneration = ActiveGeneration & {form?:RequestData; catalog?:EventItem[]; options?:Options};
+
+function saveActiveGeneration(data: StoredActiveGeneration) {
   sessionStorage.setItem(ACTIVE_GENERATION_KEY, JSON.stringify(data));
 }
 
-function readActiveGeneration(): ActiveGeneration | null {
+function readActiveGeneration(): StoredActiveGeneration | null {
   const raw = sessionStorage.getItem(ACTIVE_GENERATION_KEY);
   if (!raw) return null;
 
   try {
-    const data = JSON.parse(raw) as ActiveGeneration;
+    const data = JSON.parse(raw) as StoredActiveGeneration;
 
     if (
       typeof data.jobId !== 'string' ||
@@ -48,6 +50,44 @@ function readActiveGeneration(): ActiveGeneration | null {
 function clearActiveGeneration() {
   sessionStorage.removeItem(ACTIVE_GENERATION_KEY);
 }
+
+const COMPLETED_GENERATION_KEY = 'severus_completed_generation';
+type CompletedGeneration = {
+  project: Project;
+  form: RequestData;
+  catalog: EventItem[];
+  options: Options;
+  mode: 'demo' | 'api';
+};
+
+function saveCompletedGeneration(data: CompletedGeneration): boolean {
+  try {
+    sessionStorage.setItem(COMPLETED_GENERATION_KEY, JSON.stringify(data));
+    return true;
+  } catch {
+    console.warn('Не удалось сохранить сценарий для восстановления после обновления страницы.');
+    return false;
+  }
+}
+
+function readCompletedGeneration(): CompletedGeneration | null {
+  try {
+    const raw = sessionStorage.getItem(COMPLETED_GENERATION_KEY);
+    if (!raw) return null;
+    const data = JSON.parse(raw) as CompletedGeneration;
+    if (!data || !Array.isArray(data.project?.variants) || !data.project.variants.length ||
+        typeof data.form?.event_id !== 'string' ||
+        !Array.isArray(data.catalog) || !data.options?.formats ||
+        (data.mode !== 'api' && data.mode !== 'demo')) return null;
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+function clearCompletedGeneration() {
+  sessionStorage.removeItem(COMPLETED_GENERATION_KEY);
+}
 function App(){
  const [page,setPage]=useState<Page>('welcome');const [mode,setMode]=useState<'demo'|'api'>('demo');const [catalog,setCatalog]=useState<EventItem[]>(DEMO_EVENTS);const [options,setOptions]=useState<Options>(DEMO_OPTIONS);const [catalogError,setCatalogError]=useState('');const [busy,setBusy]=useState(false);const [error,setError]=useState('');const [status,setStatus]=useState('queued');const [project,setProject]=useState<Project|null>(null);const [selectedVariant,setSelectedVariant]=useState(0);const [section,setSection]=useState<'timeline'|'materials'|'roles'>('timeline');
  const [form,setForm]=useState<RequestData>({event_id:'knowledge_day',region_id:'RU-SVE',grade:6,pupils_count:25,duration_minutes:45,format:'class_hour',participants:{teachers_count:1,parents_enabled:false,parents_count:0,parent_roles:[]},resources:{projector:true,printer:false,internet:true,audio:true,room:'classroom',available_materials:[]},teacher_preferences:{style:'interactive',script_detail:'detailed',difficulty:'standard',interaction_level:'medium',group_work:true,preparation_effort:'minimal',notes:null},generation:{variants_count:2,language:'ru'}});
@@ -65,10 +105,11 @@ function App(){
 
  setPage('loading');setStatus('queued');const loadingStartedAt=Date.now();try{let result:Project;if(mode==='demo'){await new Promise(r=>setTimeout(r,5600));result=makeDemoProject(form,catalog)}else {
   const started = await startProject(form);
-  saveActiveGeneration(started);
+  saveActiveGeneration({...started, form, catalog, options});
   result = await waitForProject(started, setStatus);
-  clearActiveGeneration();
 }
+const saved = saveCompletedGeneration({project:result, form, catalog, options, mode});
+if (mode === 'api' && saved) clearActiveGeneration();
 await new Promise<void>(resolve=>setTimeout(resolve,Math.max(0,6800-(Date.now()-loadingStartedAt))));setProject(result);setSelectedVariant(0);setSection('timeline');setPage('result')}catch(e){if(e instanceof FinalGenerationError)clearActiveGeneration();setPage('form');setError(e instanceof Error?e.message:'Не удалось получить сценарий')}}
  const variant=project?.variants[selectedVariant];const mappedMaterials=useMemo(()=>new Map((variant?.materials||[]).map(m=>[m.material_id,m])),[variant]); 
 
@@ -79,6 +120,18 @@ await new Promise<void>(resolve=>setTimeout(resolve,Math.max(0,6800-(Date.now()-
 }, [selectedVariant, project]);
 
 useEffect(() => {
+  const completed = readCompletedGeneration();
+  if (completed) {
+    clearActiveGeneration();
+    setForm(completed.form);
+    setCatalog(completed.catalog);
+    setOptions(completed.options);
+    setMode(completed.mode);
+    setProject(completed.project);
+    setPage('result');
+    return;
+  }
+
   const saved = readActiveGeneration();
 
   if (!saved) return;
@@ -87,6 +140,9 @@ useEffect(() => {
   const controller = new AbortController();
 
   setMode('api');
+  if (saved.form) setForm(saved.form);
+  if (saved.catalog) setCatalog(saved.catalog);
+  if (saved.options) setOptions(saved.options);
   setPage('loading');
   setStatus('queued');
 
@@ -98,7 +154,14 @@ useEffect(() => {
     .then((result) => {
       if (cancelled) return;
 
-      clearActiveGeneration();
+      const stored = saveCompletedGeneration({
+        project:result,
+        form:saved.form ?? form,
+        catalog:saved.catalog ?? catalog,
+        options:saved.options ?? options,
+        mode:'api',
+      });
+      if (stored) clearActiveGeneration();
       setProject(result);
       setSelectedVariant(0);
       setSection('timeline');
@@ -123,6 +186,12 @@ useEffect(() => {
   };
 }, []);
 
+
+function newScenario() {
+  clearCompletedGeneration();
+  setProject(null);
+  setPage('form');
+}
 
 async function copyScenario() {
   if (!variant) return;
@@ -208,7 +277,7 @@ async function copyScenario() {
 
  return <div className="app"><div className="side-ornament left"><SideVines/></div><div className="side-ornament right"><SideVines/></div>
  <div className="app-shell">{page!=='welcome'&&<div className="glass-doe-bg" aria-hidden="true"/>}<div className="page-jewel page-jewel-top" aria-hidden="true"><span className="gem-wing left"/><span className="gem-core"/><span className="gem-wing right"/></div><div className="page-jewel page-jewel-bottom" aria-hidden="true"><span className="gem-wing left"/><span className="gem-core"/><span className="gem-wing right"/></div>
- {page!=='welcome'&&<header className="topbar"><button className="brand" onClick={()=>setPage('welcome')} aria-label="На главную"><MagicStar small/><span>Северус</span></button><div className="topbar-mid"><MagicStar small/> <span className="selected-text-glint">Мастерская событий</span> <MagicStar small/></div><span className={'mode-badge '+(mode==='api'?'connected':'')}>{mode==='api'?'● API подключён':'◇ Демо-режим'}</span></header>}
+ {page!=='welcome'&&<header className="topbar"><button className="brand" onClick={()=>{clearCompletedGeneration();setPage('welcome')}} aria-label="На главную"><MagicStar small/><span>Северус</span></button><div className="topbar-mid"><MagicStar small/> <span className="selected-text-glint">Мастерская событий</span> <MagicStar small/></div><span className={'mode-badge '+(mode==='api'?'connected':'')}>{mode==='api'?'● API подключён':'◇ Демо-режим'}</span></header>}
  {page==='welcome'&&<main className="welcome"><div className="welcome-stars">✧ ✦ ✧</div><div className="welcome-overline">ВАША МАСТЕРСКАЯ ЧУДЕСНЫХ СОБЫТИЙ</div><div className="hero-logo-wrap"><img className="hero-logo" src="/assets/severus-logo.png" alt="Северус — магический логотип с календарём, волшебной палочкой и зелёной ланью"/></div><p className="welcome-subtitle">Пусть каждый школьный праздник станет маленькой историей,<br/> которую хочется помнить.</p><button className="primary hero-cta" onClick={()=>setPage('form')}><Sparkles size={18}/> Создать сценарий <ArrowRight size={18}/></button><div className="welcome-foot">ИДЕЯ <span>✧</span> ВОЛШЕБСТВО <span>✧</span> ВАШЕ СОБЫТИЕ</div></main>}
  {page==='form'&&<main className="page-content"><div className="heading"><span className="eyebrow"><MagicStar small/> <span className="selected-text-glint">КОНСТРУКТОР МЕРОПРИЯТИЯ</span></span><h1>Создадим немного <em>волшебства</em></h1><p>Расскажите о вашем событии — мы подготовим сценарий, наполненный идеями.</p></div>
  <div className="mode-switch"><div><b>Источник сценария</b><span>{mode==='demo'?'Учебный каталог (2 примера). Не совпадает с полным каталогом API; сервер не требуется.':'Сценарий создаётся через API с использованием подключённого сервиса генерации.'}</span></div><div className="mode-actions"><button className={mode==='demo'?'active':''} onClick={useDemo}>Демо</button><button className={mode==='api'?'active':''} onClick={connect} disabled={busy}>{busy?<LoaderCircle size={14} className="spin"/>:null} API</button></div></div>
@@ -229,7 +298,7 @@ async function copyScenario() {
  <aside className="form-aside"><div className="aside-card"><span className="aside-decoration">✦</span><div className="aside-calendar"><CalendarDays size={30}/></div><h3>Каждое событие —<br/><em>особенная история</em></h3><p>Магия начинается с одной идеи. Выберите параметры, а Северус подскажет, как воплотить её в жизнь.</p><div className="gold-rule"/><ul><li><Check size={15}/> Сценарий по вашим запросам</li><li><Check size={15}/> Пошаговый план мероприятия</li><li><Check size={15}/> Идеи и материалы для педагога</li></ul></div><div className="tip"><Lightbulb size={18}/><span>Для первого знакомства рекомендуем <b>демо-режим</b>. Он работает без подключения к серверу.</span></div></aside></div>
  <div className="form-bottom"><button className="secondary" onClick={()=>setPage('welcome')}><ArrowLeft size={16}/> На главную</button><button className="primary" disabled={!valid} onClick={generate}><WandSparkles size={19}/> Сотворить сценарий <ArrowRight size={18}/></button></div></main>}
  {page==='loading'&&<main className="loader-page"><Loader caption={mode==='demo'?'Волшебная палочка создаёт пробную историю…':status==='queued'?'Ожидаем начала генерации…':'Сервер создаёт сценарии вашего мероприятия…'}/></main>}
- {page==='result'&&variant&&<main className="page-content results"><div className="heading"><span className="eyebrow result-overline"><WandSparkles size={18}/> <span className="selected-text-glint">{project?.status==="partial"?"ГОТОВА ЧАСТЬ СЦЕНАРИЕВ":"ВАШ СЦЕНАРИЙ ГОТОВ"}</span></span><h1>История начинается <em>здесь</em></h1><p>{selectedEvent?.title||'Школьное мероприятие'} · {form.grade} класс · {form.duration_minutes} минут</p></div>{mode==='demo'&&<div className="notice demo-notice"><Sparkles size={16}/> Демо-результат: создан локально, не получен от бэкенда или LLM.</div>}{project?.status==="partial"&&<div role="status" className="notice error"><b>Сценарии готовы частично.</b> Не все варианты удалось сформировать. Ниже показаны только готовые сценарии.{!!project.variant_statuses?.length&&<ul>{project.variant_statuses.filter(v=>v.status!=="completed").map(v=><li key={v.variant_id}>Вариант {v.variant_id}: {v.status==="failed"?"не сформирован":v.status}</li>)}</ul>}{!!project.generation_issues?.length?<ul>{project.generation_issues.map((issue,i)=><li key={i}>{issue.variant_id?`Вариант ${issue.variant_id}: `:""}{issue.message||issue.code||"Причина не указана"}</li>)}</ul>:<p>Сервис не передал подробные причины отклонения вариантов.</p>}</div>}{!!project?.generation_warnings?.length&&<div role="status" className="notice generation-warnings"><b>Предупреждения сервера</b><ul>{project.generation_warnings.map((warning,i)=><li key={i}>{typeof warning==='string'?warning:warning.message||warning.code||'Предупреждение без описания'}</li>)}</ul></div>}<div className="results-header"><div><span className="step-label">ВАРИАНТЫ СЦЕНАРИЯ</span><div className="tabs">{project?.variants.map((v,i)=><button key={v.variant_id} onClick={()=>{setSelectedVariant(i);setSection('timeline')}} className={i===selectedVariant?'current':''}>Вариант {i+1}</button>)}</div></div><button className="primary new-scenario" onClick={()=>setPage('form')}><RefreshCw size={15}/> Новый сценарий</button></div>
+ {page==='result'&&variant&&<main className="page-content results"><div className="heading"><span className="eyebrow result-overline"><WandSparkles size={18}/> <span className="selected-text-glint">{project?.status==="partial"?"ГОТОВА ЧАСТЬ СЦЕНАРИЕВ":"ВАШ СЦЕНАРИЙ ГОТОВ"}</span></span><h1>История начинается <em>здесь</em></h1><p>{selectedEvent?.title||'Школьное мероприятие'} · {form.grade} класс · {form.duration_minutes} минут</p></div>{mode==='demo'&&<div className="notice demo-notice"><Sparkles size={16}/> Демо-результат: создан локально, не получен от бэкенда или LLM.</div>}{project?.status==="partial"&&<div role="status" className="notice error"><b>Сценарии готовы частично.</b> Не все варианты удалось сформировать. Ниже показаны только готовые сценарии.{!!project.variant_statuses?.length&&<ul>{project.variant_statuses.filter(v=>v.status!=="completed").map(v=><li key={v.variant_id}>Вариант {v.variant_id}: {v.status==="failed"?"не сформирован":v.status}</li>)}</ul>}{!!project.generation_issues?.length?<ul>{project.generation_issues.map((issue,i)=><li key={i}>{issue.variant_id?`Вариант ${issue.variant_id}: `:""}{issue.message||issue.code||"Причина не указана"}</li>)}</ul>:<p>Сервис не передал подробные причины отклонения вариантов.</p>}</div>}{!!project?.generation_warnings?.length&&<div role="status" className="notice generation-warnings"><b>Предупреждения сервера</b><ul>{project.generation_warnings.map((warning,i)=><li key={i}>{typeof warning==='string'?warning:warning.message||warning.code||'Предупреждение без описания'}</li>)}</ul></div>}<div className="results-header"><div><span className="step-label">ВАРИАНТЫ СЦЕНАРИЯ</span><div className="tabs">{project?.variants.map((v,i)=><button key={v.variant_id} onClick={()=>{setSelectedVariant(i);setSection('timeline')}} className={i===selectedVariant?'current':''}>Вариант {i+1}</button>)}</div></div><button className="primary new-scenario" onClick={newScenario}><RefreshCw size={15}/> Новый сценарий</button></div>
  <section className="panel result-hero"><div className="result-hero-star">✧</div><span className="step-label">{variant.variant_id.toUpperCase()} · ГОТОВЫЙ СЦЕНАРИЙ</span><h2>{variant.title}</h2><p>{variant.concept?.summary}</p><div className="concept-goal"><Gem size={17}/><span><b>Цель:</b> {variant.concept?.goal}</span></div></section>
  <div className="result-layout"><div className="panel result-main"><div className="result-tabs"><button className={section==='timeline'?'current':''} onClick={()=>setSection('timeline')}><ClipboardList size={17}/> Этапы</button><button className={section==='materials'?'current':''} onClick={()=>setSection('materials')}><BookOpen size={17}/> Материалы</button><button className={section==='roles'?'current':''} onClick={()=>setSection('roles')}><Users size={17}/> Участники</button></div>
  {section==='timeline'&&<div className="timeline">{variant.timeline?.map((block,i)=><article className="timeline-step" key={block.block_id}><span className="timeline-index">{String(i+1).padStart(2,'0')}</span><div className="timeline-body"><div className="timeline-top"><h3>{block.title}</h3><span>{block.start_minute}–{block.start_minute+block.duration_minutes} мин</span></div>{block.purpose&&<p className="purpose">{block.purpose}</p>}{block.teacher_script&&<div className="teacher-script"><b>Слова и действия педагога</b><p>{block.teacher_script}</p></div>}{!!block.pupil_actions?.length&&<div className="pupil-actions"><b>Что делают ученики</b><ul>{block.pupil_actions.map((a,j)=><li key={j}>{a}</li>)}</ul></div>}{!!block.material_ids?.length&&<div className="material-links">{block.material_ids.map(id=>mappedMaterials.get(id)).filter(Boolean).map(m=><span key={m!.material_id}><FileText size={13}/>{m!.title}</span>)}</div>}</div></article>)}</div>}
